@@ -1,0 +1,31 @@
+{
+  "name": "@nlptools/segmentation",
+  "version": "0.0.0",
+  "description": "Programmatically create text segmentations, powered by Demo Macro.",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "pnpm unbuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DemoMacro/nlptools.git"
+  },
+  "keywords": [
+    "nlp",
+    "segmentation"
+  ],
+  "author": {
+    "name": "Demo Macro",
+    "email": "abc@imst.xyz",
+    "url": "https://imst.xyz/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DemoMacro/nlptools/issues"
+  },
+  "homepage": "https://github.com/DemoMacro/nlptools#readme"
+}

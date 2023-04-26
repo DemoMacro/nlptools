@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "paths": {
+      "nlptools": ["./packages/nlptools/src/index.ts"],
+      "@nlptools/comparison": ["./packages/comparison/src/index.ts"],
+      "@nlptools/segmentation": ["./packages/segmentation/src/index.ts"],
+      "@nlptools/similarity": ["./packages/similarity/src/index.ts"]
+    }
+  }
+}

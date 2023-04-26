@@ -1,0 +1,38 @@
+{
+  "name": "@nlptools/nlptools",
+  "version": "0.0.0",
+  "description": "Natural language processing tools, powered by Demo Macro.",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r prepack",
+    "dev": "pnpm -r prepack --stub",
+    "check": "rome check . --apply-unsafe && rome format . --write",
+    "format": "prettier --write --list-different . --ignore-path .gitignore",
+    "postinstall": "githooks install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DemoMacro/nlptools.git"
+  },
+  "keywords": [
+    "nlp"
+  ],
+  "author": {
+    "name": "Demo Macro",
+    "email": "abc@imst.xyz",
+    "url": "https://imst.xyz/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DemoMacro/nlptools/issues"
+  },
+  "homepage": "https://github.com/DemoMacro/nlptools#readme",
+  "devDependencies": {
+    "@funish/githooks": "edge",
+    "@funish/githooks-config": "edge",
+    "@funish/lint": "edge",
+    "prettier": "2.8.4",
+    "rome": "12.0.0",
+    "unbuild": "1.2.0"
+  }
+}
