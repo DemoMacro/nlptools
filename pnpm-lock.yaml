@@ -5,13 +5,13 @@ importers:
     devDependencies:
       "@funish/githooks":
         specifier: edge
-        version: 0.0.4
+        version: 0.0.4-edge.9
       "@funish/githooks-config":
         specifier: edge
-        version: 0.0.1
+        version: 0.0.1-edge.3
       "@funish/lint":
         specifier: edge
-        version: 0.0.1
+        version: 0.0.1-edge.10
       prettier:
         specifier: 2.8.4
         version: 2.8.4
@@ -30,7 +30,11 @@ importers:
 
   packages/nlptools: {}
 
-  packages/segmentation: {}
+  packages/segmentation:
+    dependencies:
+      "@node-rs/jieba":
+        specifier: ^1.7.0
+        version: 1.7.0
 
   packages/similarity: {}
 
@@ -582,38 +586,38 @@ packages:
     dev: true
     optional: true
 
-  /@funish/argv@0.0.3:
+  /@funish/argv@0.0.3-edge.2:
     resolution:
       {
-        integrity: sha512-sakF/JfarbsFUvE57HFMuaL5j8N+ZnwyLx2eZcyTq/ZTpQkTgW+kmxocRhRxxFKtKkdghZy3OxvkOMel8BZMOA==,
+        integrity: sha512-os1fmC5flzAB6d709tuIbqUkXxYyowC/lQ+MSm5ip9+RD2ZhPwLWGV9/Zcs2lbtTYNry6jAORNqzWD6LcdsKMw==,
       }
     dev: true
 
-  /@funish/cli@0.0.3:
+  /@funish/cli@0.0.3-edge.2:
     resolution:
       {
-        integrity: sha512-dbm1S6S8IBbnf3GR9+eRJCi4VE0CqWGUy6EUGlYUkB2QY9F42AKw99JtwhHSCZ++qgcB9QBX//AsflGeUpvF3w==,
+        integrity: sha512-mml66aecp1ugfEPn7y0xN3MbzIHLjr5pRU8/WZUJ+Ohsdic7BGDNnfc/1SghehjcPK/RmK9PjoeyP5snFz1lzg==,
       }
     dependencies:
-      "@funish/argv": 0.0.3
+      "@funish/argv": 0.0.3-edge.2
       pkg-types: 1.0.2
     dev: true
 
-  /@funish/githooks-config@0.0.1:
+  /@funish/githooks-config@0.0.1-edge.3:
     resolution:
       {
-        integrity: sha512-krtPb52v5MGl1scPRG86TTJeLicAO+pTLYXBqzjr0pRMliumS9U6Z3ipqOjArd7jD3llVGcspcR6omg3FIn4lQ==,
+        integrity: sha512-69o8LvRCSFOGJ+2uRJTAMKjwgKxQAsrw6IkrgL+K+VANXzjcuirgVMLbKUC2dJeErXs9o3YX4Db7vShUmHvXeQ==,
       }
     dev: true
 
-  /@funish/githooks@0.0.4:
+  /@funish/githooks@0.0.4-edge.9:
     resolution:
       {
-        integrity: sha512-Zg3wFmBrbEU+Of6F6FOdJ1DDcmNETuoLow96K8GBR8gNoZWN4DKwtlCOzMQ+c9EwWRhvJC7mBRwgnX7UCFu2FQ==,
+        integrity: sha512-bhXY+eGYPuErW60Nc0Jaocz0idxxzDW288cl4kMMQWkeAcDoMJhZIIiluUal91SzYFRlgPnprvj1PvZMRM5HNg==,
       }
     hasBin: true
     dependencies:
-      "@funish/cli": 0.0.3
+      "@funish/cli": 0.0.3-edge.2
       c12: 1.1.2
       cac: 6.7.14
       consola: 2.15.3
@@ -624,14 +628,14 @@ packages:
       - supports-color
     dev: true
 
-  /@funish/lint@0.0.1:
+  /@funish/lint@0.0.1-edge.10:
     resolution:
       {
-        integrity: sha512-r4qFEfxWFPa0EV+MqnBGn0oslOz8DoaGYE6AQ7t7bohU8fQHkleL+1MkqcASBvZz8GCJLbII+n2zA4QvzrFYtQ==,
+        integrity: sha512-RyUntQ8Dzny39Hl5DF9s2xdXmTBp7XtKKB5xLHei42KU176l5Dot6swXFjgaU1wKGnaGkpDdPqmOHm9Szt67kg==,
       }
     hasBin: true
     dependencies:
-      "@funish/cli": 0.0.3
+      "@funish/cli": 0.0.3-edge.2
       c12: 1.1.2
       consola: 2.15.3
       micromatch: 4.0.5
@@ -690,6 +694,184 @@ packages:
       "@jridgewell/resolve-uri": 3.1.0
       "@jridgewell/sourcemap-codec": 1.4.14
     dev: true
+
+  /@node-rs/jieba-android-arm-eabi@1.7.0:
+    resolution:
+      {
+        integrity: sha512-XF4OYcZCyDiBK+jm1Zmt2o+xEO7K2K5OvUC3MTc9jd3Lwvy3EdHp8tpGvEp8PxfVFe2/JxNzX4OQQQP3Dhmk9A==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [arm]
+    os: [android]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-android-arm64@1.7.0:
+    resolution:
+      {
+        integrity: sha512-9oWwFVr/37T89WC+jjiI9A6u0zUJNTJl5ZC4CMxX45MVMokWI7bBXU7t7qBmMdFBzj+OFwDd3sm1fh4vl7NSWA==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [arm64]
+    os: [android]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-darwin-arm64@1.7.0:
+    resolution:
+      {
+        integrity: sha512-9gBuxJCNITNI/gU5l8eeVGQ9MAf0BV86lfeo9TeU61vJCy6sqyx26wFMLODQgLNdiMP+q/fZme/G0hfZUjfPVA==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-darwin-x64@1.7.0:
+    resolution:
+      {
+        integrity: sha512-FFUSMY4tl0Prpxa1SHy7Yzze2KfV/bZzccpO5nd+a8zCKbiX6gVkJ89FfxSAD2QrXUGkZvJYiPmu5nkZItqRZQ==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-freebsd-x64@1.7.0:
+    resolution:
+      {
+        integrity: sha512-QFz2pz0Br+621QbKkgQPqTn90j1kcCD9jaI++qTLNHJGlWLRn6sFoAjb+jQEQEy9aE7VqfIV56eaVcCoU5VO2w==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [x64]
+    os: [freebsd]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-linux-arm-gnueabihf@1.7.0:
+    resolution:
+      {
+        integrity: sha512-kHJxO2sd7gMKqI1YS5DjABEcRwRemaCtgbKSuUqEaHGmUz9nAaUF6FSY8U4rXwr7HXt+kQa4NgyYDjgz+Pscrw==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [arm]
+    os: [linux]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-linux-arm64-gnu@1.7.0:
+    resolution:
+      {
+        integrity: sha512-3qoCV9pF6llPBGDMu7K8JdHjI10WPkrq6P2gpZESqekcE4DatV6DcU9FWR+QL7MK/7meoE3/Zhjm7OK+qBd8gg==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-linux-arm64-musl@1.7.0:
+    resolution:
+      {
+        integrity: sha512-xv6hvzOV7iTCq7mM8SWhC3zEk6CqmBwhOSlfbb3gvPkc4U1UA1hmvcrD7oO5Qn+U+nuswysGCdVU6Z5AypLDfg==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-linux-x64-gnu@1.7.0:
+    resolution:
+      {
+        integrity: sha512-NpelWidMSNLoFTw+ov3y5jhJZjapHwEnh0Fyfm/7mvqkdwzVyedqNj22etRGum+nsAosMotCUWUznIMAD075gQ==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-linux-x64-musl@1.7.0:
+    resolution:
+      {
+        integrity: sha512-yG4F8sy+fW4RbhyKXmEMT/JGuQuKH0TGymCEGYgT0km2I60iys63jWf2VTzCtrx583wxN5XoHv5HN60nhtIBtw==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-win32-arm64-msvc@1.7.0:
+    resolution:
+      {
+        integrity: sha512-R6l/BSMs6R6BwpZS6DIDZuAEjUIPdAHgyi+xptP3mICjm6U+GMsvsRTeZkIJ7a/yzYUfqvz54VpQsfE5f0psBQ==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-win32-ia32-msvc@1.7.0:
+    resolution:
+      {
+        integrity: sha512-FwibbuizEjzom02K2JM2T8tL0VlxW5xGDDy3L3dgx46xIGE85PwGYjgju+eDt4UODgxDsxGC4DUMMZf3XvCc7A==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [ia32]
+    os: [win32]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba-win32-x64-msvc@1.7.0:
+    resolution:
+      {
+        integrity: sha512-pJv7nluB6azhsOWvJB86Dyfg/M7n9k49bs9Bwmsylz9uhdZX9QnEShDW934RdmnjPYQ5aPgsSFrY6NXP/aovUA==,
+      }
+    engines: { node: ">= 10" }
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@node-rs/jieba@1.7.0:
+    resolution:
+      {
+        integrity: sha512-Hm1JIlejxkWe1FSFZRns/g1j5hZmp357n+0n2BluABA4KLZ8EraHfPmPRmVMW6vbdMZObTYIVu5aVrPnUfBOxg==,
+      }
+    engines: { node: ">= 10" }
+    optionalDependencies:
+      "@node-rs/jieba-android-arm-eabi": 1.7.0
+      "@node-rs/jieba-android-arm64": 1.7.0
+      "@node-rs/jieba-darwin-arm64": 1.7.0
+      "@node-rs/jieba-darwin-x64": 1.7.0
+      "@node-rs/jieba-freebsd-x64": 1.7.0
+      "@node-rs/jieba-linux-arm-gnueabihf": 1.7.0
+      "@node-rs/jieba-linux-arm64-gnu": 1.7.0
+      "@node-rs/jieba-linux-arm64-musl": 1.7.0
+      "@node-rs/jieba-linux-x64-gnu": 1.7.0
+      "@node-rs/jieba-linux-x64-musl": 1.7.0
+      "@node-rs/jieba-win32-arm64-msvc": 1.7.0
+      "@node-rs/jieba-win32-ia32-msvc": 1.7.0
+      "@node-rs/jieba-win32-x64-msvc": 1.7.0
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution:
