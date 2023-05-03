@@ -7,6 +7,9 @@
 
 ## Packages
 
+- [nlptools](./packages/nlptools/README.md)
+- [@nlptools/comparison](./packages/comparison/README.md)
+- [@nlptools/segmentation](./packages/segmentation/README.md)
 - [@nlptools/similarity](./packages/similarity/README.md)
 
 ## License

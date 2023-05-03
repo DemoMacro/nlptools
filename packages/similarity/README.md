@@ -20,6 +20,15 @@ $ yarn add @nlptools/similarity
 $ pnpm add @nlptools/similarity
 ```
 
+## Usage
+
+```ts
+// levenshtein distance
+import { levenshteinDistance } from "@nlptools/similarity";
+
+const distance = levenshteinDistance("Hello, world!", "Hello, world?");
+```
+
 ## License
 
 - [MIT](LICENSE) &copy; [Demo Macro](https://imst.xyz/)

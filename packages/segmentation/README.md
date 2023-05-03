@@ -20,6 +20,18 @@ $ yarn add @nlptools/segmentation
 $ pnpm add @nlptools/segmentation
 ```
 
+## Usage
+
+```ts
+import { createSegmentation } from "@nlptools/segmentation";
+
+const segmentation = createSegmentation("Hello, world!", {
+  // options
+  lang: "en",
+  segmentation: "words",
+});
+```
+
 ## License
 
 - [MIT](LICENSE) &copy; [Demo Macro](https://imst.xyz/)

@@ -20,6 +20,33 @@ $ yarn add @nlptools/comparison
 $ pnpm add @nlptools/comparison
 ```
 
+## Usage
+
+```ts
+// diff
+import { createDiffComparison } from "@nlptools/comparison";
+
+const diff = createDiffComparison("Hello, world!", "Hello, world?", {
+  // options
+  ignoreCase: false,
+  lang: "en",
+  segmentation: "chars",
+});
+
+// similarity
+import { createSimilarityComparison } from "@nlptools/comparison";
+
+const similarity = createSimilarityComparison(
+  "Hello, world!",
+  "Hello, world?",
+  {
+    // options
+    lang: "en",
+    threshold: 10,
+  }
+);
+```
+
 ## License
 
 - [MIT](LICENSE) &copy; [Demo Macro](https://imst.xyz/)

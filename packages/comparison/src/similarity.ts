@@ -1,5 +1,8 @@
 import { createSegmentation, SupportedLanguages } from "@nlptools/segmentation";
-import { findClosest, calcSimilarity } from "@nlptools/similarity";
+import {
+  levenshteinClosest,
+  levenshteinSimilarity,
+} from "@nlptools/similarity";
 
 export function filterText(text: string) {
   return text.replace(/[\s\p{P}]+/g, "").trim();
@@ -30,8 +33,11 @@ export function createSimilarityComparison(
   if (sourceParagraphs && targetParagraphs) {
     for (let i = 0; i < sourceParagraphs.length; i++) {
       const sourceParagraph = sourceParagraphs[i];
-      const targetParagraph = findClosest(sourceParagraph, targetParagraphs);
-      const sourceParagraphSimilarity = calcSimilarity(
+      const targetParagraph = levenshteinClosest(
+        sourceParagraph,
+        targetParagraphs
+      );
+      const sourceParagraphSimilarity = levenshteinSimilarity(
         filterText(sourceParagraph),
         filterText(targetParagraph)
       );
@@ -61,8 +67,11 @@ export function createSimilarityComparison(
         if (sourceSentences && targetSentences) {
           for (let j = 0; j < sourceSentences.length; j++) {
             const sourceSentence = sourceSentences[j];
-            const targetSentence = findClosest(sourceSentence, targetSentences);
-            const sourceSentenceSimilarity = calcSimilarity(
+            const targetSentence = levenshteinClosest(
+              sourceSentence,
+              targetSentences
+            );
+            const sourceSentenceSimilarity = levenshteinSimilarity(
               filterText(sourceSentence),
               filterText(targetSentence)
             );
@@ -94,8 +103,11 @@ export function createSimilarityComparison(
               if (sourcePhrases && targetPhrases) {
                 for (let k = 0; k < sourcePhrases.length; k++) {
                   const sourcePhrase = sourcePhrases[k];
-                  const targetPhrase = findClosest(sourcePhrase, targetPhrases);
-                  const sourcePhraseSimilarity = calcSimilarity(
+                  const targetPhrase = levenshteinClosest(
+                    sourcePhrase,
+                    targetPhrases
+                  );
+                  const sourcePhraseSimilarity = levenshteinSimilarity(
                     filterText(sourcePhrase),
                     filterText(targetPhrase)
                   );

@@ -38,7 +38,17 @@ importers:
         specifier: 5.0.3
         version: 5.0.3
 
-  packages/nlptools: {}
+  packages/nlptools:
+    dependencies:
+      "@nlptools/comparison":
+        specifier: workspace:^
+        version: link:../comparison
+      "@nlptools/segmentation":
+        specifier: workspace:^
+        version: link:../segmentation
+      "@nlptools/similarity":
+        specifier: workspace:^
+        version: link:../similarity
 
   packages/segmentation:
     dependencies:
@@ -51,7 +61,7 @@ importers:
   playground:
     dependencies:
       "@nlptools/comparison":
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../packages/comparison
       "@nlptools/segmentation":
         specifier: workspace:*

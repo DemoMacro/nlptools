@@ -149,7 +149,7 @@ const similarity = (a: string, b: string): number => {
 };
 
 export {
-  closest as findClosest,
-  distance as editDistance,
-  similarity as calcSimilarity,
+  closest as levenshteinClosest,
+  distance as levenshteinDistance,
+  similarity as levenshteinSimilarity,
 };

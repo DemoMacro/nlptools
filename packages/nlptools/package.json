@@ -26,5 +26,10 @@
   "bugs": {
     "url": "https://github.com/DemoMacro/nlptools/issues"
   },
-  "homepage": "https://github.com/DemoMacro/nlptools#readme"
+  "homepage": "https://github.com/DemoMacro/nlptools#readme",
+  "dependencies": {
+    "@nlptools/comparison": "workspace:^",
+    "@nlptools/segmentation": "workspace:^",
+    "@nlptools/similarity": "workspace:^"
+  }
 }
