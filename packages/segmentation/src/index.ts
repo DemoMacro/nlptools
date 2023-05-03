@@ -1,8 +1,8 @@
-import { SupportedLanguages } from "./types";
 import { splitParagraphs } from "./paragraphs";
 import { splitSentences } from "./sentences";
 import { splitPhrases } from "./phrases";
 import { splitWord } from "./words";
+import { SupportedLanguages } from "./types";
 
 export function createSegmentation(
   text: string,
@@ -31,4 +31,5 @@ export function createSegmentation(
   }
 }
 
-export { splitParagraphs, splitSentences, splitWord, SupportedLanguages };
+export { splitParagraphs, splitSentences, splitPhrases, splitWord };
+export type { SupportedLanguages };

@@ -1,5 +1,5 @@
 {
-  "name": "nlptools",
+  "name": "@nlptools/nlptools",
   "version": "0.0.0",
   "description": "Natural language processing tools, powered by Demo Macro.",
   "main": "dist/index.mjs",
