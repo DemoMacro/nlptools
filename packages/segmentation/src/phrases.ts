@@ -1,6 +1,6 @@
 import { SupportedLanguages } from "./types";
 
-export function splitSentences(
+export function splitPhrases(
   text: string,
   options: {
     lang?: SupportedLanguages;
@@ -8,8 +8,8 @@ export function splitSentences(
 ) {
   switch (options.lang) {
     case "zh":
-      return text.match(/[^。？！；]+[。？！；]*[\p{P}]*/g);
+      return text.match(/[^，。？！；]+[。？！；]*[\p{P}]*/g);
     default:
-      return text.match(/[^.?!;]+[.?!;]*([\x20]*)/g);
+      return text.match(/[^,.?!;]+[.?!;]*([\x20]*)/g);
   }
 }

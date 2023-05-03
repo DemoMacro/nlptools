@@ -1,6 +1,7 @@
 import { SupportedLanguages } from "./types";
+import { cut } from "@node-rs/jieba";
 
-export function splitSentences(
+export function splitWord(
   text: string,
   options: {
     lang?: SupportedLanguages;
@@ -8,8 +9,8 @@ export function splitSentences(
 ) {
   switch (options.lang) {
     case "zh":
-      return text.match(/[^。？！；]+[。？！；]*[\p{P}]*/g);
+      return cut(text, true);
     default:
-      return text.match(/[^.?!;]+[.?!;]*([\x20]*)/g);
+      return text.split(/(\x20|[.?!;]+\x20)/g);
   }
 }

@@ -129,7 +129,7 @@ const distance = (a: string, b: string): number => {
   return myers_x(a, b);
 };
 
-const closest = (str: string, arr: readonly string[]): string => {
+const closest = (str: string, arr: readonly string[]) => {
   let min_distance = Infinity;
   let min_index = 0;
   for (let i = 0; i < arr.length; i++) {
@@ -142,4 +142,14 @@ const closest = (str: string, arr: readonly string[]): string => {
   return arr[min_index];
 };
 
-export { closest, distance };
+const similarity = (a: string, b: string): number => {
+  const dist = distance(a, b);
+  const max = Math.max(a.length, b.length);
+  return 1 - dist / max;
+};
+
+export {
+  closest as findClosest,
+  distance as editDistance,
+  similarity as calcSimilarity,
+};
