@@ -1,7 +1,7 @@
-import { splitParagraphs } from "./paragraphs";
-import { splitSentences } from "./sentences";
-import { splitPhrases } from "./phrases";
-import { splitWord } from "./words";
+import { segmentParagraphs } from "./paragraphs";
+import { segmentSentences } from "./sentences";
+import { segmentPhrases } from "./phrases";
+import { segmentWords } from "./words";
 import { SupportedLanguages } from "./types";
 
 export function createSegmentation(
@@ -15,21 +15,21 @@ export function createSegmentation(
 
   switch (options.segmentation) {
     case "paragraphs":
-      return splitParagraphs(text);
+      return segmentParagraphs(text);
     case "sentences":
-      return splitSentences(text, {
+      return segmentSentences(text, {
         lang,
       });
     case "phrases":
-      return splitPhrases(text, {
+      return segmentPhrases(text, {
         lang,
       });
     case "words":
-      return splitWord(text, {
+      return segmentWords(text, {
         lang,
       });
   }
 }
 
-export { splitParagraphs, splitSentences, splitPhrases, splitWord };
+export { segmentParagraphs, segmentSentences, segmentPhrases, segmentWords };
 export type { SupportedLanguages };

@@ -1,4 +1,9 @@
-import { createSegmentation, SupportedLanguages } from "@nlptools/segmentation";
+import {
+  segmentParagraphs,
+  segmentSentences,
+  segmentPhrases,
+  SupportedLanguages,
+} from "@nlptools/segmentation";
 import {
   levenshteinClosest,
   levenshteinSimilarity,
@@ -20,15 +25,9 @@ export function createSimilarityComparison(
 
   const similarityComparison = [];
 
-  const sourceParagraphs = createSegmentation(source, {
-    lang,
-    segmentation: "paragraphs",
-  });
+  const sourceParagraphs = segmentParagraphs(source);
 
-  const targetParagraphs = createSegmentation(target, {
-    lang,
-    segmentation: "paragraphs",
-  });
+  const targetParagraphs = segmentParagraphs(target);
 
   if (sourceParagraphs && targetParagraphs) {
     for (let i = 0; i < sourceParagraphs.length; i++) {
@@ -54,14 +53,12 @@ export function createSimilarityComparison(
           segment: true,
         });
       } else {
-        const sourceSentences = createSegmentation(sourceParagraph, {
+        const sourceSentences = segmentSentences(sourceParagraph, {
           lang,
-          segmentation: "sentences",
         });
 
-        const targetSentences = createSegmentation(targetParagraph, {
+        const targetSentences = segmentSentences(targetParagraph, {
           lang,
-          segmentation: "sentences",
         });
 
         if (sourceSentences && targetSentences) {
@@ -90,14 +87,12 @@ export function createSimilarityComparison(
                 segment: j === sourceSentences.length - 1,
               });
             } else {
-              const sourcePhrases = createSegmentation(sourceSentence, {
+              const sourcePhrases = segmentPhrases(sourceSentence, {
                 lang,
-                segmentation: "phrases",
               });
 
-              const targetPhrases = createSegmentation(targetSentence, {
+              const targetPhrases = segmentPhrases(targetSentence, {
                 lang,
-                segmentation: "phrases",
               });
 
               if (sourcePhrases && targetPhrases) {

@@ -1,6 +1,6 @@
 import { SupportedLanguages } from "./types";
 
-export function splitPhrases(
+export function segmentPhrases(
   text: string,
   options: {
     lang?: SupportedLanguages;

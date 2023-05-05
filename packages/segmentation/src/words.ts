@@ -1,7 +1,7 @@
 import { SupportedLanguages } from "./types";
 import { cut } from "@node-rs/jieba";
 
-export function splitWord(
+export function segmentWords(
   text: string,
   options: {
     lang?: SupportedLanguages;
