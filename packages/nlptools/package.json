@@ -1,6 +1,6 @@
 {
   "name": "@nlptools/nlptools",
-  "version": "0.0.1-edge.0",
+  "version": "0.0.1-edge.1",
   "description": "Natural language processing tools, powered by Demo Macro.",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/DemoMacro/nlptools#readme",
   "dependencies": {
-    "@nlptools/comparison": "workspace:^",
-    "@nlptools/segmentation": "workspace:^",
-    "@nlptools/similarity": "workspace:^"
+    "@nlptools/comparison": "workspace:*",
+    "@nlptools/segmentation": "workspace:*",
+    "@nlptools/similarity": "workspace:*"
   }
 }

@@ -8,7 +8,7 @@ export function createSegmentation(
   text: string,
   options: {
     lang?: SupportedLanguages;
-    segmentation: "paragraphs" | "sentences" | "phrases" | "words";
+    segmentation: "paragraphs" | "sentences" | "phrases";
   }
 ) {
   const { lang } = options;
@@ -22,10 +22,6 @@ export function createSegmentation(
       });
     case "phrases":
       return segmentPhrases(text, {
-        lang,
-      });
-    case "words":
-      return segmentWords(text, {
         lang,
       });
   }
