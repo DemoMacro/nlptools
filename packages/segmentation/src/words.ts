@@ -1,5 +1,5 @@
 import { SupportedLanguages } from "./types";
-import { cut } from "@node-rs/jieba";
+import { cut } from "jieba-wasm";
 
 export function segmentWords(
   text: string,
