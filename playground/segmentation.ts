@@ -21,6 +21,14 @@ console.log(
   createSegmentation(englishText, { lang: "en", segmentation: "sentences" })
 );
 
+console.log(
+  createSegmentation(chineseText, { lang: "zh", segmentation: "phrases" })
+);
+
+console.log(
+  createSegmentation(englishText, { lang: "en", segmentation: "phrases" })
+);
+
 // console.log(createSegmentation(chineseText, { lang: "zh", segmentation: "paragraphs" }));
 
 // console.log(createSegmentation(englishText, { lang: "en", segmentation: "paragraphs" }));

@@ -1,6 +1,6 @@
 {
   "name": "@nlptools/nlptools",
-  "version": "0.0.1-edge.2",
+  "version": "0.0.1-edge.3",
   "description": "Natural language processing tools, powered by Demo Macro.",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",

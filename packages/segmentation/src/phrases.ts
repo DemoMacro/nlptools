@@ -8,8 +8,8 @@ export function segmentPhrases(
 ) {
   switch (options.lang) {
     case "zh":
-      return text.match(/[^，。？！；]+[。？！；]*[\p{P}]*/g);
+      return text.match(/[^，。？！；]+[，。？！；]*[\p{P}]*/g);
     default:
-      return text.match(/[^,.?!;]+[.?!;]*([\x20]*)/g);
+      return text.match(/[^,.?!;]+[,.?!;]*([\x20]*)/g);
   }
 }
