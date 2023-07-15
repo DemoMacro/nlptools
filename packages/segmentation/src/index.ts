@@ -2,7 +2,7 @@ import { segmentParagraphs } from "./paragraphs";
 import { segmentSentences } from "./sentences";
 import { segmentPhrases } from "./phrases";
 import { segmentWords } from "./words";
-import { SupportedLanguages } from "./types";
+import type { SupportedLanguages } from "./types";
 
 export function createSegmentation(
   text: string,

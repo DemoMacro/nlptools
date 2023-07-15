@@ -1,7 +1,7 @@
 import {
   createDiffComparison,
   createSimilarityComparison,
-} from "@nlptools/comparison";
+} from "../packages/comparison/src/index";
 
 const source = "你好，世界！";
 

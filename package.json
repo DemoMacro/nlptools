@@ -10,7 +10,7 @@
     "format": "prettier --write --list-different . --ignore-path .gitignore",
     "edge": "pnpm -r exec bump v",
     "release": "pnpm -r exec bump v -r patch",
-    "publish": "pnpm -r exec bump p",
+    "public": "pnpm -r exec bump p",
     "postinstall": "githooks install"
   },
   "repository": {

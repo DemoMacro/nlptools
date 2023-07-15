@@ -114,7 +114,10 @@ const myers_x = (b: string, a: string): number => {
   return score;
 };
 
-const distance = (a: string, b: string): number => {
+const distance = (valueA: string, valueB: string): number => {
+  let a = valueA;
+  let b = valueB;
+
   if (a.length < b.length) {
     const tmp = b;
     b = a;

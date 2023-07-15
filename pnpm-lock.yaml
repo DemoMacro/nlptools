@@ -1,17 +1,21 @@
 lockfileVersion: "6.0"
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
   .:
     devDependencies:
       "@funish/githooks":
         specifier: edge
-        version: 0.0.5-edge.0
+        version: 0.0.5-edge.1
       "@funish/githooks-config":
         specifier: edge
-        version: 0.0.1
+        version: 0.0.2-edge.0(@funish/githooks@0.0.5-edge.1)
       "@funish/lint":
         specifier: edge
-        version: 0.0.2-edge.1
+        version: 0.0.2-edge.2
       prettier:
         specifier: 2.8.4
         version: 2.8.4
@@ -53,7 +57,7 @@ importers:
   packages/segmentation:
     dependencies:
       jieba-wasm:
-        specifier: ^0.0.2
+        specifier: 0.0.2
         version: 0.0.2
 
   packages/similarity: {}
@@ -612,38 +616,42 @@ packages:
     dev: true
     optional: true
 
-  /@funish/argv@0.0.3:
+  /@funish/argv@0.0.4-edge.0:
     resolution:
       {
-        integrity: sha512-sakF/JfarbsFUvE57HFMuaL5j8N+ZnwyLx2eZcyTq/ZTpQkTgW+kmxocRhRxxFKtKkdghZy3OxvkOMel8BZMOA==,
+        integrity: sha512-wTTW02ea9KIdgTUlL4i2OODhuAxKdl5BR7JncoxxpgzUvhmuEbvIZi/BtN/RBysmqrgDeLqykV5fLxR1qdCfMw==,
       }
     dev: true
 
-  /@funish/cli@0.0.3:
+  /@funish/cli@0.0.4-edge.0:
     resolution:
       {
-        integrity: sha512-dbm1S6S8IBbnf3GR9+eRJCi4VE0CqWGUy6EUGlYUkB2QY9F42AKw99JtwhHSCZ++qgcB9QBX//AsflGeUpvF3w==,
+        integrity: sha512-5zPYuV0fBwxWL6w53thO7oNASA4ja32Sl+qEp8rxrmN500LY/SQyyfVZp5bGBetDyNcLqIe2mg5cW/chKZKgEg==,
       }
     dependencies:
-      "@funish/argv": 0.0.3
+      "@funish/argv": 0.0.4-edge.0
       pkg-types: 1.0.2
     dev: true
 
-  /@funish/githooks-config@0.0.1:
+  /@funish/githooks-config@0.0.2-edge.0(@funish/githooks@0.0.5-edge.1):
     resolution:
       {
-        integrity: sha512-krtPb52v5MGl1scPRG86TTJeLicAO+pTLYXBqzjr0pRMliumS9U6Z3ipqOjArd7jD3llVGcspcR6omg3FIn4lQ==,
+        integrity: sha512-5UFT66DM+sQ4WGe8s5uQoGOPfjGUIm2ojsylaHgEVA1fI91FjzfhUIy7mMYZPzX740eFU9Bb66M/DGRBpkZqpg==,
       }
+    peerDependencies:
+      "@funish/githooks": 0.0.5-edge.1
+    dependencies:
+      "@funish/githooks": 0.0.5-edge.1
     dev: true
 
-  /@funish/githooks@0.0.5-edge.0:
+  /@funish/githooks@0.0.5-edge.1:
     resolution:
       {
-        integrity: sha512-Ao6L2PXH5DwwjxlbgPS6qSynP1UOMWMcyZjJ9kAmbKH424Y4Hv3sXdirf6eGAV9k9ub05+BSXWngMVCb0licEw==,
+        integrity: sha512-ExFZYh8kMlUec73WzKhV68b9wtSoiGj63T1v9Qpd5/SHV4uNeKpd8sMCkIEDOEziKqz8sbgg3eTirrlsvjelxA==,
       }
     hasBin: true
     dependencies:
-      "@funish/cli": 0.0.3
+      "@funish/cli": 0.0.4-edge.0
       c12: 1.4.1
       cac: 6.7.14
       consola: 2.15.3
@@ -654,14 +662,14 @@ packages:
       - supports-color
     dev: true
 
-  /@funish/lint@0.0.2-edge.1:
+  /@funish/lint@0.0.2-edge.2:
     resolution:
       {
-        integrity: sha512-0AgBmUpWrquHHfbSxqc+y4MIuq/9snTJHkoGavJu7A9I84AdFqcC6xKHz6U/Pflb0OuPam3rpFI8HBqv+QTCqQ==,
+        integrity: sha512-OxhHJ7f16BTmw8wBXdyKlYgI/kSvXk9fbI7pErN0TTbNf5mMis5nP2n54UTP/SnommUzpqrXdvQHWp2iH0hqUg==,
       }
     hasBin: true
     dependencies:
-      "@funish/cli": 0.0.3
+      "@funish/cli": 0.0.4-edge.0
       c12: 1.4.1
       consola: 2.15.3
       micromatch: 4.0.5

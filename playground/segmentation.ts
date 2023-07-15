@@ -1,4 +1,4 @@
-import { createSegmentation } from "@nlptools/segmentation";
+import { createSegmentation } from "../packages/segmentation/src/index";
 
 const chineseText =
   "照顾病人很重要，医生会跟进，但这是一个充满痛苦和痛苦的时期。就最小的细节而言，任何人都不应从事任何一种工作，除非他从中得到一些好处。不要在痛斥中生气在快感中痛斥他要从痛中发一毛希望没有滋生。非为色欲所蒙蔽，不出也；弃职而软其心者，其过也，是劳。";
