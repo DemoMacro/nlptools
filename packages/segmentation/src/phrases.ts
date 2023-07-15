@@ -11,12 +11,16 @@ export function segmentPhrases(
 
   switch (options.lang) {
     case "zh":
-      return paragraphs.flatMap((paragraph: string) =>
-        paragraph.match(/[^，。？！；]+[，。？！；]*[\p{P}]*/gm)
-      );
+      return paragraphs
+        .flatMap((paragraph: string) =>
+          paragraph.match(/[^，。？！；]+[，。？！；]*[\p{P}]*/gm)
+        )
+        .filter((w) => !!w);
     default:
-      return paragraphs.flatMap((paragraph: string) =>
-        paragraph.match(/[^,.?!;]+[,.?!;]*([\x20]*)/gm)
-      );
+      return paragraphs
+        .flatMap((paragraph: string) =>
+          paragraph.match(/[^,.?!;]+[,.?!;]*([\x20]*)/gm)
+        )
+        .filter((w) => !!w);
   }
 }

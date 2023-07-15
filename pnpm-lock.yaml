@@ -16,6 +16,9 @@ importers:
       "@funish/lint":
         specifier: edge
         version: 0.0.2-edge.2
+      "@types/node":
+        specifier: ^20.4.2
+        version: 20.4.2
       prettier:
         specifier: 2.8.4
         version: 2.8.4
@@ -945,6 +948,13 @@ packages:
     resolution:
       {
         integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==,
+      }
+    dev: true
+
+  /@types/node@20.4.2:
+    resolution:
+      {
+        integrity: sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==,
       }
     dev: true
 
