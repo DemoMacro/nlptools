@@ -11,6 +11,10 @@ export function segmentWords(
     case "zh":
       return cut(text, true);
     default:
-      return text.split(/[\x20.,?!;]+/gm).filter((w) => w.length > 0);
+      return text
+        .replace(/([\x20,.;:?!])/gm, "\r\n$1\r\n")
+        .split(/[\f\n\r\t\v]+/gm)
+        .map((s) => s.trim())
+        .filter((w) => !!w);
   }
 }

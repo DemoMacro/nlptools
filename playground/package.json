@@ -3,6 +3,10 @@
   "dependencies": {
     "@nlptools/comparison": "workspace:*",
     "@nlptools/segmentation": "workspace:*",
-    "@nlptools/similarity": "workspace:*"
+    "@nlptools/similarity": "workspace:*",
+    "@node-rs/jieba": "^1.7.0"
+  },
+  "devDependencies": {
+    "@funish/bench": "edge"
   }
 }

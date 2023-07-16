@@ -1,5 +1,4 @@
 import type { SupportedLanguages } from "./types";
-import { segmentParagraphs } from "./paragraphs";
 
 export function segmentSentences(
   text: string,
@@ -7,21 +6,18 @@ export function segmentSentences(
     lang?: SupportedLanguages;
   }
 ) {
-  const paragraphs = segmentParagraphs(text);
-
   switch (options.lang) {
     case "zh":
-      return paragraphs
-        .flatMap((paragraph: string) =>
-          paragraph.match(/[^。？！；]+[。？！；]*[\p{P}]*/gm)
-        )
+      return text
+        .replace(/([。；？！])/gm, "$1\r\n")
+        .split(/[\f\n\r\t\v]+/gm)
+        .map((s) => s.trim())
         .filter((w) => !!w);
     default:
-      // return text.match(/[^.?!;]+[.?!;]*(\x20*)/gm);
-      return paragraphs
-        .flatMap((paragraph: string) =>
-          paragraph.match(/[^.?!;]+[.?!;]*(\x20*)/gm)
-        )
+      return text
+        .replace(/([.;?!])/gm, "$1\r\n")
+        .split(/[\f\n\r\t\v]+/gm)
+        .map((s) => s.trim())
         .filter((w) => !!w);
   }
 }

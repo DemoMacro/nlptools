@@ -1,6 +1,6 @@
 {
   "name": "@nlptools/comparison",
-  "version": "0.0.1-edge.5",
+  "version": "0.0.1-edge.6",
   "description": "Programmatically create text comparisons, powered by Demo Macro.",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",

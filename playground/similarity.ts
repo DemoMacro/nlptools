@@ -2,7 +2,7 @@ import {
   levenshteinDistance,
   levenshteinClosest,
   levenshteinSimilarity,
-} from "@nlptools/similarity";
+} from "../packages/similarity/src/index";
 
 const str = "hello";
 const arr = ["hello", "world", "foo", "bar", "baz"];
