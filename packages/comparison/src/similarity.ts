@@ -16,7 +16,7 @@ export function createSimilarityComparison(
     threshold?: number;
   }
 ) {
-  const { lang, threshold = 10 } = options;
+  const { lang, threshold = 13 } = options;
 
   const similarityComparison = [];
 
@@ -28,15 +28,25 @@ export function createSimilarityComparison(
   const targetParagraphs = createSegmentation(target, {
     lang,
     segmentation: "paragraphs",
-  });
+  }).filter((paragraph) => paragraph.length >= threshold);
 
-  if (sourceParagraphs && targetParagraphs) {
-    for (let i = 0; i < sourceParagraphs.length; i++) {
-      const sourceParagraph = sourceParagraphs[i];
+  for (let i = 0; i < sourceParagraphs.length; i++) {
+    const sourceParagraph = sourceParagraphs[i];
+
+    if (sourceParagraph.length < threshold) {
+      similarityComparison.push({
+        source: sourceParagraph,
+        target: "",
+        similarity: 0,
+        segmentation: "paragraphs",
+        segment: true,
+      });
+    } else {
       const targetParagraph = levenshteinClosest(
         sourceParagraph,
         targetParagraphs
       );
+
       const sourceParagraphSimilarity = levenshteinSimilarity(
         filterText(sourceParagraph),
         filterText(targetParagraph)

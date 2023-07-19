@@ -1,6 +1,6 @@
 {
   "name": "@nlptools/similarity",
-  "version": "0.0.1-edge.6",
+  "version": "0.0.1-edge.7",
   "description": "Multiple algorithms for similarity, powered by Demo Macro.",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",

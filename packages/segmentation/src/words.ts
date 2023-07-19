@@ -9,7 +9,7 @@ export function segmentWords(
 ) {
   switch (options.lang) {
     case "zh":
-      return cut(text, true);
+      return cut(text, true) as string[];
     default:
       return text
         .replace(/([\x20,.;:?!])/gm, "\r\n$1\r\n")
