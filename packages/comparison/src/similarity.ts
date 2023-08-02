@@ -54,7 +54,7 @@ export function createSimilarityComparison(
 
       if (
         sourceParagraphSimilarity >=
-        1 - threshold / Math.max(sourceParagraph.length, targetParagraph.length)
+        1 - threshold / Math.min(sourceParagraph.length, targetParagraph.length)
       ) {
         similarityComparison.push({
           source: sourceParagraph,
@@ -90,7 +90,7 @@ export function createSimilarityComparison(
               sourceSentenceSimilarity >=
               1 -
                 threshold /
-                  Math.max(sourceSentence.length, targetSentence.length)
+                  Math.min(sourceSentence.length, targetSentence.length)
             ) {
               similarityComparison.push({
                 source: sourceSentence,
