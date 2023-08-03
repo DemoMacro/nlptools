@@ -147,8 +147,11 @@ const closest = (str: string, arr: readonly string[]) => {
 
 const similarity = (a: string, b: string): number => {
   const dist = distance(a, b);
-  const max = Math.max(a.length, b.length);
-  return 1 - dist / max;
+  if (a.length < b.length) {
+    return (b.length - a.length) / dist;
+  } else {
+    return 1 - dist / b.length;
+  }
 };
 
 export {

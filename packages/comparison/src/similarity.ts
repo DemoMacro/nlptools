@@ -4,19 +4,20 @@ import {
   levenshteinSimilarity,
 } from "@nlptools/similarity";
 
-export function filterText(text: string) {
-  return text.replace(/[\s\p{P}]+/g, "").trim();
-}
-
 export function createSimilarityComparison(
   source: string,
   target: string,
   options: {
     lang?: SupportedLanguages;
     threshold?: number;
+    filter?: (text: string) => string;
   }
 ) {
-  const { lang, threshold = 13 } = options;
+  const { lang, threshold = 13, filter } = options;
+
+  function filterText(text: string) {
+    return filter ? filter(text) : text.replace(/[\s\p{P}]+/g, "").trim();
+  }
 
   const similarityComparison = [];
 
@@ -54,7 +55,7 @@ export function createSimilarityComparison(
 
       if (
         sourceParagraphSimilarity >=
-        1 - threshold / Math.min(sourceParagraph.length, targetParagraph.length)
+        1 - threshold / Math.max(sourceParagraph.length, targetParagraph.length)
       ) {
         similarityComparison.push({
           source: sourceParagraph,
@@ -81,6 +82,7 @@ export function createSimilarityComparison(
               sourceSentence,
               targetSentences
             );
+
             const sourceSentenceSimilarity = levenshteinSimilarity(
               filterText(sourceSentence),
               filterText(targetSentence)
@@ -90,7 +92,7 @@ export function createSimilarityComparison(
               sourceSentenceSimilarity >=
               1 -
                 threshold /
-                  Math.min(sourceSentence.length, targetSentence.length)
+                  Math.max(sourceSentence.length, targetSentence.length)
             ) {
               similarityComparison.push({
                 source: sourceSentence,
