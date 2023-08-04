@@ -27,8 +27,8 @@ importers:
         specifier: 12.1.3
         version: 12.1.3
       unbuild:
-        specifier: 1.2.0
-        version: 1.2.0
+        specifier: 1.2.1
+        version: 1.2.1
 
   packages/comparison:
     dependencies:
@@ -931,8 +931,8 @@ packages:
       fastq: 1.15.0
     dev: true
 
-  /@rollup/plugin-alias@4.0.4(rollup@3.27.1):
-    resolution: {integrity: sha512-0CaAY238SMtYAWEXXptWSR8iz8NYZnH7zNBKuJ14xFJSGwLtPgjvXYsoApAHfzYXXH1ejxpVw7WlHss3zhh9SQ==}
+  /@rollup/plugin-alias@5.0.0(rollup@3.27.1):
+    resolution: {integrity: sha512-l9hY5chSCjuFRPsnRm16twWBiSApl2uYFLsepQYwtBuAxNMQ/1dJqADld40P0Jkqm65GRTLy/AC6hnpVebtLsA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^1.20.0||^2.0.0||^3.0.0
@@ -1949,18 +1949,18 @@ packages:
     resolution: {integrity: sha512-RsPyTbqORDNDxqAdQPQBpgqhWle1VcTSou/FraClYlHf6TZnQcGslpLcAphNR+sQW4q5lLWLbOsRlh9j24baQg==}
     dev: true
 
-  /unbuild@1.2.0:
-    resolution: {integrity: sha512-GcolNMBatav7FbRdLDR8BMbnYWMoKfxXdJIHibpBtx3GERN4GbbUD5h4RfGIFi+mjWPz4AphSz5gIg9FWNWw3Q==}
+  /unbuild@1.2.1:
+    resolution: {integrity: sha512-J4efk69Aye43tWcBPCsLK7TIRppGrEN4pAlDzRKo3HSE6MgTSTBxSEuE3ccx7ixc62JvGQ/CoFXYqqF2AHozow==}
     hasBin: true
     dependencies:
-      '@rollup/plugin-alias': 4.0.4(rollup@3.27.1)
+      '@rollup/plugin-alias': 5.0.0(rollup@3.27.1)
       '@rollup/plugin-commonjs': 24.1.0(rollup@3.27.1)
       '@rollup/plugin-json': 6.0.0(rollup@3.27.1)
       '@rollup/plugin-node-resolve': 15.1.0(rollup@3.27.1)
       '@rollup/plugin-replace': 5.0.2(rollup@3.27.1)
       '@rollup/pluginutils': 5.0.2(rollup@3.27.1)
       chalk: 5.3.0
-      consola: 2.15.3
+      consola: 3.2.3
       defu: 6.1.2
       esbuild: 0.17.19
       globby: 13.2.2
