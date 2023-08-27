@@ -132,25 +132,55 @@ const distance = (valueA: string, valueB: string): number => {
   return myers_x(a, b);
 };
 
-const closest = (str: string, arr: readonly string[]) => {
-  let min_distance = Infinity;
-  let min_index = 0;
-  for (let i = 0; i < arr.length; i++) {
-    const dist = distance(str, arr[i]);
-    if (dist < min_distance) {
-      min_distance = dist;
-      min_index = i;
-    }
-  }
-  return arr[min_index];
-};
-
 const similarity = (a: string, b: string): number => {
   const dist = distance(a, b);
   if (a.length < b.length) {
     return (b.length - a.length) / dist;
   } else {
     return 1 - dist / b.length;
+  }
+};
+
+const closest = (
+  str: string,
+  arr: readonly string[],
+  method: "distance" | "similarity" = "similarity",
+) => {
+  if (method === "similarity") {
+    let max_similarity = -Infinity;
+    let min_index = 0;
+    for (let i = 0; i < arr.length; i++) {
+      const dist = similarity(str, arr[i]);
+      if (dist > max_similarity) {
+        max_similarity = dist;
+        min_index = i;
+      }
+
+      if (max_similarity > 0.8) {
+        break;
+      }
+    }
+    return {
+      similarity: max_similarity,
+      closest: arr[min_index],
+      distance: distance(str, arr[min_index]),
+    };
+  } else {
+    let min_distance = Infinity;
+    let min_index = 0;
+    for (let i = 0; i < arr.length; i++) {
+      const dist = distance(str, arr[i]);
+      if (dist < min_distance) {
+        min_distance = dist;
+        min_index = i;
+      }
+    }
+
+    return {
+      distance: min_distance,
+      closest: arr[min_index],
+      similarity: similarity(str, arr[min_index]),
+    };
   }
 };
 

@@ -1,8 +1,36 @@
 import { createSegmentation, SupportedLanguages } from "@nlptools/segmentation";
-import {
-  levenshteinClosest,
-  levenshteinSimilarity,
-} from "@nlptools/similarity";
+import { levenshteinSimilarity } from "@nlptools/similarity";
+
+function filterText(text: string) {
+  return text.replace(/[\s\d\p{P}]+/g, "");
+}
+
+function useFirstClosest(str: string, arr: readonly string[], threshold = 13) {
+  let max_similarity = -Infinity;
+  let min_index = 0;
+  let loop_break = false;
+
+  const tolerance = Math.abs(1 - threshold / Math.max(str.length, arr.length));
+
+  for (let i = 0; i < arr.length; i++) {
+    const dist = levenshteinSimilarity(filterText(str), filterText(arr[i]));
+    if (dist > max_similarity) {
+      max_similarity = dist;
+      min_index = i;
+    }
+
+    if (max_similarity > tolerance) {
+      loop_break = true;
+      break;
+    }
+  }
+
+  return {
+    similarity: max_similarity,
+    closest: arr[min_index],
+    break: loop_break,
+  };
+}
 
 export function createSimilarityComparison(
   source: string,
@@ -10,14 +38,9 @@ export function createSimilarityComparison(
   options: {
     lang?: SupportedLanguages;
     threshold?: number;
-    filter?: (text: string) => string;
-  }
+  },
 ) {
-  const { lang, threshold = 13, filter } = options;
-
-  function filterText(text: string) {
-    return filter ? filter(text) : text.replace(/[\s\p{P}]+/g, "").trim();
-  }
+  const { lang, threshold = 13 } = options;
 
   const similarityComparison = [];
 
@@ -43,26 +66,20 @@ export function createSimilarityComparison(
         segment: true,
       });
     } else {
-      const targetParagraph = levenshteinClosest(
+      const targetParagraph = useFirstClosest(
         sourceParagraph,
-        targetParagraphs
+        targetParagraphs,
+        threshold,
       );
 
-      const sourceParagraphSimilarity = levenshteinSimilarity(
-        filterText(sourceParagraph),
-        filterText(targetParagraph)
-      );
-
-      if (
-        sourceParagraphSimilarity >=
-        1 - threshold / Math.max(sourceParagraph.length, targetParagraph.length)
-      ) {
+      if (targetParagraph.break) {
         similarityComparison.push({
           source: sourceParagraph,
-          target: targetParagraph,
-          similarity: sourceParagraphSimilarity,
+          target: targetParagraph.closest,
+          similarity: targetParagraph.similarity,
           segmentation: "paragraphs",
           segment: true,
+          break: true,
         });
       } else {
         const sourceSentences = createSegmentation(sourceParagraph, {
@@ -70,36 +87,29 @@ export function createSimilarityComparison(
           segmentation: "sentences",
         });
 
-        const targetSentences = createSegmentation(targetParagraph, {
-          lang,
-          segmentation: "sentences",
-        });
+        // const targetSentences = createSegmentation(targetParagraph.closest, {
+        //   lang,
+        //   segmentation: "sentences",
+        // });
+        const targetSentences = targetParagraphs;
 
-        if (sourceSentences && targetSentences) {
+        if (sourceSentences && targetParagraphs) {
           for (let j = 0; j < sourceSentences.length; j++) {
             const sourceSentence = sourceSentences[j];
-            const targetSentence = levenshteinClosest(
+            const targetSentence = useFirstClosest(
               sourceSentence,
-              targetSentences
+              targetSentences,
+              threshold,
             );
 
-            const sourceSentenceSimilarity = levenshteinSimilarity(
-              filterText(sourceSentence),
-              filterText(targetSentence)
-            );
-
-            if (
-              sourceSentenceSimilarity >=
-              1 -
-                threshold /
-                  Math.max(sourceSentence.length, targetSentence.length)
-            ) {
+            if (targetSentence.break) {
               similarityComparison.push({
                 source: sourceSentence,
-                target: targetSentence,
-                similarity: sourceSentenceSimilarity,
+                target: targetSentence.closest,
+                similarity: targetSentence.similarity,
                 segmentation: "sentences",
                 segment: j === sourceSentences.length - 1,
+                break: true,
               });
             } else {
               const sourcePhrases = createSegmentation(sourceSentence, {
@@ -107,7 +117,7 @@ export function createSimilarityComparison(
                 segmentation: "phrases",
               });
 
-              const targetPhrases = createSegmentation(targetSentence, {
+              const targetPhrases = createSegmentation(targetSentence.closest, {
                 lang,
                 segmentation: "phrases",
               });
@@ -115,19 +125,15 @@ export function createSimilarityComparison(
               if (sourcePhrases && targetPhrases) {
                 for (let k = 0; k < sourcePhrases.length; k++) {
                   const sourcePhrase = sourcePhrases[k];
-                  const targetPhrase = levenshteinClosest(
+                  const targetPhrase = useFirstClosest(
                     sourcePhrase,
-                    targetPhrases
+                    targetPhrases,
+                    threshold,
                   );
-                  const sourcePhraseSimilarity = levenshteinSimilarity(
-                    filterText(sourcePhrase),
-                    filterText(targetPhrase)
-                  );
-
                   similarityComparison.push({
                     source: sourcePhrase,
-                    target: targetPhrase,
-                    similarity: sourcePhraseSimilarity,
+                    target: targetPhrase.closest,
+                    similarity: targetPhrase.similarity,
                     segmentation: "phrases",
                     segment:
                       j === sourceSentences.length - 1 &&

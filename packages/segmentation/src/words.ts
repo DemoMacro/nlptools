@@ -5,7 +5,7 @@ export function segmentWords(
   text: string,
   options: {
     lang?: SupportedLanguages;
-  }
+  },
 ) {
   switch (options.lang) {
     case "zh":
