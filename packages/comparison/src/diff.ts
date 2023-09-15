@@ -8,7 +8,7 @@ export function createDiffComparison(
     ignoreCase?: boolean;
     lang?: SupportedLanguages;
     segmentation: "paragraphs" | "sentences" | "phrases" | "words";
-  },
+  }
 ) {
   const { ignoreCase, lang, segmentation } = options;
 

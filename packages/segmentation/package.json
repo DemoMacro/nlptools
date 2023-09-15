@@ -1,6 +1,6 @@
 {
   "name": "@nlptools/segmentation",
-  "version": "0.0.1-edge.11",
+  "version": "0.0.1-edge.12",
   "description": "Programmatically create text segmentations, powered by Demo Macro.",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",

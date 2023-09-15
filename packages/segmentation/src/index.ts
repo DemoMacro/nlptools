@@ -9,7 +9,7 @@ export function createSegmentation(
   options: {
     lang?: SupportedLanguages;
     segmentation: "paragraphs" | "sentences" | "phrases" | "words";
-  },
+  }
 ) {
   const { lang } = options;
 
