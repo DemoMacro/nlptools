@@ -11,12 +11,12 @@ console.log(`Closest: ${levenshteinClosest(str, arr)}`);
 console.log(
   `Distance: ${levenshteinDistance(
     "hello",
-    levenshteinClosest(str, arr)?.closest
-  )}`
+    levenshteinClosest(str, arr)?.closest,
+  )}`,
 );
 console.log(
   `Similarity: ${levenshteinSimilarity(
     "hello",
-    levenshteinClosest(str, arr)?.closest
-  )}`
+    levenshteinClosest(str, arr)?.closest,
+  )}`,
 );

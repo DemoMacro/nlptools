@@ -43,7 +43,7 @@ const similarity = createSimilarityComparison(
     // options
     lang: "en",
     threshold: 10,
-  }
+  },
 );
 ```
 

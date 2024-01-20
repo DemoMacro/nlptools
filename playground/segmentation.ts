@@ -6,27 +6,27 @@ const englishText =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
 console.log(
-  createSegmentation(chineseText, { lang: "zh", segmentation: "words" })
+  createSegmentation(chineseText, { lang: "zh", segmentation: "words" }),
 );
 
 console.log(
-  createSegmentation(englishText, { lang: "en", segmentation: "words" })
+  createSegmentation(englishText, { lang: "en", segmentation: "words" }),
 );
 
 console.log(
-  createSegmentation(chineseText, { lang: "zh", segmentation: "sentences" })
+  createSegmentation(chineseText, { lang: "zh", segmentation: "sentences" }),
 );
 
 console.log(
-  createSegmentation(englishText, { lang: "en", segmentation: "sentences" })
+  createSegmentation(englishText, { lang: "en", segmentation: "sentences" }),
 );
 
 console.log(
-  createSegmentation(chineseText, { lang: "zh", segmentation: "phrases" })
+  createSegmentation(chineseText, { lang: "zh", segmentation: "phrases" }),
 );
 
 console.log(
-  createSegmentation(englishText, { lang: "en", segmentation: "phrases" })
+  createSegmentation(englishText, { lang: "en", segmentation: "phrases" }),
 );
 
 // console.log(createSegmentation(chineseText, { lang: "zh", segmentation: "paragraphs" }));
