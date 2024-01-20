@@ -1,9 +1,7 @@
-import {
-  segmentParagraphs,
-  segmentSentences,
-  segmentPhrases,
-  SupportedLanguages,
-} from "@nlptools/segmentation";
+import { segmentParagraphs } from "@nlptools/segmentation/dist/paragraphs";
+import { segmentPhrases } from "@nlptools/segmentation/dist/phrases";
+import { segmentSentences } from "@nlptools/segmentation/dist/sentences";
+import { SupportedLanguages } from "@nlptools/segmentation/dist/types";
 import { levenshteinClosest } from "@nlptools/similarity";
 
 function filterText(text: string) {
@@ -16,7 +14,7 @@ export function createSimilarityComparison(
   options: {
     lang?: SupportedLanguages;
     threshold?: number;
-  },
+  }
 ) {
   const { lang, threshold = 13 } = options;
 
@@ -25,7 +23,7 @@ export function createSimilarityComparison(
   const sourceParagraphs = segmentParagraphs(source);
 
   const targetParagraphs = segmentParagraphs(target).filter(
-    (paragraph) => paragraph.length >= threshold,
+    (paragraph) => paragraph.length >= threshold
   );
 
   for (let i = 0; i < sourceParagraphs.length; i++) {
@@ -43,7 +41,7 @@ export function createSimilarityComparison(
     } else {
       const targetParagraph = levenshteinClosest(
         sourceParagraph,
-        targetParagraphs,
+        targetParagraphs
       );
       if (targetParagraph.distance < threshold / 2) {
         similarityComparison.push({
@@ -80,7 +78,7 @@ export function createSimilarityComparison(
           } else {
             const targetSentence = levenshteinClosest(
               sourceSentence,
-              targetSentences,
+              targetSentences
             );
 
             if (targetSentence.distance < threshold / 2) {
@@ -117,7 +115,7 @@ export function createSimilarityComparison(
                 } else {
                   const targetPhrase = levenshteinClosest(
                     sourcePhrase,
-                    targetPhrases,
+                    targetPhrases
                   );
                   similarityComparison.push({
                     source: sourcePhrase,

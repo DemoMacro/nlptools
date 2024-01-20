@@ -1,15 +1,15 @@
 import { segmentParagraphs } from "./paragraphs";
-import { segmentSentences } from "./sentences";
 import { segmentPhrases } from "./phrases";
-import { segmentWords } from "./words";
+import { segmentSentences } from "./sentences";
 import type { SupportedLanguages } from "./types";
+import { segmentWords } from "./words";
 
 export function createSegmentation(
   text: string,
   options: {
     lang?: SupportedLanguages;
     segmentation: "paragraphs" | "sentences" | "phrases" | "words";
-  },
+  }
 ) {
   const { lang } = options;
 
