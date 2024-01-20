@@ -1,4 +1,4 @@
-import { createSegmentation, SupportedLanguages } from "@nlptools/segmentation";
+import { SupportedLanguages, createSegmentation } from "@nlptools/segmentation";
 import { Diff } from "diff";
 
 export function createDiffComparison(
@@ -8,18 +8,17 @@ export function createDiffComparison(
     ignoreCase?: boolean;
     lang?: SupportedLanguages;
     segmentation: "paragraphs" | "sentences" | "phrases" | "words";
-  },
+  }
 ) {
   const { ignoreCase, lang, segmentation } = options;
 
   const diffComparison = new Diff();
 
-  diffComparison.tokenize = function (text) {
-    return createSegmentation(text, {
+  diffComparison.tokenize = (text) =>
+    createSegmentation(text, {
       lang,
       segmentation,
     });
-  };
 
   return diffComparison.diff(source, target, {
     ignoreCase,

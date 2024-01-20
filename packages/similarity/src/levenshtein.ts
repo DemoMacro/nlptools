@@ -150,7 +150,7 @@ const closest = (str: string, arr: readonly string[]) => {
   return {
     distance: min_distance,
     closest: arr[min_index],
-    similarity: 1 - min_distance / Math.max(str.length, arr[min_index].length),
+    similarity: similarity(str, arr[min_index]),
   };
 };
 

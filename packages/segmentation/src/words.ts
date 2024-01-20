@@ -1,11 +1,11 @@
-import type { SupportedLanguages } from "./types";
 import { cut } from "jieba-wasm";
+import type { SupportedLanguages } from "./types";
 
 export function segmentWords(
   text: string,
   options: {
     lang?: SupportedLanguages;
-  },
+  }
 ) {
   switch (options.lang) {
     case "zh":
