@@ -4,9 +4,9 @@
     "@nlptools/comparison": "workspace:*",
     "@nlptools/segmentation": "workspace:*",
     "@nlptools/similarity": "workspace:*",
-    "@node-rs/jieba": "^1.7.0"
+    "@node-rs/jieba": "1.10.0"
   },
   "devDependencies": {
-    "@funish/bench": "edge"
+    "@funish/bench": "0.0.2"
   }
 }
