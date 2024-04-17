@@ -35,7 +35,7 @@
     "@funish/githooks": "0.0.5",
     "@funish/githooks-config": "0.0.2",
     "@funish/lint": "0.0.2",
-    "@types/node": "20.12.5",
+    "@types/node": "20.12.7",
     "prettier": "3.2.5",
     "unbuild": "2.0.0"
   }
