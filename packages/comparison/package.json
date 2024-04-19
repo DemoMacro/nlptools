@@ -36,6 +36,6 @@
     "diff": "5.2.0"
   },
   "devDependencies": {
-    "@types/diff": "5.0.9"
+    "@types/diff": "5.2.0"
   }
 }
