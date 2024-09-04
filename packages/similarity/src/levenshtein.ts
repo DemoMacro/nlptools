@@ -137,7 +137,7 @@ const similarity = (a: string, b: string): number => {
 };
 
 const closest = (str: string, arr: readonly string[]) => {
-  let min_distance = Infinity;
+  let min_distance = Number.POSITIVE_INFINITY;
   let min_index = 0;
   for (let i = 0; i < arr.length; i++) {
     const dist = distance(str, arr[i]);

@@ -1,7 +1,7 @@
 import { segmentParagraphs } from "@nlptools/segmentation/dist/paragraphs";
 import { segmentPhrases } from "@nlptools/segmentation/dist/phrases";
 import { segmentSentences } from "@nlptools/segmentation/dist/sentences";
-import { SupportedLanguages } from "@nlptools/segmentation/dist/types";
+import type { SupportedLanguages } from "@nlptools/segmentation/dist/types";
 import { levenshteinClosest } from "@nlptools/similarity";
 
 function filterText(text: string) {

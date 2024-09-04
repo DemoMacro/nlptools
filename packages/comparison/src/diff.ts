@@ -1,4 +1,7 @@
-import { SupportedLanguages, createSegmentation } from "@nlptools/segmentation";
+import {
+  type SupportedLanguages,
+  createSegmentation,
+} from "@nlptools/segmentation";
 import { Diff } from "diff";
 
 export function createDiffComparison(
