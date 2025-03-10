@@ -29,6 +29,6 @@
   },
   "homepage": "https://github.com/DemoMacro/nlptools#readme",
   "dependencies": {
-    "jieba-wasm": "0.0.2"
+    "@nlptools/core": "workspace:*"
   }
 }

@@ -31,25 +31,26 @@ importers:
 
   packages/comparison:
     dependencies:
+      "@nlptools/core":
+        specifier: workspace:*
+        version: link:../core
       "@nlptools/segmentation":
         specifier: workspace:*
         version: link:../segmentation
       "@nlptools/similarity":
         specifier: workspace:*
         version: link:../similarity
-      diff:
-        specifier: 5.2.0
-        version: 5.2.0
-    devDependencies:
-      "@types/diff":
-        specifier: 5.0.9
-        version: 5.0.9
+
+  packages/core: {}
 
   packages/nlptools:
     dependencies:
       "@nlptools/comparison":
         specifier: workspace:*
         version: link:../comparison
+      "@nlptools/core":
+        specifier: workspace:*
+        version: link:../core
       "@nlptools/segmentation":
         specifier: workspace:*
         version: link:../segmentation
@@ -59,11 +60,15 @@ importers:
 
   packages/segmentation:
     dependencies:
-      jieba-wasm:
-        specifier: 0.0.2
-        version: 0.0.2
+      "@nlptools/core":
+        specifier: workspace:*
+        version: link:../core
 
-  packages/similarity: {}
+  packages/similarity:
+    dependencies:
+      "@nlptools/core":
+        specifier: workspace:*
+        version: link:../core
 
   playground:
     dependencies:
@@ -76,9 +81,6 @@ importers:
       "@nlptools/similarity":
         specifier: workspace:*
         version: link:../packages/similarity
-      "@node-rs/jieba":
-        specifier: 1.10.0
-        version: 1.10.0
     devDependencies:
       "@funish/bench":
         specifier: 0.0.2
@@ -300,18 +302,6 @@ packages:
     engines: { node: ">=14.21.3" }
     cpu: [x64]
     os: [win32]
-
-  "@emnapi/core@1.1.1":
-    resolution:
-      {
-        integrity: sha512-eu4KjHfXg3I+UUR7vSuwZXpRo4c8h4Rtb5Lu2F7Z4JqJFl/eidquONEBiRs6viXKpWBC3BaJBy68xGJ2j56idw==,
-      }
-
-  "@emnapi/runtime@1.1.1":
-    resolution:
-      {
-        integrity: sha512-3bfqkzuR1KLx57nZfjr2NLnFOobvyS0aTszaEGCGqmYMVDRaGvgIZbjGSV/MHSSmLgQ/b9JFHQ5xm5WRZYd+XQ==,
-      }
 
   "@esbuild/aix-ppc64@0.19.12":
     resolution:
@@ -803,144 +793,6 @@ packages:
         integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==,
       }
 
-  "@napi-rs/wasm-runtime@0.1.2":
-    resolution:
-      {
-        integrity: sha512-8JuczewTFIZ/XIjHQ+YlQUydHvlKx2hkcxtuGwh+t/t5zWyZct6YG4+xjHcq8xyc/e7FmFwf42Zj2YgICwmlvA==,
-      }
-
-  "@node-rs/jieba-android-arm-eabi@1.10.0":
-    resolution:
-      {
-        integrity: sha512-bzusJSLHm7I0qL8aQXGLt7IQ51Px35yGGEcQ/Ps4SEt0AxRSJ2/rxNET/8mlwBpOCZ5xiKE3BOBRfQajiPiI3g==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm]
-    os: [android]
-
-  "@node-rs/jieba-android-arm64@1.10.0":
-    resolution:
-      {
-        integrity: sha512-g89Oq5U2RPmtlvuQhjNj8YZc5Gq033ODb7Ot4Z/OdIHvg2WMxi2M1GQhcdKu60dO79/tazc53W6I8/y691DUfQ==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [android]
-
-  "@node-rs/jieba-darwin-arm64@1.10.0":
-    resolution:
-      {
-        integrity: sha512-IhR5r+XxFcfhVsF93zQ3uCJy8ndotRntXzoW/JCyKqOahUo/ITQRT6vTKHKMyD9xNmjl222OZonBSo2+mlI2fQ==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [darwin]
-
-  "@node-rs/jieba-darwin-x64@1.10.0":
-    resolution:
-      {
-        integrity: sha512-MBIs8ixKY4FPnifdZ7eTx6ht85TXE4kFBK4c8A/VDAbnmzBzpEyuV7tHUA2wAdfR0muC9j7/5FB4kQGZgYfc8g==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [darwin]
-
-  "@node-rs/jieba-freebsd-x64@1.10.0":
-    resolution:
-      {
-        integrity: sha512-MuY+1QEXONxo3I/uFLFju0/pSN5bzQORhJkIdP8CYv+jZaVB4Uz6rC7A5HrgjiAXOna6QsKlRgx2bYyHfaBUrA==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [freebsd]
-
-  "@node-rs/jieba-linux-arm-gnueabihf@1.10.0":
-    resolution:
-      {
-        integrity: sha512-QfSBnwISdVuTqsi4iThAO1LSbKRSqSsIWiIJgCduhYsTDDiG9+pHyfiZtcTwSf73SDXHZ400QuBNONWLQ/dSag==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm]
-    os: [linux]
-
-  "@node-rs/jieba-linux-arm64-gnu@1.10.0":
-    resolution:
-      {
-        integrity: sha512-vzA2tX/6dReEd/7tZ9927glWQmKDausM6R9S5CqZx4BA4NSaWAK0xFdWsz0K7np459FXqNavLdNB5FVFJb4zzA==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [linux]
-
-  "@node-rs/jieba-linux-arm64-musl@1.10.0":
-    resolution:
-      {
-        integrity: sha512-gxqoAVOQsn9sgYK6mFO9dsMZ/yOMvVecLZW5rGvLErjiugVvYUlESXIvCqxp2GSws8RtTqJj6p9u/lBmCCuvaw==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [linux]
-
-  "@node-rs/jieba-linux-x64-gnu@1.10.0":
-    resolution:
-      {
-        integrity: sha512-rS5Shs8JITxJjFIjoIZ5a9O+GO21TJgKu03g2qwFE3QaN5ZOvXtz+/AqqyfT4GmmMhCujD83AGqfOGXDmItF9w==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [linux]
-
-  "@node-rs/jieba-linux-x64-musl@1.10.0":
-    resolution:
-      {
-        integrity: sha512-BvSiF2rR8Birh2oEVHcYwq0WGC1cegkEdddWsPrrSmpKmukJE2zyjcxaOOggq2apb8fIRsjyeeUh6X3R5AgjvA==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [linux]
-
-  "@node-rs/jieba-wasm32-wasi@1.10.0":
-    resolution:
-      {
-        integrity: sha512-EzeAAbRrFTdYw61rd8Mfwdp/fA21d58z9vLY06CDbI+dqANfMFn1IUdwzKWi8S5J/MRhvbzonbbh3yHlz6F43Q==,
-      }
-    engines: { node: ">=14.0.0" }
-    cpu: [wasm32]
-
-  "@node-rs/jieba-win32-arm64-msvc@1.10.0":
-    resolution:
-      {
-        integrity: sha512-eZjRLFUAvq1/E5+xXfJRqIB99Gu6BA+6+EXf/rCLuvEjXrDQuUunhmrSoOL5MjmUXTtazS+bXq9PXV5EFYyOPw==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [win32]
-
-  "@node-rs/jieba-win32-ia32-msvc@1.10.0":
-    resolution:
-      {
-        integrity: sha512-DrfbeCN7UcLN+MiocZabWo74XZIjfpQsJ/WMOItZzVbU2gDcJSkSyAhML9+OqId66DhGCMFFlGinocElM8iIAw==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [ia32]
-    os: [win32]
-
-  "@node-rs/jieba-win32-x64-msvc@1.10.0":
-    resolution:
-      {
-        integrity: sha512-RjBkBmjjHmj+bofiq5/han8wzbCkDk24OAPJ+YX8PX20GFSHmdjCiWapv3AooN8/RiKqlBfgodjS1JUngNWo5g==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [win32]
-
-  "@node-rs/jieba@1.10.0":
-    resolution:
-      {
-        integrity: sha512-9oZMCvZVnrAMeWTSnEjJ0OSw7YcV4dJJKSioqq80oUNf3eYLGdEXsgYwCe1AYEMcfUfNVgvjznItJKrsoud0IA==,
-      }
-    engines: { node: ">= 10" }
-
   "@nodelib/fs.scandir@2.1.5":
     resolution:
       {
@@ -1040,18 +892,6 @@ packages:
         integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==,
       }
     engines: { node: ">=10.13.0" }
-
-  "@tybys/wasm-util@0.8.1":
-    resolution:
-      {
-        integrity: sha512-GSsTwyBl4pIzsxAY5wroZdyQKyhXk0d8PCRZtrSZ2WEB1cBdrp2EgGBwHOGCZtIIPun/DL3+AykCv+J6fyRH4Q==,
-      }
-
-  "@types/diff@5.0.9":
-    resolution:
-      {
-        integrity: sha512-RWVEhh/zGXpAVF/ZChwNnv7r4rvqzJ7lYNSmZSVTxjV0PBLf6Qu7RNg+SUtkpzxmiNkjCx0Xn2tPp7FIkshJwQ==,
-      }
 
   "@types/estree@1.0.5":
     resolution:
@@ -1374,13 +1214,6 @@ packages:
       {
         integrity: sha512-2N3BOUU4gYMpTP24s5rF5iP7BDr7uNTCs4ozw3kf/eKfvWSIu93GEBi5m427YoyJoeOzQ5smuu4nNAPGb8idSQ==,
       }
-
-  diff@5.2.0:
-    resolution:
-      {
-        integrity: sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==,
-      }
-    engines: { node: ">=0.3.1" }
 
   dir-glob@3.0.1:
     resolution:
@@ -1705,12 +1538,6 @@ packages:
     resolution:
       {
         integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==,
-      }
-
-  jieba-wasm@0.0.2:
-    resolution:
-      {
-        integrity: sha512-CPmS+U/klii3LWKrccDqm/BvWmgBB3x4HV/WBxC/l7GsitVfzCzsZ8cWz+vh2riv6M5P8rvHJzCz4xsoFA79cw==,
       }
 
   jiti@1.21.6:
@@ -2508,12 +2335,6 @@ packages:
       }
     engines: { node: ">=8.0" }
 
-  tslib@2.6.2:
-    resolution:
-      {
-        integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==,
-      }
-
   type-level-regexp@0.1.17:
     resolution:
       {
@@ -2780,16 +2601,6 @@ snapshots:
   "@biomejs/cli-win32-x64@1.8.3":
     optional: true
 
-  "@emnapi/core@1.1.1":
-    dependencies:
-      tslib: 2.6.2
-    optional: true
-
-  "@emnapi/runtime@1.1.1":
-    dependencies:
-      tslib: 2.6.2
-    optional: true
-
   "@esbuild/aix-ppc64@0.19.12":
     optional: true
 
@@ -2981,74 +2792,6 @@ snapshots:
       "@jridgewell/resolve-uri": 3.1.2
       "@jridgewell/sourcemap-codec": 1.5.0
 
-  "@napi-rs/wasm-runtime@0.1.2":
-    dependencies:
-      "@emnapi/core": 1.1.1
-      "@emnapi/runtime": 1.1.1
-      "@tybys/wasm-util": 0.8.1
-    optional: true
-
-  "@node-rs/jieba-android-arm-eabi@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-android-arm64@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-darwin-arm64@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-darwin-x64@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-freebsd-x64@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-linux-arm-gnueabihf@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-linux-arm64-gnu@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-linux-arm64-musl@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-linux-x64-gnu@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-linux-x64-musl@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-wasm32-wasi@1.10.0":
-    dependencies:
-      "@napi-rs/wasm-runtime": 0.1.2
-    optional: true
-
-  "@node-rs/jieba-win32-arm64-msvc@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-win32-ia32-msvc@1.10.0":
-    optional: true
-
-  "@node-rs/jieba-win32-x64-msvc@1.10.0":
-    optional: true
-
-  "@node-rs/jieba@1.10.0":
-    optionalDependencies:
-      "@node-rs/jieba-android-arm-eabi": 1.10.0
-      "@node-rs/jieba-android-arm64": 1.10.0
-      "@node-rs/jieba-darwin-arm64": 1.10.0
-      "@node-rs/jieba-darwin-x64": 1.10.0
-      "@node-rs/jieba-freebsd-x64": 1.10.0
-      "@node-rs/jieba-linux-arm-gnueabihf": 1.10.0
-      "@node-rs/jieba-linux-arm64-gnu": 1.10.0
-      "@node-rs/jieba-linux-arm64-musl": 1.10.0
-      "@node-rs/jieba-linux-x64-gnu": 1.10.0
-      "@node-rs/jieba-linux-x64-musl": 1.10.0
-      "@node-rs/jieba-wasm32-wasi": 1.10.0
-      "@node-rs/jieba-win32-arm64-msvc": 1.10.0
-      "@node-rs/jieba-win32-ia32-msvc": 1.10.0
-      "@node-rs/jieba-win32-x64-msvc": 1.10.0
-
   "@nodelib/fs.scandir@2.1.5":
     dependencies:
       "@nodelib/fs.stat": 2.0.5
@@ -3111,13 +2854,6 @@ snapshots:
       rollup: 3.29.4
 
   "@trysound/sax@0.2.0": {}
-
-  "@tybys/wasm-util@0.8.1":
-    dependencies:
-      tslib: 2.6.2
-    optional: true
-
-  "@types/diff@5.0.9": {}
 
   "@types/estree@1.0.5": {}
 
@@ -3330,8 +3066,6 @@ snapshots:
   defu@6.1.4: {}
 
   destr@2.0.3: {}
-
-  diff@5.2.0: {}
 
   dir-glob@3.0.1:
     dependencies:
@@ -3552,8 +3286,6 @@ snapshots:
   is-stream@3.0.0: {}
 
   isexe@2.0.0: {}
-
-  jieba-wasm@0.0.2: {}
 
   jiti@1.21.6: {}
 
@@ -3986,9 +3718,6 @@ snapshots:
   to-regex-range@5.0.1:
     dependencies:
       is-number: 7.0.0
-
-  tslib@2.6.2:
-    optional: true
 
   type-level-regexp@0.1.17: {}
 

@@ -1,7 +1,23 @@
-// reference: fastest-levenshtein
-// github: https://github.com/ka-weihe/fastest-levenshtein
+/**
+ * @nlptools/similarity - Levenshtein similarity algorithm implementation
+ * Based on fastest-levenshtein library
+ * github: https://github.com/ka-weihe/fastest-levenshtein
+ */
+import { resolveLanguage } from "@nlptools/core";
+import type {
+  ClosestResult,
+  SimilarityMeasure,
+  SimilarityOptions,
+  SimilarityResult,
+} from "./interfaces";
 
+// Precalculated array for Myers algorithm
 const peq = new Uint32Array(0x10000);
+
+/**
+ * Myers bit vector algorithm implementation (32-bit version)
+ * Suitable for shorter strings (length<=32)
+ */
 const myers_32 = (a: string, b: string): number => {
   const n = a.length;
   const m = b.length;
@@ -36,6 +52,10 @@ const myers_32 = (a: string, b: string): number => {
   return sc;
 };
 
+/**
+ * Myers bit vector algorithm implementation (extended version)
+ * Suitable for longer strings (length>32)
+ */
 const myers_x = (b: string, a: string): number => {
   const n = a.length;
   const m = b.length;
@@ -114,48 +134,106 @@ const myers_x = (b: string, a: string): number => {
   return score;
 };
 
-const distance = (valueA: string, valueB: string): number => {
+/**
+ * Calculate Levenshtein distance between two strings
+ */
+const calculateDistance = (valueA: string, valueB: string): number => {
   let a = valueA;
   let b = valueB;
 
+  // Ensure a is the longer string to optimize calculation
   if (a.length < b.length) {
     const tmp = b;
     b = a;
     a = tmp;
   }
+
+  // Special handling for empty strings
   if (b.length === 0) {
     return a.length;
   }
+
+  // Choose different algorithm implementations based on string length
   if (a.length <= 32) {
     return myers_32(a, b);
   }
   return myers_x(a, b);
 };
 
-const similarity = (a: string, b: string): number => {
-  return 1 - distance(a, b) / Math.max(a.length, b.length);
-};
+/**
+ * Levenshtein similarity measure implementation
+ */
+export class LevenshteinMeasure implements SimilarityMeasure {
+  /**
+   * Calculate similarity between two strings
+   */
+  calculate(
+    a: string,
+    b: string,
+    options: SimilarityOptions = {},
+  ): SimilarityResult {
+    const { caseSensitive = false } = options;
 
-const closest = (str: string, arr: readonly string[]) => {
-  let min_distance = Number.POSITIVE_INFINITY;
-  let min_index = 0;
-  for (let i = 0; i < arr.length; i++) {
-    const dist = distance(str, arr[i]);
-    if (dist < min_distance) {
-      min_distance = dist;
-      min_index = i;
+    // If case should be ignored, convert text to lowercase
+    let textA = a;
+    let textB = b;
+    if (!caseSensitive) {
+      textA = textA.toLowerCase();
+      textB = textB.toLowerCase();
     }
+
+    const distance = calculateDistance(textA, textB);
+    const similarity = 1 - distance / Math.max(a.length, b.length);
+
+    return {
+      distance,
+      similarity,
+    };
   }
 
-  return {
-    distance: min_distance,
-    closest: arr[min_index],
-    similarity: similarity(str, arr[min_index]),
-  };
-};
+  /**
+   * Find the closest string
+   */
+  findClosest(
+    query: string,
+    candidates: readonly string[],
+    options: SimilarityOptions = {},
+  ): ClosestResult {
+    if (!candidates.length) {
+      return {
+        closest: "",
+        similarity: 0,
+        distance: 1,
+      };
+    }
 
-export {
-  closest as levenshteinClosest,
-  distance as levenshteinDistance,
-  similarity as levenshteinSimilarity,
-};
+    // Iterate through all candidate strings to find the one with minimum distance
+    let minDistance = Number.MAX_VALUE;
+    let closest = candidates[0];
+    let maxSimilarity = -1;
+
+    for (const candidate of candidates) {
+      const result = this.calculate(query, candidate, options);
+
+      if (result.distance < minDistance) {
+        minDistance = result.distance;
+        closest = candidate;
+        // Calculate similarity
+        maxSimilarity = result.similarity;
+      }
+    }
+
+    return {
+      closest,
+      similarity: maxSimilarity,
+      distance: minDistance,
+    };
+  }
+}
+
+/**
+ * Create Levenshtein similarity measure instance
+ */
+export function createLevenshteinMeasure(): SimilarityMeasure {
+  return new LevenshteinMeasure();
+}

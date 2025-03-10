@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm -r prepack",
     "dev": "pnpm -r prepack --stub",
-    "check": "biome check . --apply-unsafe && biome format . --write",
+    "check": "biome check . --write --unsafe && biome format . --write",
     "format": "prettier --write --list-different . --ignore-path .gitignore",
     "edge": "pnpm -r exec bump version",
     "release": "pnpm -r exec bump version -r patch",
@@ -38,5 +38,6 @@
     "@types/node": "22.5.3",
     "prettier": "3.3.3",
     "unbuild": "2.0.0"
-  }
+  },
+  "packageManager": "pnpm@10.6.1+sha512.40ee09af407fa9fbb5fbfb8e1cb40fbb74c0af0c3e10e9224d7b53c7658528615b2c92450e74cfad91e3a2dcafe3ce4050d80bda71d757756d2ce2b66213e9a3"
 }

@@ -3,6 +3,7 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "lib": ["ESNext", "DOM"],
+    "target": "ESNext",
     "strict": true,
     "paths": {
       "nlptools": ["./packages/nlptools/src/index.ts"],

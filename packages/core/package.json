@@ -1,7 +1,7 @@
 {
-  "name": "nlptools",
+  "name": "@nlptools/core",
   "version": "0.0.1",
-  "description": "Natural language processing tools, powered by Demo Macro.",
+  "description": "Core utilities and interfaces for NLP tools, powered by Demo Macro.",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
@@ -15,7 +15,9 @@
     "url": "git+https://github.com/DemoMacro/nlptools.git"
   },
   "keywords": [
-    "nlp"
+    "nlp",
+    "core",
+    "utilities"
   ],
   "author": {
     "name": "Demo Macro",
@@ -26,11 +28,5 @@
   "bugs": {
     "url": "https://github.com/DemoMacro/nlptools/issues"
   },
-  "homepage": "https://github.com/DemoMacro/nlptools#readme",
-  "dependencies": {
-    "@nlptools/core": "workspace:*",
-    "@nlptools/comparison": "workspace:*",
-    "@nlptools/segmentation": "workspace:*",
-    "@nlptools/similarity": "workspace:*"
-  }
+  "homepage": "https://github.com/DemoMacro/nlptools#readme"
 }

@@ -1,35 +1,33 @@
-import { segmentParagraphs } from "./paragraphs";
-import { segmentPhrases } from "./phrases";
-import { segmentSentences } from "./sentences";
-import type { SupportedLanguages } from "./types";
-import { segmentWords } from "./words";
+/**
+ * @nlptools/segmentation - Text segmentation toolkit
+ */
+import {
+  SegmentationType,
+  Segmenter,
+  createSegmenter as createSegmenterInterface,
+} from "./interfaces";
+import { createParagraphsSegmenter } from "./paragraphs";
+import { createPhrasesSegmenter } from "./phrases";
+import { createSentencesSegmenter } from "./sentences";
+import { createWordsSegmenter } from "./words";
 
-export function createSegmentation(
-  text: string,
-  options: {
-    lang?: SupportedLanguages;
-    segmentation: "paragraphs" | "sentences" | "phrases" | "words";
-  },
-) {
-  const { lang } = options;
+// Register segmenter implementations
+const segmenterFactories: Record<SegmentationType, () => Segmenter> = {
+  paragraphs: createParagraphsSegmenter,
+  sentences: createSentencesSegmenter,
+  phrases: createPhrasesSegmenter,
+  words: createWordsSegmenter,
+};
 
-  switch (options.segmentation) {
-    case "paragraphs":
-      return segmentParagraphs(text);
-    case "sentences":
-      return segmentSentences(text, {
-        lang,
-      });
-    case "phrases":
-      return segmentPhrases(text, {
-        lang,
-      });
-    case "words":
-      return segmentWords(text, {
-        lang,
-      });
+// Override the implementation of createSegmenter function
+function createSegmenter(type: SegmentationType): Segmenter {
+  const factory = segmenterFactories[type];
+  if (!factory) {
+    throw new Error(`Unsupported segmentation type: ${type}`);
   }
+  return factory();
 }
 
-export { segmentParagraphs, segmentSentences, segmentPhrases, segmentWords };
-export type { SupportedLanguages };
+// Export public API
+export { Segmenter, SegmentationType, createSegmenter };
+export * from "./interfaces";
