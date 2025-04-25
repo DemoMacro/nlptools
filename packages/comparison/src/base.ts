@@ -56,10 +56,10 @@ export class BaseComparison {
 
     // If case should be ignored, convert text to lowercase
     if (ignoreCase) {
-      sourceSegments.forEach((segment, index) => {
+      sourceSegments.forEach((segment: string, index: string | number) => {
         sourceSegments[index] = segment.toLowerCase();
       });
-      targetSegments.forEach((segment, index) => {
+      targetSegments.forEach((segment: string, index: string | number) => {
         targetSegments[index] = segment.toLowerCase();
       });
     }

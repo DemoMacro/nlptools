@@ -1,11 +1,11 @@
+/**
+ * @nlptools/tokenization - Text tokenization toolkit using retext
+ */
 import { resolveLanguage } from "@nlptools/core";
 import type { Paragraph, Sentence, Word } from "nlcst";
 import { toString as nlcstToString } from "nlcst-to-string";
 import { retext } from "retext"; // Import the main retext processor factory
 import retextEnglish from "retext-english";
-/**
- * @nlptools/tokenization - Text tokenization toolkit using retext
- */
 import type { Processor } from "unified";
 import { visit } from "unist-util-visit";
 import type {
@@ -28,13 +28,13 @@ export function createTokenizer(type: TokenizationType): Tokenizer {
       // Use generic processor type and 'as any' casts due to persistent type issues
 
       // Start with the base retext processor (uses retext-latin)
-      const processor = retext(); // Use 'as any' for the base processor
+      const processor = retext();
 
       // If language is English, add the specific English parser plugin
       if (resolvedLang === "en") {
         processor.use(
           retextEnglish as unknown as Parameters<Processor["use"]>[0],
-        ); // Use 'as any' for the plugin
+        );
       } else {
         // For non-English, issue warning
         console.warn(

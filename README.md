@@ -60,9 +60,9 @@ console.log(sentences.segments);
 ## Packages
 
 - [nlptools](./packages/nlptools/README.md) - Main package that includes all modules
+- [@nlptools/core](./packages/core/README.md) - Core utilities and interfaces
 - [@nlptools/comparison](./packages/comparison/README.md) - Text comparison utilities
 - [@nlptools/tokenization](./packages/segmentation/README.md) - Text segmentation tools
-- [@nlptools/core](./packages/core/README.md) - Core utilities and interfaces
 
 ## Documentation
 
