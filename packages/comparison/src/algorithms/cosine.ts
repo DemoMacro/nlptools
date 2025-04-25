@@ -1,7 +1,6 @@
 /**
- * @nlptools/similarity - Cosine similarity algorithm implementation
+ * @nlptools/comparison - Cosine similarity algorithm implementation
  */
-import { resolveLanguage } from "@nlptools/core";
 import type {
   ClosestResult,
   SimilarityMeasure,
@@ -103,9 +102,6 @@ export function createCosineMeasure(): SimilarityMeasure {
       options?: SimilarityOptions,
     ): SimilarityResult {
       const { caseSensitive = false, lang = "auto" } = options || {};
-
-      // Process language options
-      const resolvedLang = resolveLanguage(a + b, lang);
 
       // Calculate Cosine similarity
       return calculateCosineSimilarity(a, b, caseSensitive);

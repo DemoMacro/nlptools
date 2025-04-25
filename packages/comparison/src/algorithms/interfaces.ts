@@ -1,7 +1,7 @@
 /**
- * @nlptools/similarity - Similarity calculation interface definitions
+ * @nlptools/comparison - Similarity calculation interface definitions
  */
-import { type BaseOptions, TextProcessingResult } from "@nlptools/core";
+import type { BaseOptions } from "@nlptools/core";
 
 /**
  * Similarity calculation result

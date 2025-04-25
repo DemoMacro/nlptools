@@ -30,7 +30,6 @@
   "dependencies": {
     "@nlptools/core": "workspace:*",
     "@nlptools/comparison": "workspace:*",
-    "@nlptools/segmentation": "workspace:*",
-    "@nlptools/similarity": "workspace:*"
+    "@nlptools/tokenization": "workspace:*"
   }
 }

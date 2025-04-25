@@ -1,9 +1,9 @@
 /**
- * @nlptools/similarity Benchmark
+ * @nlptools/comparison/algorithms Benchmark
  * Performance testing for similarity calculation functionality
  */
 import { Bench } from "@funish/bench";
-import { createSimilarityMeasure } from "../../packages/similarity/src/index";
+import { createSimilarityMeasure } from "../../packages/comparison/src/algorithms/index";
 
 const bench = new Bench({
   times: 5000,

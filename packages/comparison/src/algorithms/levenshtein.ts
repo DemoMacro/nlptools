@@ -1,9 +1,8 @@
 /**
- * @nlptools/similarity - Levenshtein similarity algorithm implementation
+ * @nlptools/comparison - Levenshtein similarity algorithm implementation
  * Based on fastest-levenshtein library
  * github: https://github.com/ka-weihe/fastest-levenshtein
  */
-import { resolveLanguage } from "@nlptools/core";
 import type {
   ClosestResult,
   SimilarityMeasure,

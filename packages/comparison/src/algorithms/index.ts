@@ -1,8 +1,5 @@
 import { createConsecutiveMeasure } from "./consecutive";
 import { createCosineMeasure } from "./cosine";
-/**
- * @nlptools/similarity - Similarity calculation toolkit
- */
 import type {
   ClosestResult,
   SimilarityAlgorithm,

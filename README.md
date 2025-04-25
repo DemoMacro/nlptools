@@ -24,9 +24,8 @@ NLPTools is a comprehensive collection of natural language processing utilities 
 pnpm install @nlptools/nlptools
 
 # Or install individual packages as needed
-pnpm install @nlptools/similarity
 pnpm install @nlptools/comparison
-pnpm install @nlptools/segmentation
+pnpm install @nlptools/tokenization
 pnpm install @nlptools/core
 ```
 
@@ -61,9 +60,8 @@ console.log(sentences.segments);
 ## Packages
 
 - [nlptools](./packages/nlptools/README.md) - Main package that includes all modules
-- [@nlptools/similarity](./packages/similarity/README.md) - Text similarity algorithms
 - [@nlptools/comparison](./packages/comparison/README.md) - Text comparison utilities
-- [@nlptools/segmentation](./packages/segmentation/README.md) - Text segmentation tools
+- [@nlptools/tokenization](./packages/segmentation/README.md) - Text segmentation tools
 - [@nlptools/core](./packages/core/README.md) - Core utilities and interfaces
 
 ## Documentation

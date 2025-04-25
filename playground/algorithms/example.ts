@@ -1,8 +1,8 @@
 /**
- * @nlptools/similarity Example
+ * @nlptools/comparison/algorithms Example
  * Demonstrates how to use similarity calculation functionality
  */
-import { createSimilarityMeasure } from "../../packages/similarity/src/index";
+import { createSimilarityMeasure } from "../../packages/comparison/src/algorithms/index";
 
 // Create Levenshtein similarity measure
 const levenshteinMeasure = createSimilarityMeasure("levenshtein");

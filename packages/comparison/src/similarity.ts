@@ -1,7 +1,7 @@
 /**
  * @nlptools/comparison - Similarity comparison algorithm implementation
  */
-import { createSimilarityMeasure } from "@nlptools/similarity";
+import { createSimilarityMeasure } from "./algorithms";
 import {
   AlgorithmSelector,
   BaseComparison,

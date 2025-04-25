@@ -1,8 +1,7 @@
 /**
- * @nlptools/similarity - Consecutive character matching similarity algorithm implementation
+ * @nlptools/comparison - Consecutive character matching similarity algorithm implementation
  * This algorithm is designed for plagiarism detection similar to academic paper checking systems
  */
-import { resolveLanguage } from "@nlptools/core";
 import type {
   ClosestResult,
   SimilarityMeasure,
@@ -156,9 +155,6 @@ export function createConsecutiveMeasure(): SimilarityMeasure {
         minMatchLength = 10,
       } = options || {};
 
-      // Process language options
-      const resolvedLang = resolveLanguage(a + b, lang);
-
       // Calculate consecutive matching similarity
       return calculateConsecutiveSimilarity(
         a,
@@ -185,9 +181,6 @@ export function createConsecutiveMeasure(): SimilarityMeasure {
         lang = "auto",
         minMatchLength = 10,
       } = options || {};
-
-      // Process language options
-      const resolvedLang = resolveLanguage(query, lang);
 
       // If no candidates, return empty result
       if (candidates.length === 0) {

@@ -55,9 +55,8 @@ const segmentationResult = segmenter.segment("Hello world! How are you?");
 
 This is an umbrella package that includes the following modules:
 
-- [@nlptools/similarity](../similarity/README.md) - Multiple algorithms for text similarity
 - [@nlptools/comparison](../comparison/README.md) - Text comparison utilities
-- [@nlptools/segmentation](../segmentation/README.md) - Text segmentation tools
+- [@nlptools/tokenization](../tokenization/README.md) - Text segmentation tools
 
 Each module can also be installed and used independently.
 
@@ -65,9 +64,8 @@ Each module can also be installed and used independently.
 
 This package re-exports all functionality from the included packages. Please refer to the individual package documentation for detailed API references:
 
-- [Similarity API](../similarity/README.md#api-reference)
 - [Comparison API](../comparison/README.md#api-reference)
-- [Segmentation API](../segmentation/README.md#api-reference)
+- [Segmentation API](../tokenization/README.md#api-reference)
 
 ## License
 

@@ -2,7 +2,7 @@
  * @nlptools/comparison - Base comparison utilities and shared functionality
  */
 import { resolveLanguage } from "@nlptools/core";
-import { createSegmenter } from "@nlptools/segmentation";
+import { createSegmenter } from "../../tokenization/src";
 import type { ComparisonOptions, SegmentationLevel } from "./interfaces";
 
 /**

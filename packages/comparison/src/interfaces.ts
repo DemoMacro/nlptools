@@ -1,9 +1,9 @@
 /**
  * @nlptools/comparison - Text comparison interface definitions
  */
-import type { BaseOptions } from "@nlptools/core";
-import type { SupportedLanguage } from "@nlptools/segmentation";
-import type { SimilarityResult } from "@nlptools/similarity";
+import type { BaseOptions, SupportedLanguages } from "@nlptools/core";
+import type { TokenizationType } from "@nlptools/tokenization";
+import type { SimilarityResult } from "./algorithms";
 
 /**
  * Comparison type
@@ -27,7 +27,7 @@ export interface ComparisonOptions extends BaseOptions {
    * Language
    * @default "auto"
    */
-  lang?: SupportedLanguage;
+  lang?: SupportedLanguages;
 
   /**
    * Whether to be case-sensitive

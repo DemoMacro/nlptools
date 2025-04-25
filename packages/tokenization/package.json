@@ -1,7 +1,7 @@
 {
-  "name": "@nlptools/segmentation",
+  "name": "@nlptools/tokenization",
   "version": "0.0.1",
-  "description": "Programmatically create text segmentations, powered by Demo Macro.",
+  "description": "Programmatically create text tokenizations, powered by Demo Macro.",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
@@ -16,6 +16,7 @@
   },
   "keywords": [
     "nlp",
+    "tokenization",
     "segmentation"
   ],
   "author": {
@@ -29,6 +30,14 @@
   },
   "homepage": "https://github.com/DemoMacro/nlptools#readme",
   "dependencies": {
-    "@nlptools/core": "workspace:*"
+    "@nlptools/core": "workspace:*",
+    "nlcst-to-string": "4.0.0",
+    "retext": "9.0.0",
+    "retext-english": "4.1.0",
+    "unified": "11.0.4",
+    "unist-util-visit": "5.0.0"
+  },
+  "devDependencies": {
+    "@types/nlcst": "2.0.3"
   }
 }

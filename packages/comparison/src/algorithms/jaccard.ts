@@ -1,7 +1,6 @@
 /**
- * @nlptools/similarity - Jaccard similarity algorithm implementation
+ * @nlptools/comparison - Jaccard similarity algorithm implementation
  */
-import { resolveLanguage } from "@nlptools/core";
 import type {
   ClosestResult,
   SimilarityMeasure,
@@ -79,9 +78,6 @@ export function createJaccardMeasure(): SimilarityMeasure {
       options?: SimilarityOptions,
     ): SimilarityResult {
       const { caseSensitive = false, lang = "auto" } = options || {};
-
-      // Process language options
-      const resolvedLang = resolveLanguage(a + b, lang);
 
       // Calculate Jaccard similarity
       return calculateJaccardSimilarity(a, b, caseSensitive);

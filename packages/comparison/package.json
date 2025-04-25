@@ -32,7 +32,6 @@
   "homepage": "https://github.com/DemoMacro/nlptools#readme",
   "dependencies": {
     "@nlptools/core": "workspace:*",
-    "@nlptools/segmentation": "workspace:*",
-    "@nlptools/similarity": "workspace:*"
+    "@nlptools/tokenization": "workspace:*"
   }
 }

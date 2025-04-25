@@ -1,8 +1,8 @@
-# @nlptools/segmentation
+# @nlptools/tokenization
 
-![npm version](https://img.shields.io/npm/v/@nlptools/segmentation)
-![npm downloads](https://img.shields.io/npm/dw/@nlptools/segmentation)
-![npm license](https://img.shields.io/npm/l/@nlptools/segmentation)
+![npm version](https://img.shields.io/npm/v/@nlptools/tokenization)
+![npm downloads](https://img.shields.io/npm/dw/@nlptools/tokenization)
+![npm license](https://img.shields.io/npm/l/@nlptools/tokenization)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)
 
 > Programmatically create text segmentations, powered by Demo Macro.
@@ -11,20 +11,20 @@
 
 ```bash
 # npm
-$ npm install @nlptools/segmentation
+$ npm install @nlptools/tokenization
 
 # yarn
-$ yarn add @nlptools/segmentation
+$ yarn add @nlptools/tokenization
 
 # pnpm
-$ pnpm add @nlptools/segmentation
+$ pnpm add @nlptools/tokenization
 ```
 
 ## Usage
 
 ```ts
 // Import the segmentation creator function
-import { createSegmenter, SegmentationType } from "@nlptools/segmentation";
+import { createSegmenter, SegmentationType } from "@nlptools/tokenization";
 
 // Create a segmenter with your preferred segmentation type
 const wordsSegmenter = createSegmenter("words");
