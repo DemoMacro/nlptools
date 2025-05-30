@@ -34,7 +34,7 @@
     "nlcst-to-string": "4.0.0",
     "retext": "9.0.0",
     "retext-english": "4.1.0",
-    "unified": "11.0.4",
+    "unified": "11.0.5",
     "unist-util-visit": "5.0.0"
   },
   "devDependencies": {
