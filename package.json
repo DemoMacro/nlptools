@@ -4,14 +4,10 @@
   "description": "Natural language processing tools, powered by Demo Macro.",
   "private": true,
   "scripts": {
-    "build": "pnpm -r prepack",
     "dev": "pnpm -r prepack --stub",
-    "check": "biome check . --write --unsafe && biome format . --write",
-    "format": "prettier --write --list-different . --ignore-path .gitignore",
-    "edge": "pnpm -r exec bump version",
-    "release": "pnpm -r exec bump version -r patch",
-    "public": "pnpm -r exec bump publish",
-    "postinstall": "githooks install"
+    "build": "pnpm -r prepack",
+    "lint": "basis lint --all",
+    "postinstall": "pnpm dev && basis git setup"
   },
   "repository": {
     "type": "git",
@@ -31,13 +27,13 @@
   },
   "homepage": "https://github.com/DemoMacro/nlptools#readme",
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
-    "@funish/githooks": "0.0.5",
-    "@funish/githooks-config": "0.0.2",
-    "@funish/lint": "0.0.2",
-    "@types/node": "22.5.3",
-    "prettier": "3.3.3",
-    "unbuild": "2.0.0"
+    "@funish/basis": "0.1.2",
+    "@prettier/plugin-oxc": "0.0.4",
+    "@types/node": "24.9.1",
+    "oxlint": "1.24.0",
+    "oxlint-tsgolint": "0.3.0",
+    "prettier": "3.6.2",
+    "unbuild": "3.6.1"
   },
-  "packageManager": "pnpm@10.9.0+sha512.0486e394640d3c1fb3c9d43d49cf92879ff74f8516959c235308f5a8f62e2e19528a65cdc2a3058f587cde71eba3d5b56327c8c33a97e4c4051ca48a10ca2d5f"
+  "packageManager": "pnpm@10.21.0+sha512.da3337267e400fdd3d479a6c68079ac6db01d8ca4f67572083e722775a796788a7a9956613749e000fac20d424b594f7a791a5f4e2e13581c5ef947f26968a40"
 }

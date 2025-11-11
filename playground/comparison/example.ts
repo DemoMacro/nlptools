@@ -1,18 +1,19 @@
 /**
  * @nlptools/comparison example
- * Demonstrates how to use text comparison functionality for both English and Chinese texts
- * Includes examples of different comparison methods and options
+ * Demonstrates how to use text similarity functionality for both English and Chinese texts
+ * Includes examples of different similarity algorithms and options
  */
 import {
-  type DiffComparisonResult,
-  type SegmentationLevel,
-  type SimilarityComparisonResult,
-  createComparator,
+  createSimilarityMeasure,
+  type SimilarityResult,
+  type SimilarityOptions,
 } from "../../packages/comparison/src/index";
 
-// Create comparator instances
-const diffComparator = createComparator("diff");
-const similarityComparator = createComparator("similarity");
+// Create similarity measure instances
+const levenshteinMeasure = createSimilarityMeasure("levenshtein");
+const jaccardMeasure = createSimilarityMeasure("jaccard");
+const cosineMeasure = createSimilarityMeasure("cosine");
+const consecutiveMeasure = createSimilarityMeasure("consecutive");
 
 // ============================================================================
 // Basic Examples
@@ -22,23 +23,39 @@ const similarityComparator = createComparator("similarity");
 const simpleSource = "Hello, world!";
 const simpleTarget = "Hello, Dolly!";
 
-// Simple difference comparison
-const simpleDiffResult = diffComparator.compare(simpleSource, simpleTarget, {
-  lang: "en",
-  segmentationLevel: "words",
-});
-
-// Simple similarity comparison
-const simpleSimilarityResult = similarityComparator.compare(
+// Simple similarity comparison with different algorithms
+const simpleLevenshteinResult = levenshteinMeasure.calculate(
   simpleSource,
   simpleTarget,
   {
-    lang: "en",
+    caseSensitive: false,
   },
 );
 
-console.log("Simple difference comparison result:", simpleDiffResult);
-console.log("Simple similarity comparison result:", simpleSimilarityResult);
+const simpleJaccardResult = jaccardMeasure.calculate(
+  simpleSource,
+  simpleTarget,
+  {
+    caseSensitive: false,
+  },
+);
+
+const simpleCosineResult = cosineMeasure.calculate(simpleSource, simpleTarget, {
+  caseSensitive: false,
+});
+
+const simpleConsecutiveResult = consecutiveMeasure.calculate(
+  simpleSource,
+  simpleTarget,
+  {
+    caseSensitive: false,
+  },
+);
+
+console.log("Simple Levenshtein similarity result:", simpleLevenshteinResult);
+console.log("Simple Jaccard similarity result:", simpleJaccardResult);
+console.log("Simple Cosine similarity result:", simpleCosineResult);
+console.log("Simple Consecutive similarity result:", simpleConsecutiveResult);
 
 // ============================================================================
 // Standard Text Examples (English and Chinese)
@@ -97,156 +114,213 @@ With the increase in computational power and the development of ML techniques, N
 // Similarity comparison examples
 console.log("\nSimilarity comparison examples:");
 console.log("Chinese text similarity comparison:");
-const chineseSimilarityResult = similarityComparator.compare(
+const chineseLevenshteinResult = levenshteinMeasure.calculate(
   chineseSource,
   chineseTarget,
   {
-    lang: "zh",
-    ignoreCase: true,
-    threshold: 0.6,
-    segmentationLevel: "sentences",
+    caseSensitive: false,
   },
-) as SimilarityComparisonResult;
+);
+
+const chineseJaccardResult = jaccardMeasure.calculate(
+  chineseSource,
+  chineseTarget,
+  {
+    caseSensitive: false,
+  },
+);
+
+const chineseCosineResult = cosineMeasure.calculate(
+  chineseSource,
+  chineseTarget,
+  {
+    caseSensitive: false,
+  },
+);
+
+const chineseConsecutiveResult = consecutiveMeasure.calculate(
+  chineseSource,
+  chineseTarget,
+  {
+    caseSensitive: false,
+    minMatchLength: 5,
+  },
+);
 
 console.log("Source text:", chineseSource);
 console.log("Target text:", chineseTarget);
 console.log(
-  "Overall similarity:",
-  chineseSimilarityResult.overallSimilarity.toFixed(4),
+  "Levenshtein similarity:",
+  chineseLevenshteinResult.similarity.toFixed(4),
 );
-console.log("Number of matches:", chineseSimilarityResult.items.length);
-console.log("Match details:", chineseSimilarityResult.items);
+console.log("Jaccard similarity:", chineseJaccardResult.similarity.toFixed(4));
+console.log("Cosine similarity:", chineseCosineResult.similarity.toFixed(4));
+console.log(
+  "Consecutive similarity:",
+  chineseConsecutiveResult.similarity.toFixed(4),
+);
 
 console.log("\nEnglish text similarity comparison:");
-const englishSimilarityResult = similarityComparator.compare(
+const englishLevenshteinResult = levenshteinMeasure.calculate(
   englishSource,
   englishTarget,
   {
-    lang: "en",
-    ignoreCase: true,
-    threshold: 0.5,
-    segmentationLevel: "phrases",
+    caseSensitive: false,
   },
-) as SimilarityComparisonResult;
+);
+
+const englishJaccardResult = jaccardMeasure.calculate(
+  englishSource,
+  englishTarget,
+  {
+    caseSensitive: false,
+  },
+);
+
+const englishCosineResult = cosineMeasure.calculate(
+  englishSource,
+  englishTarget,
+  {
+    caseSensitive: false,
+  },
+);
+
+const englishConsecutiveResult = consecutiveMeasure.calculate(
+  englishSource,
+  englishTarget,
+  {
+    caseSensitive: false,
+    minMatchLength: 5,
+  },
+);
 
 console.log("Source text:", englishSource);
 console.log("Target text:", englishTarget);
 console.log(
-  "Overall similarity:",
-  englishSimilarityResult.overallSimilarity.toFixed(4),
+  "Levenshtein similarity:",
+  englishLevenshteinResult.similarity.toFixed(4),
 );
-console.log("Number of matches:", englishSimilarityResult.items.length);
-console.log("Match details:", englishSimilarityResult.items);
-
-// Difference comparison examples
-console.log("\nDifference comparison examples:");
-console.log("Chinese text difference comparison:");
-const chineseDiffResult = diffComparator.compare(chineseSource, chineseTarget, {
-  lang: "zh",
-  ignoreCase: false,
-  segmentationLevel: "words",
-});
-
-console.log("Source text:", chineseSource);
-console.log("Target text:", chineseTarget);
-console.log("Difference result:", chineseDiffResult);
-
-console.log("\nEnglish text difference comparison:");
-const englishDiffResult = diffComparator.compare(englishSource, englishTarget, {
-  lang: "en",
-  ignoreCase: true,
-  segmentationLevel: "words",
-});
-
-console.log("Source text:", englishSource);
-console.log("Target text:", englishTarget);
-console.log("Difference result:", englishDiffResult);
+console.log("Jaccard similarity:", englishJaccardResult.similarity.toFixed(4));
+console.log("Cosine similarity:", englishCosineResult.similarity.toFixed(4));
+console.log(
+  "Consecutive similarity:",
+  englishConsecutiveResult.similarity.toFixed(4),
+);
 
 // Large text comparison examples
 console.log("\nLarge text comparison examples:");
 console.log("Large Chinese text similarity comparison:");
-const largeChineseSimilarityResult = similarityComparator.compare(
+const largeChineseLevenshteinResult = levenshteinMeasure.calculate(
   largeChineseSource,
   largeChineseTarget,
   {
-    lang: "zh",
-    ignoreCase: true,
-    threshold: 0.7,
-    segmentationLevel: "paragraphs",
+    caseSensitive: false,
   },
-) as SimilarityComparisonResult;
+);
+
+const largeChineseJaccardResult = jaccardMeasure.calculate(
+  largeChineseSource,
+  largeChineseTarget,
+  {
+    caseSensitive: false,
+  },
+);
+
+const largeChineseCosineResult = cosineMeasure.calculate(
+  largeChineseSource,
+  largeChineseTarget,
+  {
+    caseSensitive: false,
+  },
+);
+
+const largeChineseConsecutiveResult = consecutiveMeasure.calculate(
+  largeChineseSource,
+  largeChineseTarget,
+  {
+    caseSensitive: false,
+    minMatchLength: 10,
+  },
+);
 
 console.log(
-  "Overall similarity (large Chinese):",
-  largeChineseSimilarityResult.overallSimilarity.toFixed(4),
+  "Levenshtein similarity (large Chinese):",
+  largeChineseLevenshteinResult.similarity.toFixed(4),
 );
-console.log("Number of matches:", largeChineseSimilarityResult.items.length);
+console.log(
+  "Jaccard similarity (large Chinese):",
+  largeChineseJaccardResult.similarity.toFixed(4),
+);
+console.log(
+  "Cosine similarity (large Chinese):",
+  largeChineseCosineResult.similarity.toFixed(4),
+);
+console.log(
+  "Consecutive similarity (large Chinese):",
+  largeChineseConsecutiveResult.similarity.toFixed(4),
+);
 
 console.log("\nLarge English text similarity comparison:");
-const largeEnglishSimilarityResult = similarityComparator.compare(
+const largeEnglishLevenshteinResult = levenshteinMeasure.calculate(
   largeEnglishSource,
   largeEnglishTarget,
   {
-    lang: "en",
-    ignoreCase: true,
-    threshold: 0.6,
-    segmentationLevel: "paragraphs",
+    caseSensitive: false,
   },
-) as SimilarityComparisonResult;
-
-console.log(
-  "Overall similarity (large English):",
-  largeEnglishSimilarityResult.overallSimilarity.toFixed(4),
-);
-console.log("Number of matches:", largeEnglishSimilarityResult.items.length);
-
-// Large text difference comparison
-console.log("\nLarge text difference comparison:");
-console.log("Large Chinese text difference comparison:");
-const largeChineseDiffResult = diffComparator.compare(
-  largeChineseSource,
-  largeChineseTarget,
-  {
-    lang: "zh",
-    segmentationLevel: "paragraphs",
-  },
-) as DiffComparisonResult;
-
-console.log(
-  "Difference operations count:",
-  largeChineseDiffResult.changes.length,
 );
 
-console.log("\nLarge English text difference comparison:");
-const largeEnglishDiffResult = diffComparator.compare(
+const largeEnglishJaccardResult = jaccardMeasure.calculate(
   largeEnglishSource,
   largeEnglishTarget,
   {
-    lang: "en",
-    segmentationLevel: "paragraphs",
+    caseSensitive: false,
   },
-) as DiffComparisonResult;
-
-console.log(
-  "Difference operations count:",
-  largeEnglishDiffResult.changes.length,
 );
 
-// Examples of different segmentation levels
-console.log("\nExamples of different segmentation levels:");
-const segmentationLevels: SegmentationLevel[] = [
-  "words",
-  "phrases",
-  "sentences",
-  "paragraphs",
-];
+const largeEnglishCosineResult = cosineMeasure.calculate(
+  largeEnglishSource,
+  largeEnglishTarget,
+  {
+    caseSensitive: false,
+  },
+);
 
-for (const level of segmentationLevels) {
-  console.log(`\nUsing ${level} level for similarity comparison:`);
-  const result = similarityComparator.compare(chineseSource, chineseTarget, {
-    lang: "zh",
-    segmentationLevel: level,
-  }) as SimilarityComparisonResult;
-  console.log(`Overall similarity: ${result.overallSimilarity.toFixed(4)}`);
-  console.log(`Number of matches: ${result.items.length}`);
+const largeEnglishConsecutiveResult = consecutiveMeasure.calculate(
+  largeEnglishSource,
+  largeEnglishTarget,
+  {
+    caseSensitive: false,
+    minMatchLength: 10,
+  },
+);
+
+console.log(
+  "Levenshtein similarity (large English):",
+  largeEnglishLevenshteinResult.similarity.toFixed(4),
+);
+console.log(
+  "Jaccard similarity (large English):",
+  largeEnglishJaccardResult.similarity.toFixed(4),
+);
+console.log(
+  "Cosine similarity (large English):",
+  largeEnglishCosineResult.similarity.toFixed(4),
+);
+console.log(
+  "Consecutive similarity (large English):",
+  largeEnglishConsecutiveResult.similarity.toFixed(4),
+);
+
+// Examples of different minMatchLength for consecutive algorithm
+console.log(
+  "\nExamples of different minMatchLength for consecutive algorithm:",
+);
+for (const minLength of [3, 5, 10, 15]) {
+  console.log(`\nUsing minMatchLength: ${minLength}`);
+  const result = consecutiveMeasure.calculate(chineseSource, chineseTarget, {
+    caseSensitive: false,
+    minMatchLength: minLength,
+  });
+  console.log(`Similarity: ${result.similarity.toFixed(4)}`);
+  console.log(`Distance: ${result.distance.toFixed(4)}`);
 }

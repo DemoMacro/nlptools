@@ -1,9 +1,9 @@
 /**
  * @nlptools/comparison Benchmark
- * Performance testing for text comparison functionality
+ * Performance testing for text similarity functionality
  */
 import { Bench } from "@funish/bench";
-import { createComparator } from "../../packages/comparison/src/index";
+import { createSimilarityMeasure } from "../../packages/comparison/src/index";
 
 const bench = new Bench({
   times: 5000,
@@ -50,84 +50,105 @@ In recent years, the emergence of pre-trained language models like BERT, GPT, an
 The applications of NLP are extensive, including machine translation, sentiment analysis, text classification, question answering systems, dialogue systems, text summarization, and information extraction. With continuous technological advancements, NLP is changing the way humans interact with computers, making human-machine communication more natural and efficient.
 `;
 
-// Create comparators
-const diffComparator = createComparator("diff");
-const similarityComparator = createComparator("similarity");
+// Create similarity measures
+const levenshteinMeasure = createSimilarityMeasure("levenshtein");
+const jaccardMeasure = createSimilarityMeasure("jaccard");
+const cosineMeasure = createSimilarityMeasure("cosine");
+const consecutiveMeasure = createSimilarityMeasure("consecutive");
 
-// Benchmark diff comparison with short texts
-bench.add("diff comparison - short english", () => {
-  diffComparator.compare(englishSource, englishTarget, {
-    lang: "en",
-    segmentationLevel: "words",
+// Benchmark levenshtein similarity with short texts
+bench.add("levenshtein similarity - short english", () => {
+  levenshteinMeasure.calculate(englishSource, englishTarget, {
+    caseSensitive: false,
   });
 });
 
-bench.add("diff comparison - short chinese", () => {
-  diffComparator.compare(chineseSource, chineseTarget, {
-    lang: "zh",
-    segmentationLevel: "words",
+bench.add("levenshtein similarity - short chinese", () => {
+  levenshteinMeasure.calculate(chineseSource, chineseTarget, {
+    caseSensitive: false,
   });
 });
 
-// Benchmark similarity comparison with short texts
-bench.add("similarity comparison - short english", () => {
-  similarityComparator.compare(englishSource, englishTarget, {
-    lang: "en",
+// Benchmark jaccard similarity with short texts
+bench.add("jaccard similarity - short english", () => {
+  jaccardMeasure.calculate(englishSource, englishTarget, {
+    caseSensitive: false,
   });
 });
 
-bench.add("similarity comparison - short chinese", () => {
-  similarityComparator.compare(chineseSource, chineseTarget, {
-    lang: "zh",
+bench.add("jaccard similarity - short chinese", () => {
+  jaccardMeasure.calculate(chineseSource, chineseTarget, {
+    caseSensitive: false,
   });
 });
 
-// Benchmark diff comparison with large texts
-bench.add("diff comparison - large english", () => {
-  diffComparator.compare(
+// Benchmark cosine similarity with short texts
+bench.add("cosine similarity - short english", () => {
+  cosineMeasure.calculate(englishSource, englishTarget, {
+    caseSensitive: false,
+  });
+});
+
+bench.add("cosine similarity - short chinese", () => {
+  cosineMeasure.calculate(chineseSource, chineseTarget, {
+    caseSensitive: false,
+  });
+});
+
+// Benchmark consecutive similarity with short texts
+bench.add("consecutive similarity - short english", () => {
+  consecutiveMeasure.calculate(englishSource, englishTarget, {
+    caseSensitive: false,
+  });
+});
+
+bench.add("consecutive similarity - short chinese", () => {
+  consecutiveMeasure.calculate(chineseSource, chineseTarget, {
+    caseSensitive: false,
+  });
+});
+
+// Benchmark with large texts
+bench.add("levenshtein similarity - large english", () => {
+  levenshteinMeasure.calculate(
     largeEnglish,
     largeEnglish
       .replace("artificial intelligence", "AI")
       .replace("machine learning", "ML"),
     {
-      lang: "en",
-      segmentationLevel: "paragraphs",
+      caseSensitive: false,
     },
   );
 });
 
-bench.add("diff comparison - large chinese", () => {
-  diffComparator.compare(
+bench.add("jaccard similarity - large chinese", () => {
+  jaccardMeasure.calculate(
     largeChinese,
     largeChinese.replace("人工智能", "AI").replace("机器学习", "ML"),
     {
-      lang: "zh",
-      segmentationLevel: "paragraphs",
+      caseSensitive: false,
     },
   );
 });
 
-// Benchmark similarity comparison with large texts
-bench.add("similarity comparison - large english", () => {
-  similarityComparator.compare(
+bench.add("cosine similarity - large english", () => {
+  cosineMeasure.calculate(
     largeEnglish,
     largeEnglish
       .replace("artificial intelligence", "AI")
       .replace("machine learning", "ML"),
     {
-      lang: "en",
-      segmentationLevel: "paragraphs",
+      caseSensitive: false,
     },
   );
 });
 
-bench.add("similarity comparison - large chinese", () => {
-  similarityComparator.compare(
+bench.add("consecutive similarity - large chinese", () => {
+  consecutiveMeasure.calculate(
     largeChinese,
     largeChinese.replace("人工智能", "AI").replace("机器学习", "ML"),
     {
-      lang: "zh",
-      segmentationLevel: "paragraphs",
+      caseSensitive: false,
     },
   );
 });
