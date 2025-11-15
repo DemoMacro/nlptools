@@ -1,7 +1,7 @@
 {
   "name": "nlptools",
-  "version": "0.0.1",
-  "description": "Natural language processing tools, powered by Demo Macro.",
+  "version": "0.0.0",
+  "description": "",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
@@ -14,9 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/DemoMacro/nlptools.git"
   },
-  "keywords": [
-    "nlp"
-  ],
+  "keywords": [],
   "author": {
     "name": "Demo Macro",
     "email": "abc@imst.xyz",
@@ -27,9 +25,5 @@
     "url": "https://github.com/DemoMacro/nlptools/issues"
   },
   "homepage": "https://github.com/DemoMacro/nlptools#readme",
-  "dependencies": {
-    "@nlptools/core": "workspace:*",
-    "@nlptools/comparison": "workspace:*",
-    "@nlptools/tokenization": "workspace:*"
-  }
+  "dependencies": {}
 }

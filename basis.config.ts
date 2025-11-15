@@ -11,9 +11,6 @@ export default defineBasisConfig({
       format:
         "pnpm prettier --write --list-different . --plugin=@prettier/plugin-oxc",
     },
-    dependencies: {
-      allowedLicenses: ["MIT", "ISC", "BSD-2-Clause", "BSD-3-Clause"],
-    },
   },
   git: {
     hooks: {
