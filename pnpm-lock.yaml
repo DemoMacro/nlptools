@@ -36,7 +36,7 @@ importers:
     dependencies:
       "@nlptools/distance-wasm":
         specifier: workspace:*
-        version: link:../distance-wasm/pkg
+        version: link:../distance-wasm/target/package/distance-wasm-0.0.1/pkg
       fastest-levenshtein:
         specifier: 1.0.16
         version: 1.0.16
@@ -49,6 +49,10 @@ importers:
 
   packages/distance-wasm/target/package/distance-wasm-0.0.0/pkg: {}
 
+  packages/distance-wasm/target/package/distance-wasm-0.0.1: {}
+
+  packages/distance-wasm/target/package/distance-wasm-0.0.1/pkg: {}
+
   packages/nlptools:
     dependencies:
       "@nlptools/distance":
@@ -57,12 +61,21 @@ importers:
       "@nlptools/splitter":
         specifier: workspace:*
         version: link:../splitter
+      "@nlptools/tokenizer":
+        specifier: workspace:*
+        version: link:../tokenizer
 
   packages/splitter:
     dependencies:
       "@langchain/textsplitters":
         specifier: 1.0.0
         version: 1.0.0(@langchain/core@1.0.5)
+
+  packages/tokenizer:
+    dependencies:
+      "@huggingface/tokenizers":
+        specifier: 0.0.6
+        version: 0.0.6
 
   playground:
     dependencies:
@@ -374,6 +387,12 @@ packages:
         integrity: sha512-w+gjfO5DrDxLu8OLOBkA9XZTbac2iZZfIrp4Sr0bxjrqR6ms5dXW0SNhVAdetD0/ZLTEaFDVJoXEw62AIvn4hA==,
       }
     hasBin: true
+
+  "@huggingface/tokenizers@0.0.6":
+    resolution:
+      {
+        integrity: sha512-bnn3VWPiOwk613kFGHCCTc2TOVB8QCCsHTJGVlfyV5tQIDCn83dWrFkLB670Pr2xVs1e5ziSwlysX+tga+R3nQ==,
+      }
 
   "@jridgewell/sourcemap-codec@1.5.5":
     resolution:
@@ -2420,6 +2439,8 @@ snapshots:
       pathe: 2.0.3
       pkg-types: 2.2.0
       semver: 7.7.2
+
+  "@huggingface/tokenizers@0.0.6": {}
 
   "@jridgewell/sourcemap-codec@1.5.5": {}
 

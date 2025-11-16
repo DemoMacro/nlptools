@@ -7,13 +7,14 @@
 
 > Main NLPTools package - Complete suite of NLP algorithms and utilities
 
-This is the main NLPTools package (`@nlptools/nlptools`) that exports all algorithms and utilities from the entire toolkit. It provides a single entry point to access all string distance, similarity algorithms, and text splitting utilities.
+This is the main NLPTools package (`@nlptools/nlptools`) that exports all algorithms and utilities from the entire toolkit. It provides a single entry point to access all string distance, similarity algorithms, text splitting, and tokenization utilities.
 
 ## Features
 
 - 🎯 **All-in-One**: Complete access to all NLPTools algorithms
 - 📦 **Convenient**: Single import for all functionality
 - ✂️ **Text Splitting**: Document chunking and text processing utilities
+- 🪙 **Tokenization**: Fast text encoding and decoding for LLM models
 - 📏 **Distance & Similarity**: Comprehensive string comparison algorithms
 - 🚀 **Performance Optimized**: Automatically uses the fastest implementations available
 - 📝 **TypeScript First**: Full type safety with comprehensive API
@@ -74,9 +75,37 @@ const chunks = await splitter.splitText(text);
 console.log(chunks);
 ```
 
+### Tokenization
+
+This package includes tokenization utilities from `@nlptools/tokenizer`:
+
+```typescript
+import { Tokenizer } from "@nlptools/nlptools";
+
+// Load tokenizer from HuggingFace Hub
+const modelId = "HuggingFaceTB/SmolLM3-3B";
+const tokenizerJson = await fetch(
+  `https://huggingface.co/${modelId}/resolve/main/tokenizer.json`,
+).then((res) => res.json());
+const tokenizerConfig = await fetch(
+  `https://huggingface.co/${modelId}/resolve/main/tokenizer_config.json`,
+).then((res) => res.json());
+
+const tokenizer = new Tokenizer(tokenizerJson, tokenizerConfig);
+
+// Encode text
+const encoded = tokenizer.encode("Hello World");
+console.log(encoded.ids); // [9906, 4435]
+console.log(encoded.tokens); // ['Hello', 'ĠWorld']
+
+// Get token count
+const tokenCount = tokenizer.encode("This is a sentence.").ids.length;
+console.log(`Token count: ${tokenCount}`);
+```
+
 ### Available Algorithm Categories
 
-This package includes all algorithms from `@nlptools/distance` and `@nlptools/splitter`:
+This package includes all algorithms from `@nlptools/distance`, `@nlptools/splitter`, and `@nlptools/tokenizer`:
 
 #### Edit Distance Algorithms
 
@@ -122,6 +151,14 @@ This package includes all algorithms from `@nlptools/distance` and `@nlptools/sp
 - `MarkdownTextSplitter` - Specialized splitter for Markdown documents
 - `TokenTextSplitter` - Splits text by token count
 - `LatexTextSplitter` - Specialized splitter for LaTeX documents
+
+#### Tokenization Utilities
+
+- `Tokenizer` - Main tokenizer class for encoding and decoding text
+- `encode()` - Convert text to token IDs and tokens
+- `decode()` - Convert token IDs back to text
+- `tokenize()` - Split text into token strings
+- `AddedToken` - Custom token configuration class
 
 ### Universal Compare Function
 

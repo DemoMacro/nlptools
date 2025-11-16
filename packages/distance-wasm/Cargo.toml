@@ -1,6 +1,6 @@
 [package]
 name = "distance-wasm"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Demo Macro <abc@imst.xyz>"]
 edition = "2018"
 description = "WebAssembly bindings for high-performance string distance and similarity algorithms"

@@ -1,7 +1,7 @@
 {
-  "name": "@nlptools/nlptools",
+  "name": "@nlptools/tokenizer",
   "version": "0.0.2",
-  "description": "Main NLPTools package - Complete suite of NLP algorithms, text distance, similarity, splitting, and tokenization utilities",
+  "description": "Tokenization utilities - HuggingFace tokenizers wrapper for NLPTools",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
@@ -18,21 +18,15 @@
   "keywords": [
     "nlp",
     "natural-language-processing",
-    "text-distance",
-    "string-similarity",
-    "fuzzy-matching",
-    "text-splitting",
-    "text-splitter",
     "tokenization",
     "tokenizer",
     "huggingface",
-    "chunking",
-    "document-processing",
     "llm",
-    "algorithms",
+    "text-processing",
+    "encoding",
+    "decoding",
     "nlptools",
-    "utility",
-    "toolkit"
+    "utility"
   ],
   "author": {
     "name": "Demo Macro",
@@ -45,8 +39,6 @@
   },
   "homepage": "https://github.com/DemoMacro/nlptools#readme",
   "dependencies": {
-    "@nlptools/distance": "workspace:*",
-    "@nlptools/splitter": "workspace:*",
-    "@nlptools/tokenizer": "workspace:*"
+    "@huggingface/tokenizers": "0.0.6"
   }
 }

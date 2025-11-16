@@ -1,6 +1,6 @@
 {
   "name": "@nlptools/splitter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Text splitting utilities - LangChain.js text splitters wrapper for NLPTools",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
