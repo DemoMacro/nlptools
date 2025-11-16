@@ -1,14 +1,10 @@
 {
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "lib": ["ESNext", "DOM"],
     "target": "ESNext",
-    "strict": true,
-    "paths": {
-      "nlptools": ["./packages/nlptools/src/index.ts"],
-      "@nlptools/comparison": ["./packages/comparison/src/index.ts"],
-      "@nlptools/tokenization": ["./packages/tokenization/src/index.ts"]
-    }
+    "module": "ESNext",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "bundler",
+    "strict": true
   }
 }

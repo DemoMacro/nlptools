@@ -1,7 +1,7 @@
 {
-  "name": "nlptools",
+  "name": "@nlptools/distance",
   "version": "0.0.0",
-  "description": "Main NLPTools package - Complete suite of NLP algorithms and utilities",
+  "description": "Complete string distance and similarity algorithms package with WebAssembly and JavaScript implementations",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
@@ -16,15 +16,19 @@
     "url": "git+https://github.com/DemoMacro/nlptools.git"
   },
   "keywords": [
-    "nlp",
-    "natural-language-processing",
     "text-distance",
     "string-similarity",
     "fuzzy-matching",
     "algorithms",
+    "levenshtein",
+    "jaro-winkler",
+    "jaccard",
+    "cosine",
+    "edit-distance",
+    "webassembly",
+    "wasm",
     "nlptools",
-    "utility",
-    "toolkit"
+    "performance"
   ],
   "author": {
     "name": "Demo Macro",
@@ -37,6 +41,7 @@
   },
   "homepage": "https://github.com/DemoMacro/nlptools#readme",
   "dependencies": {
-    "@nlptools/distance": "workspace:*"
+    "@nlptools/distance-wasm": "workspace:*",
+    "fastest-levenshtein": "1.0.16"
   }
 }

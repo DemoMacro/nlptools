@@ -32,9 +32,33 @@ importers:
         specifier: 3.6.1
         version: 3.6.1(typescript@5.9.3)
 
-  packages/nlptools: {}
+  packages/distance:
+    dependencies:
+      "@nlptools/distance-wasm":
+        specifier: workspace:*
+        version: link:../distance-wasm/pkg
+      fastest-levenshtein:
+        specifier: 1.0.16
+        version: 1.0.16
 
-  playground: {}
+  packages/distance-wasm: {}
+
+  packages/distance-wasm/pkg: {}
+
+  packages/nlptools:
+    dependencies:
+      "@nlptools/distance":
+        specifier: workspace:*
+        version: link:../distance
+
+  playground:
+    dependencies:
+      "@nlptools/distance":
+        specifier: workspace:*
+        version: link:../packages/distance
+      fastest-levenshtein:
+        specifier: 1.0.16
+        version: 1.0.16
 
 packages:
   "@babel/code-frame@7.27.1":
@@ -1191,6 +1215,13 @@ packages:
         integrity: sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==,
       }
     engines: { node: ">=8.6.0" }
+
+  fastest-levenshtein@1.0.16:
+    resolution:
+      {
+        integrity: sha512-eRnCtTTtGZFpQCwhJiUOuxPQWRXVKYDn0b2PeHfXL6/Zi53SLAzAHfVhVWK2AryC/WH05kGfxhFIPvTF0SXQzg==,
+      }
+    engines: { node: ">= 4.9.1" }
 
   fastq@1.19.1:
     resolution:
@@ -2636,6 +2667,8 @@ snapshots:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.8
+
+  fastest-levenshtein@1.0.16: {}
 
   fastq@1.19.1:
     dependencies:

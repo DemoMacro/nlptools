@@ -1,10 +1,10 @@
 {
-  "name": "@nlptools/nlptools",
+  "name": "@demomacro/nlptools",
   "version": "0.0.0",
-  "description": "",
+  "description": "Comprehensive NLP toolkit with high-performance string distance and similarity algorithms",
   "private": true,
   "scripts": {
-    "dev": "pnpm -r prepack --stub",
+    "dev": "pnpm -r dev",
     "build": "pnpm -r prepack",
     "lint": "basis lint --all",
     "postinstall": "pnpm dev && basis git setup"
@@ -14,7 +14,19 @@
     "url": "git+https://github.com/DemoMacro/nlptools.git"
   },
   "keywords": [
-    "nlp"
+    "nlp",
+    "natural-language-processing",
+    "text-distance",
+    "string-similarity",
+    "fuzzy-matching",
+    "webassembly",
+    "wasm",
+    "algorithms",
+    "levenshtein",
+    "jaro-winkler",
+    "jaccard",
+    "cosine",
+    "edit-distance"
   ],
   "author": {
     "name": "Demo Macro",
