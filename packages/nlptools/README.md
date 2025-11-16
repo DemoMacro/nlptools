@@ -1,13 +1,13 @@
-# NLPTools
+# @nlptools/nlptools
 
-![npm version](https://img.shields.io/npm/v/nlptools)
-![npm downloads](https://img.shields.io/npm/dw/nlptools)
-![npm license](https://img.shields.io/npm/l/nlptools)
+![npm version](https://img.shields.io/npm/v/@nlptools/nlptools)
+![npm downloads](https://img.shields.io/npm/dw/@nlptools/nlptools)
+![npm license](https://img.shields.io/npm/l/@nlptools/nlptools)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)
 
 > Main NLPTools package - Complete suite of NLP algorithms and utilities
 
-This is the main NLPTools package that exports all algorithms and utilities from the entire toolkit. It provides a single entry point to access all string distance and similarity algorithms.
+This is the main NLPTools package (`@nlptools/nlptools`) that exports all algorithms and utilities from the entire toolkit. It provides a single entry point to access all string distance and similarity algorithms.
 
 ## Features
 
@@ -21,13 +21,13 @@ This is the main NLPTools package that exports all algorithms and utilities from
 
 ```bash
 # Install with npm
-npm install nlptools
+npm install @nlptools/nlptools
 
 # Install with yarn
-yarn add nlptools
+yarn add @nlptools/nlptools
 
 # Install with pnpm
-pnpm add nlptools
+pnpm add @nlptools/nlptools
 ```
 
 ## Usage
@@ -35,7 +35,7 @@ pnpm add nlptools
 ### Basic Setup
 
 ```typescript
-import * as nlptools from "nlptools";
+import * as nlptools from "@nlptools/nlptools";
 
 // All algorithms are available as named functions
 console.log(nlptools.levenshtein("kitten", "sitting")); // 3
@@ -108,15 +108,7 @@ console.log(result); // 0.8666666666666667
 The package automatically selects the fastest implementation available:
 
 - **WebAssembly algorithms**: 10-100x faster than pure JavaScript
-- **JavaScript fallbacks**: Ensure compatibility across all environments
 - **High-performance implementations**: Including fastest-levenshtein for optimal speed
-
-## Dependencies
-
-This package re-exports functionality from:
-
-- `@nlptools/distance` - Complete distance algorithms package
-- `fastest-levenshtein` - High-performance JavaScript implementation
 
 ## License
 

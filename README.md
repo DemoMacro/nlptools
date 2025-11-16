@@ -11,7 +11,7 @@ NLPTools provides a complete suite of natural language processing tools, includi
 
 This is a monorepo that contains the following packages:
 
-- **[nlptools](./packages/nlptools/README.md)** - Main package that exports all algorithms and utilities from the entire toolkit
+- **[@nlptools/nlptools](./packages/nlptools/README.md)** - Main package that exports all algorithms and utilities from the entire toolkit
 - **[@nlptools/distance](./packages/distance/README.md)** - Complete distance algorithms package including both WebAssembly and JavaScript implementations
 - **[@nlptools/distance-wasm](./packages/distance-wasm/README.md)** - High-performance WebAssembly library with optimized Rust implementations
 
@@ -21,7 +21,7 @@ This is a monorepo that contains the following packages:
 
 ```bash
 # Install the main package (includes all algorithms)
-pnpm installnlptools
+pnpm install @nlptools/nlptools
 
 # Or install specific packages
 pnpm install @nlptools/distance        # Complete distance algorithms
@@ -37,7 +37,7 @@ pnpm install
 
 ```typescript
 // Using the main package (recommended)
-import * as nlptools from "nlptools";
+import * as nlptools from "@nlptools/nlptools";
 
 // Calculate Levenshtein distance
 const distance = nlptools.levenshtein("kitten", "sitting");

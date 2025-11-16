@@ -113,7 +113,6 @@ console.log(distance.fastest_levenshtein("fast", "faster")); // 2
 The package automatically selects the fastest implementation available:
 
 - **WebAssembly algorithms**: 10-100x faster than pure JavaScript
-- **JavaScript fallbacks**: Ensure compatibility across all environments
 - **Auto-detection**: Seamlessly switches between WASM and JS implementations
 
 ## References

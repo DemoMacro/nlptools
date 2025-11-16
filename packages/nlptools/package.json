@@ -1,5 +1,5 @@
 {
-  "name": "nlptools",
+  "name": "@nlptools/nlptools",
   "version": "0.0.0",
   "description": "Main NLPTools package - Complete suite of NLP algorithms and utilities",
   "main": "dist/index.mjs",
