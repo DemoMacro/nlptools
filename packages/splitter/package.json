@@ -1,7 +1,7 @@
 {
-  "name": "@nlptools/nlptools",
+  "name": "@nlptools/splitter",
   "version": "0.0.1",
-  "description": "Main NLPTools package - Complete suite of NLP algorithms, text distance, similarity, and splitting utilities",
+  "description": "Text splitting utilities - LangChain.js text splitters wrapper for NLPTools",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
@@ -18,17 +18,13 @@
   "keywords": [
     "nlp",
     "natural-language-processing",
-    "text-distance",
-    "string-similarity",
-    "fuzzy-matching",
     "text-splitting",
     "text-splitter",
     "chunking",
     "document-processing",
-    "algorithms",
+    "langchain",
     "nlptools",
-    "utility",
-    "toolkit"
+    "utility"
   ],
   "author": {
     "name": "Demo Macro",
@@ -41,7 +37,6 @@
   },
   "homepage": "https://github.com/DemoMacro/nlptools#readme",
   "dependencies": {
-    "@nlptools/distance": "workspace:*",
-    "@nlptools/splitter": "workspace:*"
+    "@langchain/textsplitters": "1.0.0"
   }
 }

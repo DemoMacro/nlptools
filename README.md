@@ -13,6 +13,7 @@ This is a monorepo that contains the following packages:
 
 - **[@nlptools/nlptools](./packages/nlptools/README.md)** - Main package that exports all algorithms and utilities from the entire toolkit
 - **[@nlptools/distance](./packages/distance/README.md)** - Complete distance algorithms package including both WebAssembly and JavaScript implementations
+- **[@nlptools/splitter](./packages/splitter/README.md)** - Text splitting utilities for document chunking and processing
 - **[@nlptools/distance-wasm](./packages/distance-wasm/README.md)** - High-performance WebAssembly library with optimized Rust implementations
 
 ## Quick Start
@@ -25,6 +26,7 @@ pnpm install @nlptools/nlptools
 
 # Or install specific packages
 pnpm install @nlptools/distance        # Complete distance algorithms
+pnpm install @nlptools/splitter        # Text splitting utilities
 pnpm install @nlptools/distance-wasm   # WASM-optimized algorithms only
 
 # Clone the repository for development

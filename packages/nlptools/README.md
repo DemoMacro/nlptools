@@ -7,12 +7,14 @@
 
 > Main NLPTools package - Complete suite of NLP algorithms and utilities
 
-This is the main NLPTools package (`@nlptools/nlptools`) that exports all algorithms and utilities from the entire toolkit. It provides a single entry point to access all string distance and similarity algorithms.
+This is the main NLPTools package (`@nlptools/nlptools`) that exports all algorithms and utilities from the entire toolkit. It provides a single entry point to access all string distance, similarity algorithms, and text splitting utilities.
 
 ## Features
 
 - 🎯 **All-in-One**: Complete access to all NLPTools algorithms
 - 📦 **Convenient**: Single import for all functionality
+- ✂️ **Text Splitting**: Document chunking and text processing utilities
+- 📏 **Distance & Similarity**: Comprehensive string comparison algorithms
 - 🚀 **Performance Optimized**: Automatically uses the fastest implementations available
 - 📝 **TypeScript First**: Full type safety with comprehensive API
 - 🔧 **Easy to Use**: Consistent API across all algorithms
@@ -55,9 +57,26 @@ const distance = nlptools.levenshtein("cat", "bat"); // 1
 const similarity = nlptools.levenshtein_normalized("cat", "bat"); // 0.6666666666666666
 ```
 
+### Text Splitting
+
+This package includes text splitters from `@nlptools/splitter`:
+
+```typescript
+import { RecursiveCharacterTextSplitter } from "@nlptools/nlptools";
+
+const splitter = new RecursiveCharacterTextSplitter({
+  chunkSize: 1000,
+  chunkOverlap: 200,
+});
+
+const text = "Your long document text here...";
+const chunks = await splitter.splitText(text);
+console.log(chunks);
+```
+
 ### Available Algorithm Categories
 
-This package includes all algorithms from `@nlptools/distance`:
+This package includes all algorithms from `@nlptools/distance` and `@nlptools/splitter`:
 
 #### Edit Distance Algorithms
 
@@ -96,6 +115,14 @@ This package includes all algorithms from `@nlptools/distance`:
 - `suffix` - Suffix similarity
 - `length` - Length-based similarity
 
+#### Text Splitters
+
+- `RecursiveCharacterTextSplitter` - Splits text recursively using different separators
+- `CharacterTextSplitter` - Splits text by character count
+- `MarkdownTextSplitter` - Specialized splitter for Markdown documents
+- `TokenTextSplitter` - Splits text by token count
+- `LatexTextSplitter` - Specialized splitter for LaTeX documents
+
 ### Universal Compare Function
 
 ```typescript
@@ -112,4 +139,4 @@ The package automatically selects the fastest implementation available:
 
 ## License
 
-- [MIT](LICENSE) &copy; [Demo Macro](https://imst.xyz/)
+- [MIT](../../LICENSE) &copy; [Demo Macro](https://imst.xyz/)

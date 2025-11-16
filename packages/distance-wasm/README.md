@@ -252,4 +252,4 @@ This project incorporates and builds upon the following excellent open source pr
 
 ## License
 
-- [MIT](LICENSE) &copy; [Demo Macro](https://imst.xyz/)
+- [MIT](../../LICENSE) &copy; [Demo Macro](https://imst.xyz/)

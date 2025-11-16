@@ -1,6 +1,6 @@
 {
   "name": "@nlptools/distance",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Complete string distance and similarity algorithms package with WebAssembly and JavaScript implementations",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
