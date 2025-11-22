@@ -7,6 +7,8 @@
     "dev": "pnpm -r dev",
     "build": "pnpm -r prepack",
     "lint": "basis lint --all",
+    "test": "vitest --run",
+    "bench": "vitest bench --run",
     "postinstall": "pnpm dev && basis git setup"
   },
   "repository": {
@@ -46,7 +48,9 @@
     "oxlint-tsgolint": "0.6.0",
     "prettier": "3.6.2",
     "typescript": "5.9.3",
-    "unbuild": "3.6.1"
+    "unbuild": "3.6.1",
+    "vite-plugin-wasm": "3.5.0",
+    "vitest": "^4.0.13"
   },
   "packageManager": "pnpm@10.21.0+sha512.da3337267e400fdd3d479a6c68079ac6db01d8ca4f67572083e722775a796788a7a9956613749e000fac20d424b594f7a791a5f4e2e13581c5ef947f26968a40"
 }

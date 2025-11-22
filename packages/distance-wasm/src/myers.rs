@@ -1,10 +1,19 @@
 // Myers algorithm implementation - efficient bit-parallel edit distance
 // Based on Gene Myers' O(ND) algorithm with bit-parallel optimization
 
+use std::cell::RefCell;
+
+thread_local! {
+    static PEQ_CACHE: RefCell<Vec<u32>> = RefCell::new(vec![0u32; 0x10000]);
+}
+
 /// Myers 32-bit implementation for strings up to 32 characters
 fn myers_32(a: &str, b: &str) -> u32 {
-    let n = a.chars().count();
-    let m = b.chars().count();
+    let a_encoded: Vec<u16> = a.encode_utf16().collect();
+    let b_encoded: Vec<u16> = b.encode_utf16().collect();
+
+    let n = a_encoded.len();
+    let m = b_encoded.len();
 
     if n == 0 {
         return m as u32;
@@ -13,49 +22,58 @@ fn myers_32(a: &str, b: &str) -> u32 {
         return n as u32;
     }
 
-    // Character bitmask table (65536 entries for Unicode BMP)
-    let mut peq = vec![0u32; 0x10000];
+    PEQ_CACHE.with(|peq_cache| {
+        let mut peq = peq_cache.borrow_mut();
 
-    // Build character bit masks for string a
-    for (i, ch) in a.chars().enumerate() {
-        let code = ch as u32 as u16;
-        peq[code as usize] |= 1u32 << i;
-    }
-
-    let lst = 1u32 << (n - 1); // Last bit position
-    let mut pv = !0u32; // Previous vertical -1 (all bits set)
-    let mut mv = 0u32; // Previous vertical 0 (all bits clear)
-    let mut sc = n as u32; // Score (edit distance)
-
-    // Process each character in string b
-    for ch in b.chars() {
-        let code = ch as u32 as u16;
-        let mut eq = peq[code as usize];
-
-        let xv = eq | mv;
-        eq |= ((eq & pv).wrapping_add(pv)) ^ pv;
-        mv |= !(eq | pv);
-        pv &= eq;
-
-        if mv & lst != 0 {
-            sc += 1;
-        }
-        if pv & lst != 0 {
-            sc -= 1;
+        // Clear peq array efficiently
+        for val in peq.iter_mut() {
+            *val = 0;
         }
 
-        mv = (mv << 1) | 1;
-        pv = (pv << 1) | !(xv | mv);
-        mv &= xv;
-    }
+        // Build character bit masks for string a
+        for (i, &code) in a_encoded.iter().enumerate() {
+            unsafe {
+                *peq.get_unchecked_mut(code as usize) |= 1u32 << i;
+            }
+        }
 
-    sc
+        let lst = 1u32 << (n - 1); // Last bit position
+        let mut pv = !0u32; // Previous vertical -1 (all bits set)
+        let mut mv = 0u32; // Previous vertical 0 (all bits clear)
+        let mut sc = n as u32; // Score (edit distance)
+
+        // Process each character in string b
+        for &code in &b_encoded {
+            let mut eq = unsafe { *peq.get_unchecked(code as usize) };
+
+            let xv = eq | mv;
+            eq |= ((eq & pv).wrapping_add(pv)) ^ pv;
+            mv |= !(eq | pv);
+            pv &= eq;
+
+            if mv & lst != 0 {
+                sc += 1;
+            }
+            if pv & lst != 0 {
+                sc -= 1;
+            }
+
+            mv = (mv << 1) | 1;
+            pv = (pv << 1) | !(xv | mv);
+            mv &= xv;
+        }
+
+        sc
+    })
 }
 
 /// Myers extended implementation for longer strings using block-based approach
 fn myers_x(a: &str, b: &str) -> u32 {
-    let n = a.chars().count();
-    let m = b.chars().count();
+    let a_encoded: Vec<u16> = a.encode_utf16().collect();
+    let b_encoded: Vec<u16> = b.encode_utf16().collect();
+
+    let n = a_encoded.len();
+    let m = b_encoded.len();
 
     if n == 0 {
         return m as u32;
@@ -68,39 +86,102 @@ fn myers_x(a: &str, b: &str) -> u32 {
     let hsize = (n + word_size - 1) / word_size; // Number of horizontal blocks
     let vsize = (m + word_size - 1) / word_size; // Number of vertical blocks
 
-    // Initialize horizontal and vertical carry arrays
+    // Initialize horizontal carry arrays
     let mut phc = vec![!0u32; hsize]; // Previous horizontal carry
     let mut mhc = vec![0u32; hsize]; // Previous horizontal mismatch
 
-    // Character bitmask table
-    let mut peq = vec![0u32; 0x10000];
+    PEQ_CACHE.with(|peq_cache| {
+        let mut peq = peq_cache.borrow_mut();
 
-    let a_chars: Vec<char> = a.chars().collect();
-    let b_chars: Vec<char> = b.chars().collect();
+        // Process all but the last vertical block
+        for block in 0..(vsize - 1) {
+            let mut mv = 0u32;
+            let mut pv = !0u32;
+            let start = block * word_size;
+            let end = (block + 1) * word_size;
 
-    // Process all but the last vertical block
-    for block in 0..(vsize - 1) {
-        let mut mv = 0u32;
-        let mut pv = !0u32;
-        let start = block * word_size;
-        let end = (block + 1) * word_size;
+            // Clear peq for this block range
+            for k in start..end.min(m) {
+                let code = unsafe { *b_encoded.get_unchecked(k) };
+                unsafe {
+                    *peq.get_unchecked_mut(code as usize) = 0;
+                }
+            }
 
-        // Build character bit masks for this block of string b
-        for k in start..end.min(m) {
-            let code = b_chars[k] as u32 as u16;
-            peq[code as usize] |= 1u32 << (k - start);
+            // Build character bit masks for this block of string b
+            for k in start..end.min(m) {
+                let code = unsafe { *b_encoded.get_unchecked(k) };
+                unsafe {
+                    *peq.get_unchecked_mut(code as usize) |= 1u32 << (k - start);
+                }
+            }
+
+            // Process each character in string a
+            for (i, &code) in a_encoded.iter().enumerate() {
+                let eq = unsafe { *peq.get_unchecked(code as usize) };
+
+                let block_i = i / word_size;
+                let bit_i = i % word_size;
+
+                let pb = unsafe { (phc.get_unchecked(block_i) >> bit_i) & 1 };
+                let mb = unsafe { (mhc.get_unchecked(block_i) >> bit_i) & 1 };
+
+                let xv = eq | mv;
+                let xh = ((((eq | mb) & pv).wrapping_add(pv)) ^ pv) | eq | mb;
+
+                let mut ph = mv | !(xh | pv);
+                let mut mh = pv & xh;
+
+                if ((ph >> 31) ^ pb) != 0 {
+                    unsafe {
+                        *phc.get_unchecked_mut(block_i) ^= 1u32 << bit_i;
+                    }
+                }
+                if ((mh >> 31) ^ mb) != 0 {
+                    unsafe {
+                        *mhc.get_unchecked_mut(block_i) ^= 1u32 << bit_i;
+                    }
+                }
+
+                ph = (ph << 1) | pb;
+                mh = (mh << 1) | mb;
+                pv = mh | !(xv | ph);
+                mv = ph & xv;
+            }
         }
 
-        // Process each character in string a
-        for (i, &ch) in a_chars.iter().enumerate() {
-            let code = ch as u32 as u16;
-            let eq = peq[code as usize];
+        // Process the last vertical block and compute final score
+        let mut mv = 0u32;
+        let mut pv = !0u32;
+        let start = (vsize - 1) * word_size;
+        let vlen = m - start;
+
+        // Clear peq for the last block range
+        for k in start..m {
+            let code = unsafe { *b_encoded.get_unchecked(k) };
+            unsafe {
+                *peq.get_unchecked_mut(code as usize) = 0;
+            }
+        }
+
+        // Build character bit masks for the last block
+        for k in start..m {
+            let code = unsafe { *b_encoded.get_unchecked(k) };
+            unsafe {
+                *peq.get_unchecked_mut(code as usize) |= 1u32 << (k - start);
+            }
+        }
+
+        let mut score = m as u32;
+
+        for (i, &code) in a_encoded.iter().enumerate() {
+            let eq = unsafe { *peq.get_unchecked(code as usize) };
 
             let block_i = i / word_size;
             let bit_i = i % word_size;
 
-            let pb = (phc[block_i] >> bit_i) & 1;
-            let mb = (mhc[block_i] >> bit_i) & 1;
+            let pb = unsafe { (phc.get_unchecked(block_i) >> bit_i) & 1 };
+            let mb = unsafe { (mhc.get_unchecked(block_i) >> bit_i) & 1 };
 
             let xv = eq | mv;
             let xh = ((((eq | mb) & pv).wrapping_add(pv)) ^ pv) | eq | mb;
@@ -108,11 +189,20 @@ fn myers_x(a: &str, b: &str) -> u32 {
             let mut ph = mv | !(xh | pv);
             let mut mh = pv & xh;
 
+            if vlen > 0 {
+                score += (ph >> (vlen - 1)) & 1;
+                score -= (mh >> (vlen - 1)) & 1;
+            }
+
             if ((ph >> 31) ^ pb) != 0 {
-                phc[block_i] ^= 1u32 << bit_i;
+                unsafe {
+                    *phc.get_unchecked_mut(block_i) ^= 1u32 << bit_i;
+                }
             }
             if ((mh >> 31) ^ mb) != 0 {
-                mhc[block_i] ^= 1u32 << bit_i;
+                unsafe {
+                    *mhc.get_unchecked_mut(block_i) ^= 1u32 << bit_i;
+                }
             }
 
             ph = (ph << 1) | pb;
@@ -121,74 +211,14 @@ fn myers_x(a: &str, b: &str) -> u32 {
             mv = ph & xv;
         }
 
-        // Clear peq for this block
-        for k in start..end.min(m) {
-            let code = b_chars[k] as u32 as u16;
-            peq[code as usize] = 0;
-        }
-    }
-
-    // Process the last vertical block and compute final score
-    let mut mv = 0u32;
-    let mut pv = !0u32;
-    let start = (vsize - 1) * word_size;
-    let vlen = m - start;
-
-    // Build character bit masks for the last block
-    for k in start..m {
-        let code = b_chars[k] as u32 as u16;
-        peq[code as usize] |= 1u32 << (k - start);
-    }
-
-    let mut score = m as u32;
-
-    for (i, &ch) in a_chars.iter().enumerate() {
-        let code = ch as u32 as u16;
-        let eq = peq[code as usize];
-
-        let block_i = i / word_size;
-        let bit_i = i % word_size;
-
-        let pb = (phc[block_i] >> bit_i) & 1;
-        let mb = (mhc[block_i] >> bit_i) & 1;
-
-        let xv = eq | mv;
-        let xh = ((((eq | mb) & pv).wrapping_add(pv)) ^ pv) | eq | mb;
-
-        let mut ph = mv | !(xh | pv);
-        let mut mh = pv & xh;
-
-        if vlen > 0 {
-            score += (ph >> (vlen - 1)) & 1;
-            score -= (mh >> (vlen - 1)) & 1;
-        }
-
-        if ((ph >> 31) ^ pb) != 0 {
-            phc[block_i] ^= 1u32 << bit_i;
-        }
-        if ((mh >> 31) ^ mb) != 0 {
-            mhc[block_i] ^= 1u32 << bit_i;
-        }
-
-        ph = (ph << 1) | pb;
-        mh = (mh << 1) | mb;
-        pv = mh | !(xv | ph);
-        mv = ph & xv;
-    }
-
-    // Clear peq for the last block
-    for k in start..m {
-        let code = b_chars[k] as u32 as u16;
-        peq[code as usize] = 0;
-    }
-
-    score
+        score
+    })
 }
 
 /// Main Myers distance function
 pub fn myers_distance(a: &str, b: &str) -> u32 {
-    let a_len = a.chars().count();
-    let b_len = b.chars().count();
+    let a_len = a.encode_utf16().count();
+    let b_len = b.encode_utf16().count();
 
     // Ensure a is the longer string
     if a_len < b_len {
@@ -209,8 +239,8 @@ pub fn myers_distance(a: &str, b: &str) -> u32 {
 
 /// Normalized Myers similarity (1.0 = identical, 0.0 = completely different)
 pub fn myers_similarity(a: &str, b: &str) -> f64 {
-    let a_len = a.chars().count();
-    let b_len = b.chars().count();
+    let a_len = a.encode_utf16().count();
+    let b_len = b.encode_utf16().count();
     let max_len = a_len.max(b_len);
 
     if max_len == 0 {

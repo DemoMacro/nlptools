@@ -8,8 +8,9 @@
     "dist"
   ],
   "scripts": {
-    "dev": "pnpm unbuild --stub",
-    "prepack": "pnpm unbuild"
+    "dev": "unbuild --stub",
+    "build": "unbuild",
+    "prepack": "pnpm build"
   },
   "repository": {
     "type": "git",

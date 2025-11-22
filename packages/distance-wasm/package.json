@@ -1,6 +1,8 @@
 {
   "scripts": {
     "dev": "rm -rf ./pkg && wasm-pack build --dev --scope nlptools",
-    "prepack": "rm -rf ./pkg && wasm-pack build --release --scope nlptools"
+    "build": "rm -rf ./pkg && wasm-pack build --release --scope nlptools",
+    "prepack": "pnpm build",
+    "test": "cargo test -- --nocapture"
   }
 }

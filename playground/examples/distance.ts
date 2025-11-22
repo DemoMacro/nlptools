@@ -1,5 +1,5 @@
 // TypeScript example for Distance-Wasm
-import * as wasm from "@nlptools/distance";
+import * as wasm from "@nlptools/distance-wasm";
 
 console.log("🧪 Testing Distance WASM Functions");
 console.log("=".repeat(50));
