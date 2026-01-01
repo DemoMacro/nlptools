@@ -37,6 +37,6 @@
   },
   "homepage": "https://github.com/DemoMacro/nlptools#readme",
   "dependencies": {
-    "@langchain/textsplitters": "1.0.0"
+    "@langchain/textsplitters": "1.0.1"
   }
 }
