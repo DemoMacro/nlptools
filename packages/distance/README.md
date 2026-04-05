@@ -11,6 +11,7 @@
 - Edit distance: Levenshtein, LCS (Myers O(ND) and DP)
 - Token similarity: Jaccard, Cosine, Sorensen-Dice (character multiset and n-gram variants)
 - Hash-based deduplication: SimHash, MinHash, LSH
+- Fuzzy search: `FuzzySearch` class and `findBestMatch` with multi-algorithm support
 - Diff: based on `@algorithm.ts/diff` (Myers and DP backends)
 - All distance algorithms include normalized similarity variants (0-1 range)
 
@@ -123,6 +124,45 @@ const query = lsh.query(mh.digest(), 0.5);
 // => [["doc1", 0.67]]
 ```
 
+### Fuzzy Search
+
+```typescript
+import { FuzzySearch, findBestMatch } from "@nlptools/distance";
+
+// String array search
+const search = new FuzzySearch(["apple", "banana", "cherry"]);
+search.search("aple");
+// => [{ item: "apple", score: 0.8, index: 0 }]
+
+// Object array with weighted keys
+const books = [
+  { title: "Old Man's War", author: "John Scalzi" },
+  { title: "The Great Gatsby", author: "F. Scott Fitzgerald" },
+];
+const bookSearch = new FuzzySearch(books, {
+  keys: [
+    { name: "title", weight: 0.7 },
+    { name: "author", weight: 0.3 },
+  ],
+  algorithm: "cosine",
+  threshold: 0.3,
+});
+bookSearch.search("old man");
+// => [{ item: { title: "Old Man's War", ... }, score: 0.52, index: 0 }]
+
+// One-shot best match
+findBestMatch("kitten", ["sitting", "kit", "mitten"]);
+// => { item: "kit", score: 0.5, index: 1 }
+
+// With per-key details
+const detailed = new FuzzySearch(books, {
+  keys: [{ name: "title" }, { name: "author" }],
+  includeMatchDetails: true,
+});
+detailed.search("gatsby");
+// => [{ item: ..., score: 0.45, index: 1, matches: { title: 0.6, author: 0.1 } }]
+```
+
 ### Diff
 
 ```typescript
@@ -172,6 +212,27 @@ const result = diff("abc", "ac");
 | `MinHash.estimate(sig1, sig2)`   | Static: estimate Jaccard from signatures                           |
 | `LSH`                            | Class with `insert()`, `query()`, `remove()`                       |
 
+### Fuzzy Search
+
+| Function / Class                             | Description                                        |
+| -------------------------------------------- | -------------------------------------------------- |
+| `FuzzySearch<T>(collection, options?)`       | Search engine with dynamic collection management   |
+| `findBestMatch(query, collection, options?)` | One-shot convenience: returns best match or `null` |
+
+**FuzzySearch options:**
+
+| Option                | Type                               | Default         | Description                   |
+| --------------------- | ---------------------------------- | --------------- | ----------------------------- |
+| `algorithm`           | `BuiltinAlgorithm \| SimilarityFn` | `"levenshtein"` | Similarity algorithm to use   |
+| `keys`                | `ISearchKey[]`                     | `[]`            | Object fields to search on    |
+| `threshold`           | `number`                           | `0`             | Min similarity score (0-1)    |
+| `limit`               | `number`                           | `Infinity`      | Max results to return         |
+| `caseSensitive`       | `boolean`                          | `false`         | Case-insensitive by default   |
+| `includeMatchDetails` | `boolean`                          | `false`         | Include per-key scores        |
+| `lsh`                 | `{ numHashes?, numBands? }`        | —               | Enable LSH for large datasets |
+
+**Built-in algorithms:** `"levenshtein"`, `"lcs"`, `"jaccard"`, `"jaccardNgram"`, `"cosine"`, `"cosineNgram"`, `"sorensen"`, `"sorensenNgram"`
+
 ### Diff
 
 | Function               | Description                 | Returns          |
@@ -180,14 +241,19 @@ const result = diff("abc", "ac");
 
 ### Types
 
-| Type              | Description                              |
-| ----------------- | ---------------------------------------- |
-| `DiffType`        | Enum: `ADDED`, `REMOVED`, `COMMON`       |
-| `IDiffItem<T>`    | Diff result item with type and tokens    |
-| `IDiffOptions<T>` | Options for diff (equals, lcs algorithm) |
-| `ISimHashOptions` | Options for SimHash (bits, hashFn)       |
-| `IMinHashOptions` | Options for MinHash (numHashes, seed)    |
-| `ILSHOptions`     | Options for LSH (numBands, numHashes)    |
+| Type                    | Description                                  |
+| ----------------------- | -------------------------------------------- |
+| `DiffType`              | Enum: `ADDED`, `REMOVED`, `COMMON`           |
+| `IDiffItem<T>`          | Diff result item with type and tokens        |
+| `IDiffOptions<T>`       | Options for diff (equals, lcs algorithm)     |
+| `ISimHashOptions`       | Options for SimHash (bits, hashFn)           |
+| `IMinHashOptions`       | Options for MinHash (numHashes, seed)        |
+| `ILSHOptions`           | Options for LSH (numBands, numHashes)        |
+| `IFuzzySearchOptions`   | Options for FuzzySearch constructor          |
+| `IFindBestMatchOptions` | Options for findBestMatch function           |
+| `ISearchKey`            | Searchable key config (name, weight, getter) |
+| `ISearchResult<T>`      | Search result with item, score, index        |
+| `SimilarityFn`          | `(a: string, b: string) => number` in [0,1]  |
 
 ## Performance
 
@@ -231,6 +297,20 @@ Unit: microseconds per operation (us/op).
 | cosineBigram  | Medium (10-100) | 5.9         | 127.0         | 3.12          |
 
 TS implementations use V8 JIT optimization + `Int32Array` ASCII fast path + integer-encoded bigrams, avoiding JS-WASM boundary overhead entirely.
+
+### Fuzzy Search: NLPTools vs Fuse.js
+
+Benchmark: 20 items in collection, 6 queries per iteration, 1000 iterations.
+Unit: milliseconds per operation (ms/op). Algorithm: levenshtein (default).
+
+| Scenario                | NLPTools | Fuse.js |
+| ----------------------- | -------- | ------- |
+| Setup (constructor)     | 0.0002   | 0.0050  |
+| Search (string array)   | 0.0114   | 0.1077  |
+| Search (object, 1 key)  | 0.0176   | 0.3308  |
+| Search (object, 2 keys) | 0.0289   | 0.6445  |
+
+Both libraries return identical top-1 results for all test queries. NLPTools scores are normalized similarity (0-1, higher is better); Fuse.js uses Bitap error scores (0 = perfect, lower is better).
 
 ## Dependencies
 

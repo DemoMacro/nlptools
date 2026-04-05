@@ -6,5 +6,5 @@ export * from "./token/sorensen";
 export * from "./hash/simhash";
 export * from "./hash/minhash";
 export * from "./hash/lsh";
-export { DiffType, diff } from "@algorithm.ts/diff";
-export type { IDiffItem, IDiffOptions, ILcs, ILcsAlgorithm } from "@algorithm.ts/diff";
+export * from "./search";
+export * from "./diff";
