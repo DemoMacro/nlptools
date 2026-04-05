@@ -143,10 +143,10 @@ export interface IFuzzySearchOptions {
   limit?: number;
 
   /**
-   * Whether search should be case-insensitive.
-   * When true, both the query and the item strings are lowercased
-   * before comparison.
-   * @default false (case-insensitive by default)
+   * Whether search should be case-sensitive.
+   * When false (default), both the query and the item strings are lowercased
+   * before comparison (case-insensitive search).
+   * @default false
    */
   caseSensitive?: boolean;
 

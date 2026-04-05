@@ -257,46 +257,46 @@ const result = diff("abc", "ac");
 
 ## Performance
 
-Benchmark: 1000 iterations per pair, same test data across all runtimes.
+Benchmark: same test data across all runtimes. TS/WASM via `vitest bench` (V8 JIT), Rust via `cargo test --release`.
 Unit: microseconds per operation (us/op).
 
 ### Edit Distance
 
 | Algorithm       | Size            | TS (V8 JIT) | WASM (via JS) | Rust (native) |
 | --------------- | --------------- | ----------- | ------------- | ------------- |
-| levenshtein     | Short (<10)     | 0.3         | 7.9           | 0.11          |
-| levenshtein     | Medium (10-100) | 1.3         | 116.2         | 0.98          |
-| levenshtein     | Long (>200)     | 15.2        | 2,877.5       | 39.68         |
-| levenshteinNorm | Short           | 0.3         | 7.9           | 0.11          |
-| lcs             | Short (<10)     | 1.6         | 16.5          | 0.41          |
-| lcs             | Medium (10-100) | 6.8         | 272.6         | 3.22          |
-| lcs             | Long (>200)     | 217.8       | 6,574.1       | 122.63        |
-| lcsNorm         | Short           | 1.7         | 16.2          | 0.48          |
+| levenshtein     | Short (<10)     | 0.3         | 1.0           | 0.24          |
+| levenshtein     | Medium (10-100) | 1.3         | 4.8           | 2.00          |
+| levenshtein     | Long (>200)     | 13.9        | 102.3         | 61.77         |
+| levenshteinNorm | Short           | 0.3         | 1.0           | 0.19          |
+| lcs             | Short (<10)     | 1.7         | 1.9           | 0.69          |
+| lcs             | Medium (10-100) | 6.8         | 10.1          | 7.70          |
+| lcs             | Long (>200)     | 216.0       | 161.8         | 151.84        |
+| lcsNorm         | Short           | 1.7         | 1.9           | 0.42          |
 
 ### Token Similarity (Character Multiset)
 
 | Algorithm | Size            | TS (V8 JIT) | WASM (via JS) | Rust (native) |
 | --------- | --------------- | ----------- | ------------- | ------------- |
-| jaccard   | Short (<10)     | 0.8         | 25.2          | 0.42          |
-| jaccard   | Medium (10-100) | 0.8         | 74.3          | 1.55          |
-| jaccard   | Long (>200)     | 1.6         | 171.5         | 5.54          |
-| cosine    | Short (<10)     | 0.8         | 19.3          | 0.32          |
-| cosine    | Medium (10-100) | 0.8         | 61.4          | 1.35          |
-| cosine    | Long (>200)     | 1.5         | 158.5         | 4.77          |
-| sorensen  | Short (<10)     | 0.7         | 19.3          | 0.33          |
-| sorensen  | Medium (10-100) | 0.7         | 61.0          | 1.33          |
-| sorensen  | Long (>200)     | 1.5         | 160.0         | 4.46          |
+| jaccard   | Short (<10)     | 0.8         | 3.4           | 0.63          |
+| jaccard   | Medium (10-100) | 0.8         | 8.6           | 2.67          |
+| jaccard   | Long (>200)     | 1.5         | 18.9          | 7.25          |
+| cosine    | Short (<10)     | 1.0         | 2.6           | 0.43          |
+| cosine    | Medium (10-100) | 0.8         | 7.0           | 1.56          |
+| cosine    | Long (>200)     | 1.7         | 17.2          | 6.23          |
+| sorensen  | Short (<10)     | 0.7         | 2.6           | 0.56          |
+| sorensen  | Medium (10-100) | 0.7         | 7.0           | 2.27          |
+| sorensen  | Long (>200)     | 1.4         | 17.4          | 6.48          |
 
 ### Bigram Variants
 
 | Algorithm     | Size            | TS (V8 JIT) | WASM (via JS) | Rust (native) |
 | ------------- | --------------- | ----------- | ------------- | ------------- |
-| jaccardBigram | Short (<10)     | 1.1         | 27.4          | 0.45          |
-| jaccardBigram | Medium (10-100) | 7.7         | 160.4         | 3.86          |
-| cosineBigram  | Short (<10)     | 0.8         | 21.2          | 0.36          |
-| cosineBigram  | Medium (10-100) | 5.9         | 127.0         | 3.12          |
+| jaccardBigram | Short (<10)     | 1.1         | 3.5           | 0.67          |
+| jaccardBigram | Medium (10-100) | 7.5         | 18.1          | 4.80          |
+| cosineBigram  | Short (<10)     | 0.7         | 2.8           | 0.43          |
+| cosineBigram  | Medium (10-100) | 5.4         | 14.0          | 4.04          |
 
-TS implementations use V8 JIT optimization + `Int32Array` ASCII fast path + integer-encoded bigrams, avoiding JS-WASM boundary overhead entirely.
+TS implementations use `Int32Array` ASCII fast path + integer-encoded bigrams, avoiding JS-WASM boundary overhead. For compute-heavy algorithms on long strings (e.g. LCS), WASM via JS and Rust native can outperform TS due to native computation advantage outweighing the boundary cost.
 
 ### Fuzzy Search: NLPTools vs Fuse.js
 

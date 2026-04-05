@@ -4,7 +4,6 @@ import {
   lcs_myers_linear_space,
   lcs_dp,
 } from "@algorithm.ts/lcs";
-import { normalize } from "../utils";
 
 export type LcsSizeFunc = (
   N1: number,
@@ -53,7 +52,9 @@ export function lcsDistance(a: string, b: string, algorithm: "myers" | "dp" = "m
  * @returns Similarity score where 1 means identical
  */
 export function lcsNormalized(a: string, b: string, algorithm: "myers" | "dp" = "myers"): number {
-  return normalize(lcsDistance(a, b, algorithm), a.length + b.length);
+  const maxLen = Math.max(a.length, b.length);
+  if (maxLen === 0) return 1;
+  return lcsLength(a, b, algorithm) / maxLen;
 }
 
 /**

@@ -5,6 +5,8 @@ import {
   ngramFrequencyMap,
   CHAR_FREQ_SIZE,
   buildCharFreqArray,
+  intersectCountInt,
+  totalCountInt,
 } from "../utils";
 
 // Reusable buffers to avoid per-call allocation
@@ -14,10 +16,10 @@ const _freqB = new Int32Array(CHAR_FREQ_SIZE);
 /**
  * Cosine similarity between two strings based on character-level multiset.
  *
- * cos(A, B) = (A · B) / (|A| * |B|)
+ * Uses textdistance.rs convention:
+ *   cosine(A, B) = intersect_count(A, B) / sqrt(count(A) * count(B))
  *
- * Uses Counter (frequency map) for multiset semantics,
- * matching the textdistance crate behavior.
+ * Where intersect_count = sum(min(freqA[c], freqB[c])) and count = sum of frequencies.
  *
  * Time: O(m + n)
  *
@@ -30,55 +32,57 @@ export function cosine(a: string, b: string): number {
   _freqA.fill(0);
   _freqB.fill(0);
   if (buildCharFreqArray(_freqA, a) && buildCharFreqArray(_freqB, b)) {
-    let dot = 0;
-    let normA = 0;
-    let normB = 0;
+    let intersection = 0;
+    let totalA = 0;
+    let totalB = 0;
     for (let i = 0; i < CHAR_FREQ_SIZE; i++) {
       const va = _freqA[i];
       const vb = _freqB[i];
-      dot += va * vb;
-      normA += va * va;
-      normB += vb * vb;
+      intersection += va < vb ? va : vb;
+      totalA += va;
+      totalB += vb;
     }
-    const denominator = Math.sqrt(normA) * Math.sqrt(normB);
-    return denominator === 0 ? 1 : dot / denominator;
+    if (totalA === 0 && totalB === 0) return 1;
+    if (totalA === 0 || totalB === 0) return 0;
+    return intersection / Math.sqrt(totalA * totalB);
   }
 
   // Non-ASCII fallback
   const freqAMap = charFrequencyMap(a);
   const freqBMap = charFrequencyMap(b);
 
-  let dotProduct = 0;
-  let normA = 0;
-  let normB = 0;
+  const intersection = intersectCount(freqAMap, freqBMap);
+  const totalA = totalCount(freqAMap);
+  const totalB = totalCount(freqBMap);
 
-  const [smaller, larger] =
-    freqAMap.size <= freqBMap.size ? [freqAMap, freqBMap] : [freqBMap, freqAMap];
+  if (totalA === 0 && totalB === 0) return 1;
+  if (totalA === 0 || totalB === 0) return 0;
+  return intersection / Math.sqrt(totalA * totalB);
+}
 
-  for (const [char, countA] of smaller) {
-    const countB = larger.get(char) ?? 0;
-    dotProduct += countA * countB;
-    normA += countA * countA;
+function intersectCount(a: Map<string, number>, b: Map<string, number>): number {
+  let count = 0;
+  const [smaller, larger] = a.size <= b.size ? [a, b] : [b, a];
+  for (const [key, countA] of smaller) {
+    const countB = larger.get(key);
+    if (countB !== undefined) {
+      count += countA < countB ? countA : countB;
+    }
   }
+  return count;
+}
 
-  for (const [, count] of larger) {
-    normB += count * count;
-  }
-
-  // If we swapped, normA came from the smaller map — fix it
-  if (freqAMap.size > freqBMap.size) {
-    const tmp = normA;
-    normA = normB;
-    normB = tmp;
-  }
-
-  const denominator = Math.sqrt(normA) * Math.sqrt(normB);
-  if (denominator === 0) return 1;
-  return dotProduct / denominator;
+function totalCount(map: Map<string, number>): number {
+  let count = 0;
+  for (const c of map.values()) count += c;
+  return count;
 }
 
 /**
  * Cosine similarity based on character n-grams.
+ *
+ * Uses textdistance.rs convention (same as character-level cosine but on n-grams):
+ *   cosine_ngram(A, B) = intersect_count(A, B) / sqrt(count(A) * count(B))
  *
  * @param a - First string
  * @param b - Second string
@@ -91,43 +95,24 @@ export function cosineNgram(a: string, b: string, n = 2): number {
   const freqBInt = ngramFrequencyMap(b, n);
 
   if (freqAInt !== null && freqBInt !== null) {
-    let dotProduct = 0;
-    let normA = 0;
-    let normB = 0;
+    const intersection = intersectCountInt(freqAInt, freqBInt);
+    const totalA = totalCountInt(freqAInt);
+    const totalB = totalCountInt(freqBInt);
 
-    for (const [id, countA] of freqAInt) {
-      const countB = freqBInt.get(id) ?? 0;
-      dotProduct += countA * countB;
-      normA += countA * countA;
-    }
-
-    for (const [, count] of freqBInt) {
-      normB += count * count;
-    }
-
-    const denominator = Math.sqrt(normA) * Math.sqrt(normB);
-    return denominator === 0 ? 1 : dotProduct / denominator;
+    if (totalA === 0 && totalB === 0) return 1;
+    if (totalA === 0 || totalB === 0) return 0;
+    return intersection / Math.sqrt(totalA * totalB);
   }
 
   // Fallback: string-keyed n-grams
   const freqA = frequencyMap(ngrams(a, n));
   const freqB = frequencyMap(ngrams(b, n));
 
-  let dotProduct = 0;
-  let normA = 0;
-  let normB = 0;
+  const intersection = intersectCount(freqA, freqB);
+  const totalA = totalCount(freqA);
+  const totalB = totalCount(freqB);
 
-  for (const [token, countA] of freqA) {
-    const countB = freqB.get(token) ?? 0;
-    dotProduct += countA * countB;
-    normA += countA * countA;
-  }
-
-  for (const [, count] of freqB) {
-    normB += count * count;
-  }
-
-  const denominator = Math.sqrt(normA) * Math.sqrt(normB);
-  if (denominator === 0) return 1;
-  return dotProduct / denominator;
+  if (totalA === 0 && totalB === 0) return 1;
+  if (totalA === 0 || totalB === 0) return 0;
+  return intersection / Math.sqrt(totalA * totalB);
 }

@@ -1,6 +1,6 @@
 {
   "name": "@nlptools/splitter",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Text splitting utilities - LangChain.js text splitters wrapper for NLPTools",
   "keywords": [
     "chunking",

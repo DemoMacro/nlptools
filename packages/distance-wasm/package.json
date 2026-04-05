@@ -3,6 +3,6 @@
     "dev": "rm -rf ./pkg && wasm-pack build --dev --scope nlptools",
     "build": "rm -rf ./pkg && wasm-pack build --release --scope nlptools",
     "prepack": "pnpm build",
-    "test": "cargo test -- --nocapture"
+    "test": "cargo test --release -- --nocapture"
   }
 }

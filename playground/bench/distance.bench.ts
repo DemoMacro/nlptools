@@ -459,6 +459,14 @@ function assertEq(label: string, actual: number, expected: number, tol = 0) {
   }
 }
 
+// WASM convention notes:
+// - Edit distances (levenshtein, damerau, hamming, sift4): return raw distance
+// - lcs_seq / lcs_str: return LCS *length*, not distance
+// - length: returns normalized *distance* (0 = identical)
+// - *_normalized for edit distances: return normalized *distance* (0 = identical)
+// - Similarity functions (jaro, cosine, jaccard, etc.): return similarity (1 = identical)
+// - lcs_seq_normalized / lcs_str_normalized / smith_waterman_normalized: similarity
+
 describe("Correctness: TS vs WASM", () => {
   bench(
     "levenshtein",
@@ -470,10 +478,11 @@ describe("Correctness: TS vs WASM", () => {
   );
 
   bench(
-    "lcsDistance",
+    "lcsLength",
     () => {
+      // wasm.lcs_seq returns LCS length, not distance
       for (const { s1, s2 } of CORRECTNESS_CASES)
-        assertEq("lcs_seq", ts.lcsDistance(s1, s2), wasm.lcs_seq(s1, s2));
+        assertEq("lcs_seq", ts.lcsLength(s1, s2), wasm.lcs_seq(s1, s2));
     },
     BENCH_CONFIG,
   );
@@ -508,11 +517,12 @@ describe("Correctness: TS vs WASM", () => {
   bench(
     "levenshteinNormalized",
     () => {
+      // wasm returns normalized distance (0=identical), TS returns similarity (1=identical)
       for (const { s1, s2 } of CORRECTNESS_CASES)
         assertEq(
           "levNorm",
           ts.levenshteinNormalized(s1, s2),
-          wasm.levenshtein_normalized(s1, s2),
+          1 - wasm.levenshtein_normalized(s1, s2),
           0.001,
         );
     },
@@ -522,8 +532,204 @@ describe("Correctness: TS vs WASM", () => {
   bench(
     "lcsNormalized",
     () => {
+      // wasm.lcs_seq_normalized returns similarity (1=identical)
       for (const { s1, s2 } of CORRECTNESS_CASES)
         assertEq("lcsNorm", ts.lcsNormalized(s1, s2), wasm.lcs_seq_normalized(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
+
+  // --- New algorithms ---
+  bench(
+    "damerauLevenshtein",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("damerau", ts.damerauLevenshtein(s1, s2), wasm.damerau_levenshtein(s1, s2));
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "damerauLevenshteinNormalized",
+    () => {
+      // wasm returns normalized distance (0=identical)
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq(
+          "damerauN",
+          ts.damerauLevenshteinNormalized(s1, s2),
+          1 - wasm.damerau_levenshtein_normalized(s1, s2),
+          0.001,
+        );
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "jaro",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("jaro", ts.jaro(s1, s2), wasm.jaro(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "jaroWinkler",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("jw", ts.jaroWinkler(s1, s2), wasm.jarowinkler(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "hamming",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("hamming", ts.hamming(s1, s2), wasm.hamming(s1, s2));
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "hammingNormalized",
+    () => {
+      // wasm returns normalized distance (0=identical)
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq(
+          "hammingN",
+          ts.hammingNormalized(s1, s2),
+          1 - wasm.hamming_normalized(s1, s2),
+          0.001,
+        );
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "lcsSubstringLength",
+    () => {
+      // wasm.lcs_str returns LCS substring length, not distance
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("lcsStr", ts.lcsSubstringLength(s1, s2), wasm.lcs_str(s1, s2));
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "lcsSubstringNormalized",
+    () => {
+      // wasm.lcs_str_normalized returns similarity (1=identical)
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq(
+          "lcsStrN",
+          ts.lcsSubstringNormalized(s1, s2),
+          wasm.lcs_str_normalized(s1, s2),
+          0.001,
+        );
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "ratcliff",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("ratcliff", ts.ratcliff(s1, s2), wasm.ratcliff_obershelp(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "smithWaterman",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("sw", ts.smithWaterman(s1, s2), wasm.smith_waterman(s1, s2));
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "smithWatermanNormalized",
+    () => {
+      // wasm.smith_waterman_normalized returns similarity (1=identical)
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq(
+          "swN",
+          ts.smithWatermanNormalized(s1, s2),
+          wasm.smith_waterman_normalized(s1, s2),
+          0.001,
+        );
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "sift4",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("sift4", ts.sift4(s1, s2), wasm.sift4_simple(s1, s2));
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "sift4Normalized",
+    () => {
+      // wasm returns normalized distance (0=identical)
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq(
+          "sift4N",
+          ts.sift4Normalized(s1, s2),
+          1 - wasm.sift4_simple_normalized(s1, s2),
+          0.001,
+        );
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "tversky",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("tversky", ts.tversky(s1, s2), wasm.tversky(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "overlap",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("overlap", ts.overlap(s1, s2), wasm.overlap(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "prefix",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("prefix", ts.prefix(s1, s2), wasm.prefix(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "suffix",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("suffix", ts.suffix(s1, s2), wasm.suffix(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "length",
+    () => {
+      // wasm.length returns normalized distance (0=identical)
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("length", ts.length(s1, s2), 1 - wasm.length(s1, s2), 0.001);
     },
     BENCH_CONFIG,
   );
