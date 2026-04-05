@@ -1,6 +1,6 @@
 {
   "name": "@nlptools/tokenizer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Tokenization utilities - HuggingFace tokenizers wrapper for NLPTools",
   "keywords": [
     "decoding",
@@ -41,6 +41,6 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@huggingface/tokenizers": "0.0.6"
+    "@huggingface/tokenizers": "0.1.3"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@nlptools/nlptools",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Main NLPTools package - Complete suite of NLP algorithms, text distance, similarity, splitting, and tokenization utilities",
   "keywords": [
     "algorithms",
