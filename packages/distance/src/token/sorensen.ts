@@ -4,6 +4,9 @@ import {
   intersectCount,
   totalCount,
   ngrams,
+  ngramFrequencyMap,
+  intersectCountInt,
+  totalCountInt,
   CHAR_FREQ_SIZE,
   buildCharFreqArray,
 } from "../utils";
@@ -33,9 +36,7 @@ export function sorensen(a: string, b: string): number {
   if (buildCharFreqArray(_freqA, a) && buildCharFreqArray(_freqB, b)) {
     let ic = 0;
     for (let i = 0; i < CHAR_FREQ_SIZE; i++) {
-      const va = _freqA[i];
-      const vb = _freqB[i];
-      ic += va < vb ? va : vb;
+      ic += Math.min(_freqA[i], _freqB[i]);
     }
     const total = a.length + b.length;
     return total === 0 ? 1 : (2 * ic) / total;
@@ -61,6 +62,17 @@ export function sorensen(a: string, b: string): number {
  * @returns Bigram Sørensen-Dice coefficient in [0, 1]
  */
 export function sorensenNgram(a: string, b: string, n = 2): number {
+  // Fast path: integer-encoded bigrams
+  const freqAInt = ngramFrequencyMap(a, n);
+  const freqBInt = ngramFrequencyMap(b, n);
+
+  if (freqAInt !== null && freqBInt !== null) {
+    const ic = intersectCountInt(freqAInt, freqBInt);
+    const total = totalCountInt(freqAInt) + totalCountInt(freqBInt);
+    return total === 0 ? 1 : (2 * ic) / total;
+  }
+
+  // Fallback: string-keyed n-grams
   const freqA = frequencyMap(ngrams(a, n));
   const freqB = frequencyMap(ngrams(b, n));
 

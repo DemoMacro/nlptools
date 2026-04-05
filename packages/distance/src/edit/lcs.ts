@@ -19,10 +19,15 @@ export type LcsPairsFunc = (
 ) => Array<[number, number]>;
 
 /**
- * Internal helper: create an equals callback for string comparison.
+ * Internal helper: create an equals callback using pre-built CharCode arrays.
+ * Avoids repeated string indexing inside the hot LCS loop.
  */
 export function stringEquals(a: string, b: string): (x: number, y: number) => boolean {
-  return (x, y) => a[x] === b[y];
+  const ca = new Uint8Array(a.length);
+  const cb = new Uint8Array(b.length);
+  for (let i = 0; i < a.length; i++) ca[i] = a.charCodeAt(i);
+  for (let i = 0; i < b.length; i++) cb[i] = b.charCodeAt(i);
+  return (x, y) => ca[x] === cb[y];
 }
 
 /**

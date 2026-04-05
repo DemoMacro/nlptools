@@ -32,6 +32,7 @@
     "type": "git",
     "url": "git+https://github.com/DemoMacro/nlptools.git"
   },
+  "type": "module",
   "scripts": {
     "dev": "pnpm -r dev",
     "build": "pnpm -r prepack",

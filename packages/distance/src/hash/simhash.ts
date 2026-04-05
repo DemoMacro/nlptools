@@ -89,13 +89,27 @@ export function hammingSimilarity(a: bigint, b: bigint, bits = 64): number {
 }
 
 /**
- * Count the number of set bits in a bigint.
+ * Count the number of set bits in a bigint using a lookup table.
+ * Processes 8 bits at a time instead of 1, reducing iterations from 64 to 8.
  */
+const POPCOUNT_TABLE = new Uint8Array(256);
+for (let i = 0; i < 256; i++) {
+  POPCOUNT_TABLE[i] =
+    (i & 1) +
+    ((i >> 1) & 1) +
+    ((i >> 2) & 1) +
+    ((i >> 3) & 1) +
+    ((i >> 4) & 1) +
+    ((i >> 5) & 1) +
+    ((i >> 6) & 1) +
+    ((i >> 7) & 1);
+}
+
 function bitCount(n: bigint): number {
   let count = 0;
   while (n > 0n) {
-    count += Number(n & 1n);
-    n >>= 1n;
+    count += POPCOUNT_TABLE[Number(n & 0xffn)];
+    n >>= 8n;
   }
   return count;
 }

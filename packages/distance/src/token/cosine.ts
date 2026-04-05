@@ -2,6 +2,7 @@ import {
   charFrequencyMap,
   frequencyMap,
   ngrams,
+  ngramFrequencyMap,
   CHAR_FREQ_SIZE,
   buildCharFreqArray,
 } from "../utils";
@@ -85,6 +86,30 @@ export function cosine(a: string, b: string): number {
  * @returns N-gram Cosine similarity in [0, 1]
  */
 export function cosineNgram(a: string, b: string, n = 2): number {
+  // Fast path: integer-encoded bigrams
+  const freqAInt = ngramFrequencyMap(a, n);
+  const freqBInt = ngramFrequencyMap(b, n);
+
+  if (freqAInt !== null && freqBInt !== null) {
+    let dotProduct = 0;
+    let normA = 0;
+    let normB = 0;
+
+    for (const [id, countA] of freqAInt) {
+      const countB = freqBInt.get(id) ?? 0;
+      dotProduct += countA * countB;
+      normA += countA * countA;
+    }
+
+    for (const [, count] of freqBInt) {
+      normB += count * count;
+    }
+
+    const denominator = Math.sqrt(normA) * Math.sqrt(normB);
+    return denominator === 0 ? 1 : dotProduct / denominator;
+  }
+
+  // Fallback: string-keyed n-grams
   const freqA = frequencyMap(ngrams(a, n));
   const freqB = frequencyMap(ngrams(b, n));
 

@@ -4,6 +4,9 @@ import {
   intersectCount,
   unionCount,
   ngrams,
+  ngramFrequencyMap,
+  intersectCountInt,
+  unionCountInt,
   CHAR_FREQ_SIZE,
   buildCharFreqArray,
 } from "../utils";
@@ -36,8 +39,8 @@ export function jaccard(a: string, b: string): number {
     for (let i = 0; i < CHAR_FREQ_SIZE; i++) {
       const va = _freqA[i];
       const vb = _freqB[i];
-      ic += va < vb ? va : vb;
-      uc += va > vb ? va : vb;
+      ic += Math.min(va, vb);
+      uc += Math.max(va, vb);
     }
     return uc === 0 ? 1 : ic / uc;
   }
@@ -62,6 +65,17 @@ export function jaccard(a: string, b: string): number {
  * @returns Bigram Jaccard similarity in [0, 1]
  */
 export function jaccardNgram(a: string, b: string, n = 2): number {
+  // Fast path: integer-encoded bigrams
+  const freqAInt = ngramFrequencyMap(a, n);
+  const freqBInt = ngramFrequencyMap(b, n);
+
+  if (freqAInt !== null && freqBInt !== null) {
+    const ic = intersectCountInt(freqAInt, freqBInt);
+    const uc = unionCountInt(freqAInt, freqBInt);
+    return uc === 0 ? 1 : ic / uc;
+  }
+
+  // Fallback: string-keyed n-grams
   const freqA = frequencyMap(ngrams(a, n));
   const freqB = frequencyMap(ngrams(b, n));
 

@@ -13,6 +13,37 @@ export function ngrams(str: string, n = 2): string[] {
 }
 
 /**
+ * Build an n-gram frequency map using integer-encoded keys.
+ * Encodes n characters into a single number to avoid string allocation
+ * and speed up Map hashing.
+ *
+ * For ASCII bigrams: key = (c1 << 8) | c2 (fits in 16 bits).
+ * For non-ASCII or n > 2: falls back to string keys.
+ */
+export function ngramFrequencyMap(str: string, n = 2): Map<number, number> | null {
+  const len = str.length;
+  if (len < n) return new Map();
+
+  // Fast path: ASCII-only bigrams encoded as integers
+  if (n === 2) {
+    const map = new Map<number, number>();
+    for (let i = 0; i <= len - 2; i++) {
+      const c1 = str.charCodeAt(i);
+      const c2 = str.charCodeAt(i + 1);
+      if (c1 >= 128 || c2 >= 128) {
+        // Hit non-ASCII — fall back to string keys
+        return null;
+      }
+      const key = (c1 << 8) | c2;
+      map.set(key, (map.get(key) ?? 0) + 1);
+    }
+    return map;
+  }
+
+  return null;
+}
+
+/**
  * Build a frequency map (Counter/multiset) from an iterable of tokens.
  * Matches the behavior of Rust's textdistance Counter.
  */
@@ -101,6 +132,47 @@ export function unionCount(a: Map<string, number>, b: Map<string, number>): numb
  * Get total token count from a frequency map.
  */
 export function totalCount(map: Map<string, number>): number {
+  let count = 0;
+  for (const c of map.values()) count += c;
+  return count;
+}
+
+// ---------------------------------------------------------------------------
+// Integer-keyed frequency map operations (for n-gram fast path)
+// ---------------------------------------------------------------------------
+
+export function intersectCountInt(a: Map<number, number>, b: Map<number, number>): number {
+  let count = 0;
+  const [smaller, larger] = a.size <= b.size ? [a, b] : [b, a];
+  for (const [key, countA] of smaller) {
+    const countB = larger.get(key);
+    if (countB !== undefined) {
+      count += Math.min(countA, countB);
+    }
+  }
+  return count;
+}
+
+export function unionCountInt(a: Map<number, number>, b: Map<number, number>): number {
+  let count = 0;
+  const [smaller, larger] = a.size <= b.size ? [a, b] : [b, a];
+  for (const [key, countA] of smaller) {
+    const countB = larger.get(key);
+    if (countB !== undefined) {
+      count += Math.max(countA, countB);
+    } else {
+      count += countA;
+    }
+  }
+  for (const [key, countB] of larger) {
+    if (!smaller.has(key)) {
+      count += countB;
+    }
+  }
+  return count;
+}
+
+export function totalCountInt(map: Map<number, number>): number {
   let count = 0;
   for (const c of map.values()) count += c;
   return count;

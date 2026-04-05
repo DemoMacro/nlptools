@@ -199,38 +199,38 @@ Unit: microseconds per operation (us/op).
 | Algorithm       | Size            | TS (V8 JIT) | WASM (via JS) | Rust (native) |
 | --------------- | --------------- | ----------- | ------------- | ------------- |
 | levenshtein     | Short (<10)     | 0.3         | 7.9           | 0.11          |
-| levenshtein     | Medium (10-100) | 1.4         | 117.3         | 0.98          |
-| levenshtein     | Long (>200)     | 14.2        | 2,827.5       | 39.68         |
+| levenshtein     | Medium (10-100) | 1.3         | 116.2         | 0.98          |
+| levenshtein     | Long (>200)     | 15.2        | 2,877.5       | 39.68         |
 | levenshteinNorm | Short           | 0.3         | 7.9           | 0.11          |
-| lcs             | Short (<10)     | 1.6         | 16.4          | 0.41          |
+| lcs             | Short (<10)     | 1.6         | 16.5          | 0.41          |
 | lcs             | Medium (10-100) | 6.8         | 272.6         | 3.22          |
-| lcs             | Long (>200)     | 261.5       | 6,531.0       | 122.63        |
-| lcsNorm         | Short           | 1.6         | 16.3          | 0.48          |
+| lcs             | Long (>200)     | 217.8       | 6,574.1       | 122.63        |
+| lcsNorm         | Short           | 1.7         | 16.2          | 0.48          |
 
 ### Token Similarity (Character Multiset)
 
 | Algorithm | Size            | TS (V8 JIT) | WASM (via JS) | Rust (native) |
 | --------- | --------------- | ----------- | ------------- | ------------- |
-| jaccard   | Short (<10)     | 1.9         | 25.2          | 0.42          |
-| jaccard   | Medium (10-100) | 6.1         | 73.0          | 1.55          |
-| jaccard   | Long (>200)     | 18.5        | 171.4         | 5.54          |
-| cosine    | Short (<10)     | 1.7         | 19.4          | 0.32          |
-| cosine    | Medium (10-100) | 5.6         | 61.6          | 1.35          |
-| cosine    | Long (>200)     | 18.2        | 157.8         | 4.77          |
-| sorensen  | Short (<10)     | 1.4         | 19.3          | 0.33          |
-| sorensen  | Medium (10-100) | 4.8         | 61.3          | 1.33          |
-| sorensen  | Long (>200)     | 16.5        | 156.4         | 4.46          |
+| jaccard   | Short (<10)     | 0.8         | 25.2          | 0.42          |
+| jaccard   | Medium (10-100) | 0.8         | 74.3          | 1.55          |
+| jaccard   | Long (>200)     | 1.6         | 171.5         | 5.54          |
+| cosine    | Short (<10)     | 0.8         | 19.3          | 0.32          |
+| cosine    | Medium (10-100) | 0.8         | 61.4          | 1.35          |
+| cosine    | Long (>200)     | 1.5         | 158.5         | 4.77          |
+| sorensen  | Short (<10)     | 0.7         | 19.3          | 0.33          |
+| sorensen  | Medium (10-100) | 0.7         | 61.0          | 1.33          |
+| sorensen  | Long (>200)     | 1.5         | 160.0         | 4.46          |
 
 ### Bigram Variants
 
 | Algorithm     | Size            | TS (V8 JIT) | WASM (via JS) | Rust (native) |
 | ------------- | --------------- | ----------- | ------------- | ------------- |
-| jaccardBigram | Short (<10)     | 2.8         | 27.2          | 0.45          |
-| jaccardBigram | Medium (10-100) | 16.3        | 161.5         | 3.86          |
-| cosineBigram  | Short (<10)     | 2.2         | 21.1          | 0.36          |
-| cosineBigram  | Medium (10-100) | 13.6        | 125.5         | 3.12          |
+| jaccardBigram | Short (<10)     | 1.1         | 27.4          | 0.45          |
+| jaccardBigram | Medium (10-100) | 7.7         | 160.4         | 3.86          |
+| cosineBigram  | Short (<10)     | 0.8         | 21.2          | 0.36          |
+| cosineBigram  | Medium (10-100) | 5.9         | 127.0         | 3.12          |
 
-TS implementations use V8 JIT optimization + `Int32Array` ASCII fast path, avoiding JS-WASM boundary overhead entirely.
+TS implementations use V8 JIT optimization + `Int32Array` ASCII fast path + integer-encoded bigrams, avoiding JS-WASM boundary overhead entirely.
 
 ## Dependencies
 
