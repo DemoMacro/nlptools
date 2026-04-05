@@ -48,12 +48,12 @@ const distance = nlptools.levenshtein("kitten", "sitting");
 console.log(`Distance: ${distance}`); // Output: 3
 
 // Calculate normalized similarity (0-1)
-const similarity = nlptools.jaro("hello", "hallo");
-console.log(`Similarity: ${similarity}`); // Output: 0.8666666666666667
+const similarity = nlptools.levenshteinNormalized("cat", "bat");
+console.log(`Similarity: ${similarity}`); // Output: 0.6666666666666666
 
-// Use the universal compare function
-const result = nlptools.compare("apple", "apply", "levenshtein");
-console.log(`Result: ${result}`); // Output: 0.2
+// Token-based similarity
+const jaccard = nlptools.jaccard("abc", "bcd");
+console.log(`Jaccard: ${jaccard}`); // Output: 0.3333333333333333
 ```
 
 ## Contributing
