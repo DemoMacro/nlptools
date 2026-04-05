@@ -33,24 +33,16 @@ console.log("\n--- Algorithm Categories ---");
 
 // Edit Distance Algorithms
 console.log("\nEdit Distance Algorithms:");
-console.log(
-  `hamming("karolin", "kathrin") = ${wasm.hamming("karolin", "kathrin")}`,
-);
-console.log(
-  `damerau_levenshtein("ca", "abc") = ${wasm.damerau_levenshtein("ca", "abc")}`,
-);
+console.log(`hamming("karolin", "kathrin") = ${wasm.hamming("karolin", "kathrin")}`);
+console.log(`damerau_levenshtein("ca", "abc") = ${wasm.damerau_levenshtein("ca", "abc")}`);
 console.log(`sift4_simple("abc", "axc") = ${wasm.sift4_simple("abc", "axc")}`);
 
 // Sequence-based Algorithms
 console.log("\nSequence-based Algorithms:");
 console.log(`lcs_seq("ABCD", "ACBAD") = ${wasm.lcs_seq("ABCD", "ACBAD")}`);
 console.log(`lcs_str("ABCD", "ACBAD") = ${wasm.lcs_str("ABCD", "ACBAD")}`);
-console.log(
-  `ratcliff_obershelp("hello", "hallo") = ${wasm.ratcliff_obershelp("hello", "hallo")}`,
-);
-console.log(
-  `smith_waterman("ACGT", "ACGT") = ${wasm.smith_waterman("ACGT", "ACGT")}`,
-);
+console.log(`ratcliff_obershelp("hello", "hallo") = ${wasm.ratcliff_obershelp("hello", "hallo")}`);
+console.log(`smith_waterman("ACGT", "ACGT") = ${wasm.smith_waterman("ACGT", "ACGT")}`);
 
 // Token-based Algorithms
 console.log("\nToken-based Algorithms:");
@@ -60,19 +52,13 @@ console.log(
 console.log(
   `sorensen("hello world", "world hello") = ${wasm.sorensen("hello world", "world hello")}`,
 );
-console.log(
-  `overlap("hello", "hello world") = ${wasm.overlap("hello", "hello world")}`,
-);
+console.log(`overlap("hello", "hello world") = ${wasm.overlap("hello", "hello world")}`);
 console.log(`tversky("abc", "bcd") = ${wasm.tversky("abc", "bcd")}`);
 
 // Bigram Algorithms
 console.log("\nBigram Algorithms:");
-console.log(
-  `jaccard_bigram("night", "nacht") = ${wasm.jaccard_bigram("night", "nacht")}`,
-);
-console.log(
-  `cosine_bigram("night", "nacht") = ${wasm.cosine_bigram("night", "nacht")}`,
-);
+console.log(`jaccard_bigram("night", "nacht") = ${wasm.jaccard_bigram("night", "nacht")}`);
+console.log(`cosine_bigram("night", "nacht") = ${wasm.cosine_bigram("night", "nacht")}`);
 
 // Naive Algorithms
 console.log("\nNaive Algorithms:");
@@ -85,9 +71,7 @@ console.log("Available algorithms include:");
 console.log(
   "Edit Distance: levenshtein, damerau_levenshtein, jaro, jarowinkler, hamming, sift4_simple, myers_levenshtein",
 );
-console.log(
-  "Sequence-based: lcs_seq, lcs_str, ratcliff_obershelp, smith_waterman",
-);
+console.log("Sequence-based: lcs_seq, lcs_str, ratcliff_obershelp, smith_waterman");
 console.log("Token-based: jaccard, cosine, sorensen, tversky, overlap");
 console.log("Bigram: jaccard_bigram, cosine_bigram");
 console.log("Naive: prefix, suffix, length");

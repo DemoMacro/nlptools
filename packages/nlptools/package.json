@@ -2,48 +2,50 @@
   "name": "@nlptools/nlptools",
   "version": "0.0.2",
   "description": "Main NLPTools package - Complete suite of NLP algorithms, text distance, similarity, splitting, and tokenization utilities",
-  "main": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "dev": "pnpm unbuild --stub",
-    "prepack": "pnpm unbuild"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DemoMacro/nlptools.git"
-  },
   "keywords": [
-    "nlp",
-    "natural-language-processing",
-    "text-distance",
-    "string-similarity",
-    "fuzzy-matching",
-    "text-splitting",
-    "text-splitter",
-    "tokenization",
-    "tokenizer",
-    "huggingface",
+    "algorithms",
     "chunking",
     "document-processing",
+    "fuzzy-matching",
+    "huggingface",
     "llm",
-    "algorithms",
+    "natural-language-processing",
+    "nlp",
     "nlptools",
-    "utility",
-    "toolkit"
+    "string-similarity",
+    "text-distance",
+    "text-splitter",
+    "text-splitting",
+    "tokenization",
+    "tokenizer",
+    "toolkit",
+    "utility"
   ],
+  "homepage": "https://github.com/DemoMacro/nlptools#readme",
+  "bugs": {
+    "url": "https://github.com/DemoMacro/nlptools/issues"
+  },
+  "license": "MIT",
   "author": {
     "name": "Demo Macro",
     "email": "abc@imst.xyz",
     "url": "https://imst.xyz/"
   },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/DemoMacro/nlptools/issues"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DemoMacro/nlptools.git"
   },
-  "homepage": "https://github.com/DemoMacro/nlptools#readme",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "scripts": {
+    "dev": "basis build --stub",
+    "build": "basis build",
+    "prepack": "pnpm build"
+  },
   "dependencies": {
     "@nlptools/distance": "workspace:*",
     "@nlptools/splitter": "workspace:*",

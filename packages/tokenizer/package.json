@@ -2,42 +2,44 @@
   "name": "@nlptools/tokenizer",
   "version": "0.0.2",
   "description": "Tokenization utilities - HuggingFace tokenizers wrapper for NLPTools",
-  "main": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "dev": "pnpm unbuild --stub",
-    "prepack": "pnpm unbuild"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DemoMacro/nlptools.git"
-  },
   "keywords": [
-    "nlp",
-    "natural-language-processing",
-    "tokenization",
-    "tokenizer",
+    "decoding",
+    "encoding",
     "huggingface",
     "llm",
-    "text-processing",
-    "encoding",
-    "decoding",
+    "natural-language-processing",
+    "nlp",
     "nlptools",
+    "text-processing",
+    "tokenization",
+    "tokenizer",
     "utility"
   ],
+  "homepage": "https://github.com/DemoMacro/nlptools#readme",
+  "bugs": {
+    "url": "https://github.com/DemoMacro/nlptools/issues"
+  },
+  "license": "MIT",
   "author": {
     "name": "Demo Macro",
     "email": "abc@imst.xyz",
     "url": "https://imst.xyz/"
   },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/DemoMacro/nlptools/issues"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DemoMacro/nlptools.git"
   },
-  "homepage": "https://github.com/DemoMacro/nlptools#readme",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "scripts": {
+    "dev": "basis build --stub",
+    "build": "basis build",
+    "prepack": "pnpm build"
+  },
   "dependencies": {
     "@huggingface/tokenizers": "0.0.6"
   }
