@@ -1,7 +1,10 @@
-export * from "@nlptools/distance-wasm";
-
-// Import fastest-levenshtein function
-import { distance as fastestLevenshtein } from "fastest-levenshtein";
-
-// Export fastest-levenshtein function with consistent naming
-export const fastest_levenshtein = fastestLevenshtein;
+export * from "./edit/levenshtein";
+export * from "./edit/lcs";
+export * from "./token/jaccard";
+export * from "./token/cosine";
+export * from "./token/sorensen";
+export * from "./hash/simhash";
+export * from "./hash/minhash";
+export * from "./hash/lsh";
+export { DiffType, diff } from "@algorithm.ts/diff";
+export type { IDiffItem, IDiffOptions, ILcs, ILcsAlgorithm } from "@algorithm.ts/diff";

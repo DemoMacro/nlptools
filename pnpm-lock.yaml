@@ -29,9 +29,12 @@ importers:
 
   packages/distance:
     dependencies:
-      '@nlptools/distance-wasm':
-        specifier: workspace:*
-        version: link:../distance-wasm/pkg
+      '@algorithm.ts/diff':
+        specifier: 1.0.4
+        version: 1.0.4
+      '@algorithm.ts/lcs':
+        specifier: 4.0.6
+        version: 4.0.6
       fastest-levenshtein:
         specifier: 1.0.16
         version: 1.0.16
@@ -77,6 +80,12 @@ importers:
         version: 1.0.16
 
 packages:
+
+  '@algorithm.ts/diff@1.0.4':
+    resolution: {integrity: sha512-aJSOUOFJL6j/5TizB0lefxEBud590scJDcycY9OmuDzjEqBoRxFJPKVPnVbftCB8pToPqJ601HYK9OJA22dVpQ==}
+
+  '@algorithm.ts/lcs@4.0.6':
+    resolution: {integrity: sha512-uu6TgA77++klfI1kM3q9LotWsTrzOzsnot8CmICzdNSG7GWxKvVb+IMMUVILrTbUKoLVfv2Js33PqfXnvkusag==}
 
   '@babel/generator@8.0.0-rc.2':
     resolution: {integrity: sha512-oCQ1IKPwkzCeJzAPb7Fv8rQ9k5+1sG8mf2uoHiMInPYvkRfrDJxbTIbH51U+jstlkghus0vAi3EBvkfvEsYNLQ==}
@@ -1782,6 +1791,12 @@ packages:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
 snapshots:
+
+  '@algorithm.ts/diff@1.0.4':
+    dependencies:
+      '@algorithm.ts/lcs': 4.0.6
+
+  '@algorithm.ts/lcs@4.0.6': {}
 
   '@babel/generator@8.0.0-rc.2':
     dependencies:

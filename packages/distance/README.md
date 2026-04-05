@@ -1,23 +1,18 @@
 # @nlptools/distance
 
 ![npm version](https://img.shields.io/npm/v/@nlptools/distance)
-![npm downloads](https://img.shields.io/npm/dw/@nlptools/distance)
 ![npm license](https://img.shields.io/npm/l/@nlptools/distance)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)
 
-> Complete string distance and similarity algorithms package with WebAssembly and JavaScript implementations
-
-This package provides comprehensive text similarity and distance algorithms, combining the high-performance WebAssembly implementation from `@nlptools/distance-wasm` with additional JavaScript-based algorithms for maximum compatibility and performance.
+> High-performance string distance and similarity algorithms, implemented in pure TypeScript
 
 ## Features
 
-- ⚡ **Dual Implementation**: WebAssembly for performance + JavaScript for compatibility
-- 🧮 **Comprehensive Algorithms**: 30+ string similarity and distance algorithms
-- 🎯 **Multiple Categories**: Edit-based, sequence-based, token-based, and naive algorithms
-- 📝 **TypeScript First**: Full type safety with comprehensive API
-- 🔧 **Universal Interface**: Single compare function for all algorithms
-- 📊 **Normalized Results**: Consistent 0-1 similarity scores across algorithms
-- 🚀 **Auto-optimization**: Automatically chooses the fastest implementation available
+- Pure TypeScript implementation, zero native dependencies
+- Edit distance: Levenshtein, LCS (Myers O(ND) and DP)
+- Token similarity: Jaccard, Cosine, Sorensen-Dice (character multiset and n-gram variants)
+- Hash-based deduplication: SimHash, MinHash, LSH
+- Diff: based on `@algorithm.ts/diff` (Myers and DP backends)
+- All distance algorithms include normalized similarity variants (0-1 range)
 
 ## Installation
 
@@ -34,94 +29,215 @@ pnpm add @nlptools/distance
 
 ## Usage
 
-### Basic Setup
+### Edit Distance
 
 ```typescript
-import * as distance from "@nlptools/distance";
+import { levenshtein, levenshteinNormalized } from "@nlptools/distance";
 
-// All algorithms are available as named functions
-console.log(distance.levenshtein("kitten", "sitting")); // 3
-console.log(distance.jaro("hello", "hallo")); // 0.8666666666666667
-console.log(distance.cosine("abc", "bcd")); // 0.6666666666666666
+levenshtein("kitten", "sitting"); // 3
+levenshteinNormalized("kitten", "sitting"); // 0.571
 ```
 
-### Distance vs Similarity
-
-Most algorithms have both distance and normalized versions:
+### LCS (Longest Common Subsequence)
 
 ```typescript
-// Distance algorithms (lower is more similar)
-const dist = distance.levenshtein("cat", "bat"); // 1
+import { lcsDistance, lcsNormalized, lcsLength, lcsPairs } from "@nlptools/distance";
 
-// Similarity algorithms (higher is more similar, 0-1 range)
-const sim = distance.levenshtein_normalized("cat", "bat"); // 0.6666666666666666
+lcsDistance("abcde", "ace"); // 2  (= 5 + 3 - 2 * 3)
+lcsNormalized("abcde", "ace"); // 0.75
+lcsLength("abcde", "ace"); // 3
+lcsPairs("abcde", "ace"); // [[0,0], [2,1], [4,2]]
 ```
 
-### Available Algorithms
+By default uses Myers O(ND) algorithm. Switch to DP with `algorithm: "dp"`.
 
-This package includes all algorithms from `@nlptools/distance-wasm` plus additional JavaScript implementations:
+### Token Similarity (Character Multiset)
 
-#### Edit Distance Algorithms
-
-- `levenshtein` - Classic edit distance
-- `fastest_levenshtein` - High-performance Levenshtein distance (fastest-levenshtein)
-- `damerau_levenshtein` - Edit distance with transpositions
-- `myers_levenshtein` - Myers bit-parallel algorithm for edit distance
-- `jaro` - Jaro similarity
-- `jarowinkler` - Jaro-Winkler similarity
-- `hamming` - Hamming distance for equal-length strings
-- `sift4_simple` - SIFT4 algorithm
-
-#### Sequence-based Algorithms
-
-- `lcs_seq` - Longest common subsequence
-- `lcs_str` - Longest common substring
-- `ratcliff_obershelp` - Gestalt pattern matching
-- `smith_waterman` - Local sequence alignment
-
-#### Token-based Algorithms
-
-- `jaccard` - Jaccard similarity
-- `cosine` - Cosine similarity
-- `sorensen` - Sørensen-Dice coefficient
-- `tversky` - Tversky index
-- `overlap` - Overlap coefficient
-
-#### Bigram Algorithms
-
-- `jaccard_bigram` - Jaccard similarity on character bigrams
-- `cosine_bigram` - Cosine similarity on character bigrams
-
-#### Naive Algorithms
-
-- `prefix` - Prefix similarity
-- `suffix` - Suffix similarity
-- `length` - Length-based similarity
-
-### Universal Compare Function
+Based on character frequency maps (Counter), matching the `textdistance` crate semantics:
 
 ```typescript
-const result = distance.compare("hello", "hallo", "jaro");
-console.log(result); // 0.8666666666666667
+import { jaccard, cosine, sorensen } from "@nlptools/distance";
 
-// Use fastest-levenshtein for optimal performance
-console.log(distance.fastest_levenshtein("fast", "faster")); // 2
+jaccard("abc", "abd"); // 0.667
+cosine("hello", "hallo"); // 0.8
+sorensen("test", "text"); // 0.75
 ```
+
+### N-Gram Variants
+
+```typescript
+import { jaccardNgram, cosineNgram, sorensenNgram } from "@nlptools/distance";
+
+jaccardNgram("hello", "hallo"); // 0.333  (bigram-based)
+cosineNgram("hello", "hallo"); // 0.5     (bigram-based)
+```
+
+### SimHash (Document Fingerprinting)
+
+```typescript
+import { simhash, hammingDistance, SimHasher } from "@nlptools/distance";
+
+// Function-based
+const fp1 = simhash(["hello", "world"]);
+const fp2 = simhash(["hello", "earth"]);
+hammingDistance(fp1, fp2); // small = similar
+
+// Class-based
+const hasher = new SimHasher();
+const a = hasher.hash(["hello", "world"]);
+const b = hasher.hash(["hello", "earth"]);
+hasher.isDuplicate(a, b); // true if hamming distance <= 3
+```
+
+### MinHash (Jaccard Similarity Estimation)
+
+```typescript
+import { MinHash } from "@nlptools/distance";
+
+const mh1 = new MinHash({ numHashes: 128 });
+mh1.update("hello");
+mh1.update("world");
+
+const mh2 = new MinHash({ numHashes: 128 });
+mh2.update("hello");
+mh2.update("earth");
+
+MinHash.estimate(mh1.digest(), mh2.digest()); // ~0.67
+```
+
+### LSH (Approximate Nearest Neighbor Search)
+
+```typescript
+import { MinHash } from "@nlptools/distance";
+import { LSH } from "@nlptools/distance";
+
+const lsh = new LSH({ numBands: 16, numHashes: 128 });
+
+const mh = new MinHash({ numHashes: 128 });
+mh.update("hello");
+mh.update("world");
+lsh.insert("doc1", mh.digest());
+
+// Query for similar documents
+const query = lsh.query(mh.digest(), 0.5);
+// => [["doc1", 0.67]]
+```
+
+### Diff
+
+```typescript
+import { diff, DiffType } from "@nlptools/distance";
+
+const result = diff("abc", "ac");
+// => [
+//   { type: DiffType.COMMON, tokens: "a" },
+//   { type: DiffType.REMOVED, tokens: "b" },
+//   { type: DiffType.COMMON, tokens: "c" },
+// ]
+```
+
+## API Reference
+
+### Edit Distance
+
+| Function                          | Description               | Returns              |
+| --------------------------------- | ------------------------- | -------------------- |
+| `levenshtein(a, b)`               | Levenshtein edit distance | `number`             |
+| `levenshteinNormalized(a, b)`     | Normalized similarity     | `number` (0-1)       |
+| `lcsDistance(a, b, algorithm?)`   | LCS distance              | `number`             |
+| `lcsNormalized(a, b, algorithm?)` | Normalized LCS similarity | `number` (0-1)       |
+| `lcsLength(a, b, algorithm?)`     | LCS length                | `number`             |
+| `lcsPairs(a, b, algorithm?)`      | LCS matching pairs        | `[number, number][]` |
+
+### Token Similarity
+
+| Function                  | Description                                    | Returns        |
+| ------------------------- | ---------------------------------------------- | -------------- |
+| `jaccard(a, b)`           | Jaccard similarity (character multiset)        | `number` (0-1) |
+| `jaccardNgram(a, b, n?)`  | Jaccard on character n-grams                   | `number` (0-1) |
+| `cosine(a, b)`            | Cosine similarity (character multiset)         | `number` (0-1) |
+| `cosineNgram(a, b, n?)`   | Cosine on character n-grams                    | `number` (0-1) |
+| `sorensen(a, b)`          | Sorensen-Dice coefficient (character multiset) | `number` (0-1) |
+| `sorensenNgram(a, b, n?)` | Sorensen-Dice on character n-grams             | `number` (0-1) |
+
+### Hash-Based Deduplication
+
+| Function / Class                 | Description                                                        |
+| -------------------------------- | ------------------------------------------------------------------ |
+| `simhash(features, options?)`    | Generate 64-bit fingerprint as `bigint`                            |
+| `hammingDistance(a, b)`          | Hamming distance between two fingerprints                          |
+| `hammingSimilarity(a, b, bits?)` | Normalized Hamming similarity                                      |
+| `SimHasher`                      | Class with `hash()`, `distance()`, `similarity()`, `isDuplicate()` |
+| `MinHash`                        | Class with `update()`, `digest()`, `estimate()`                    |
+| `MinHash.estimate(sig1, sig2)`   | Static: estimate Jaccard from signatures                           |
+| `LSH`                            | Class with `insert()`, `query()`, `remove()`                       |
+
+### Diff
+
+| Function               | Description                 | Returns          |
+| ---------------------- | --------------------------- | ---------------- |
+| `diff(a, b, options?)` | Sequence diff (Myers or DP) | `IDiffItem<T>[]` |
+
+### Types
+
+| Type              | Description                              |
+| ----------------- | ---------------------------------------- |
+| `DiffType`        | Enum: `ADDED`, `REMOVED`, `COMMON`       |
+| `IDiffItem<T>`    | Diff result item with type and tokens    |
+| `IDiffOptions<T>` | Options for diff (equals, lcs algorithm) |
+| `ISimHashOptions` | Options for SimHash (bits, hashFn)       |
+| `IMinHashOptions` | Options for MinHash (numHashes, seed)    |
+| `ILSHOptions`     | Options for LSH (numBands, numHashes)    |
 
 ## Performance
 
-The package automatically selects the fastest implementation available:
+Benchmark: 1000 iterations per pair, same test data across all runtimes.
+Unit: microseconds per operation (us/op).
 
-- **WebAssembly algorithms**: 10-100x faster than pure JavaScript
-- **Auto-detection**: Seamlessly switches between WASM and JS implementations
+### Edit Distance
 
-## References
+| Algorithm       | Size            | TS (V8 JIT) | WASM (via JS) | Rust (native) |
+| --------------- | --------------- | ----------- | ------------- | ------------- |
+| levenshtein     | Short (<10)     | 0.3         | 7.9           | 0.11          |
+| levenshtein     | Medium (10-100) | 1.4         | 117.3         | 0.98          |
+| levenshtein     | Long (>200)     | 14.2        | 2,827.5       | 39.68         |
+| levenshteinNorm | Short           | 0.3         | 7.9           | 0.11          |
+| lcs             | Short (<10)     | 1.6         | 16.4          | 0.41          |
+| lcs             | Medium (10-100) | 6.8         | 272.6         | 3.22          |
+| lcs             | Long (>200)     | 261.5       | 6,531.0       | 122.63        |
+| lcsNorm         | Short           | 1.6         | 16.3          | 0.48          |
 
-This package incorporates and builds upon the following excellent open source projects:
+### Token Similarity (Character Multiset)
 
-- [textdistance.rs](https://github.com/life4/textdistance.rs) - Core Rust implementation via @nlptools/distance-wasm
-- [fastest-levenshtein](https://github.com/ka-weihe/fastest-levenshtein) - High-performance Levenshtein implementation
+| Algorithm | Size            | TS (V8 JIT) | WASM (via JS) | Rust (native) |
+| --------- | --------------- | ----------- | ------------- | ------------- |
+| jaccard   | Short (<10)     | 1.9         | 25.2          | 0.42          |
+| jaccard   | Medium (10-100) | 6.1         | 73.0          | 1.55          |
+| jaccard   | Long (>200)     | 18.5        | 171.4         | 5.54          |
+| cosine    | Short (<10)     | 1.7         | 19.4          | 0.32          |
+| cosine    | Medium (10-100) | 5.6         | 61.6          | 1.35          |
+| cosine    | Long (>200)     | 18.2        | 157.8         | 4.77          |
+| sorensen  | Short (<10)     | 1.4         | 19.3          | 0.33          |
+| sorensen  | Medium (10-100) | 4.8         | 61.3          | 1.33          |
+| sorensen  | Long (>200)     | 16.5        | 156.4         | 4.46          |
+
+### Bigram Variants
+
+| Algorithm     | Size            | TS (V8 JIT) | WASM (via JS) | Rust (native) |
+| ------------- | --------------- | ----------- | ------------- | ------------- |
+| jaccardBigram | Short (<10)     | 2.8         | 27.2          | 0.45          |
+| jaccardBigram | Medium (10-100) | 16.3        | 161.5         | 3.86          |
+| cosineBigram  | Short (<10)     | 2.2         | 21.1          | 0.36          |
+| cosineBigram  | Medium (10-100) | 13.6        | 125.5         | 3.12          |
+
+TS implementations use V8 JIT optimization + `Int32Array` ASCII fast path, avoiding JS-WASM boundary overhead entirely.
+
+## Dependencies
+
+- `fastest-levenshtein` — fastest JS Levenshtein implementation
+- `@algorithm.ts/lcs` — Myers and DP Longest Common Subsequence
+- `@algorithm.ts/diff` — Sequence diff built on LCS
 
 ## License
 
-- [MIT](../../LICENSE) &copy; [Demo Macro](https://imst.xyz/)
+[MIT](../../LICENSE) &copy; [Demo Macro](https://www.demomacro.com/)

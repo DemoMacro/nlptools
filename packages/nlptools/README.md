@@ -176,4 +176,4 @@ The package automatically selects the fastest implementation available:
 
 ## License
 
-- [MIT](../../LICENSE) &copy; [Demo Macro](https://imst.xyz/)
+- [MIT](../../LICENSE) &copy; [Demo Macro](https://www.demomacro.com/)

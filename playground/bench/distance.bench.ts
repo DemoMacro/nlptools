@@ -1,26 +1,19 @@
 /**
  * Vitest benchmark tests for @nlptools/distance package
  *
- * This module provides performance tests that match the Rust benchmark tests
- * in packages/distance-wasm/tests/bench.rs, using Lorem Ipsum text.
- *
- * The benchmark methodology mirrors the Rust implementation:
- * - 1000 iterations per test
- * - Manual loop control to match Rust timing methodology
- * - Same test data and algorithm coverage
+ * Compares pure TS implementations against WASM (distance-wasm) for the same algorithms.
  */
 
-import { describe, it, expect, bench } from "vitest";
+import { describe, bench } from "vitest";
 import * as wasm from "@nlptools/distance-wasm";
-import * as distance from "@nlptools/distance";
+import * as ts from "@nlptools/distance";
 
-// Benchmark configuration to match Rust implementation
 const BENCH_CONFIG = {
-  iterations: 1000, // Match Rust bench.rs ITERATIONS
-  time: 1000, // Run for at least 1 second to get stable measurements
+  iterations: 1000,
+  time: 1000,
 };
 
-// Test data for benchmarking - Lorem Ipsum text (matching Rust bench.rs)
+// Test data - Lorem Ipsum text
 const SHORT_STRINGS = [
   { s1: "Lorem", s2: "ipsum" },
   { s1: "dolor", s2: "dolor" },
@@ -55,64 +48,22 @@ const LONG_STRINGS = [
   },
 ];
 
-describe("Edit Distance Algorithms Benchmark (Lorem Ipsum)", () => {
+// ============================================================================
+// Levenshtein: TS (fastest-levenshtein) vs WASM (textdistance)
+// ============================================================================
+describe("Levenshtein: TS vs WASM", () => {
   describe("Short Strings (< 10 chars)", () => {
     bench(
-      "levenshtein",
+      "TS: levenshtein",
       () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.levenshtein(s1, s2);
-        }
+        for (const { s1, s2 } of SHORT_STRINGS) ts.levenshtein(s1, s2);
       },
       BENCH_CONFIG,
     );
-
     bench(
-      "damerau_levenshtein",
+      "WASM: levenshtein",
       () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.damerau_levenshtein(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "myers_levenshtein",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.myers_levenshtein(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "fastest_levenshtein",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          distance.fastest_levenshtein(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "hamming",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS.slice(0, 3)) {
-          wasm.hamming(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "sift4_simple",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.sift4_simple(s1, s2);
-        }
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.levenshtein(s1, s2);
       },
       BENCH_CONFIG,
     );
@@ -120,51 +71,16 @@ describe("Edit Distance Algorithms Benchmark (Lorem Ipsum)", () => {
 
   describe("Medium Strings (10-100 chars)", () => {
     bench(
-      "levenshtein",
+      "TS: levenshtein",
       () => {
-        for (const { s1, s2 } of MEDIUM_STRINGS) {
-          wasm.levenshtein(s1, s2);
-        }
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.levenshtein(s1, s2);
       },
       BENCH_CONFIG,
     );
-
     bench(
-      "damerau_levenshtein",
+      "WASM: levenshtein",
       () => {
-        for (const { s1, s2 } of MEDIUM_STRINGS) {
-          wasm.damerau_levenshtein(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "myers_levenshtein",
-      () => {
-        for (const { s1, s2 } of MEDIUM_STRINGS) {
-          wasm.myers_levenshtein(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "fastest_levenshtein",
-      () => {
-        for (const { s1, s2 } of MEDIUM_STRINGS) {
-          distance.fastest_levenshtein(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "sift4_simple",
-      () => {
-        for (const { s1, s2 } of MEDIUM_STRINGS) {
-          wasm.sift4_simple(s1, s2);
-        }
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.levenshtein(s1, s2);
       },
       BENCH_CONFIG,
     );
@@ -172,371 +88,443 @@ describe("Edit Distance Algorithms Benchmark (Lorem Ipsum)", () => {
 
   describe("Long Strings (> 200 chars)", () => {
     bench(
-      "levenshtein",
+      "TS: levenshtein",
       () => {
-        for (const { s1, s2 } of LONG_STRINGS) {
-          wasm.levenshtein(s1, s2);
-        }
+        for (const { s1, s2 } of LONG_STRINGS) ts.levenshtein(s1, s2);
       },
       BENCH_CONFIG,
     );
-
     bench(
-      "damerau_levenshtein",
+      "WASM: levenshtein",
       () => {
-        for (const { s1, s2 } of LONG_STRINGS) {
-          wasm.damerau_levenshtein(s1, s2);
-        }
+        for (const { s1, s2 } of LONG_STRINGS) wasm.levenshtein(s1, s2);
       },
       BENCH_CONFIG,
     );
+  });
 
+  describe("Normalized", () => {
     bench(
-      "myers_levenshtein",
+      "TS: levenshteinNormalized",
       () => {
-        for (const { s1, s2 } of LONG_STRINGS) {
-          wasm.myers_levenshtein(s1, s2);
-        }
+        for (const { s1, s2 } of SHORT_STRINGS) ts.levenshteinNormalized(s1, s2);
       },
       BENCH_CONFIG,
     );
-
     bench(
-      "fastest_levenshtein",
+      "WASM: levenshtein_normalized",
       () => {
-        for (const { s1, s2 } of LONG_STRINGS) {
-          distance.fastest_levenshtein(s1, s2);
-        }
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.levenshtein_normalized(s1, s2);
       },
       BENCH_CONFIG,
     );
   });
 });
 
-describe("Similarity Algorithms Benchmark (Lorem Ipsum)", () => {
-  describe("Edit-based Similarity", () => {
+// ============================================================================
+// LCS: TS (@algorithm.ts/lcs) vs WASM (textdistance)
+// ============================================================================
+describe("LCS: TS vs WASM", () => {
+  describe("Short Strings (< 10 chars)", () => {
     bench(
-      "levenshtein_normalized",
+      "TS: lcsDistance",
       () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.levenshtein_normalized(s1, s2);
-        }
+        for (const { s1, s2 } of SHORT_STRINGS) ts.lcsDistance(s1, s2);
       },
       BENCH_CONFIG,
     );
-
     bench(
-      "damerau_levenshtein_normalized",
+      "WASM: lcs_seq",
       () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.damerau_levenshtein_normalized(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "myers_levenshtein_normalized",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.myers_levenshtein_normalized(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "hamming_normalized",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS.slice(0, 3)) {
-          wasm.hamming_normalized(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "sift4_simple_normalized",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.sift4_simple_normalized(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "jaro",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.jaro(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "jarowinkler",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.jarowinkler(s1, s2);
-        }
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.lcs_seq(s1, s2);
       },
       BENCH_CONFIG,
     );
   });
 
-  describe("Token-based Similarity", () => {
+  describe("Medium Strings (10-100 chars)", () => {
     bench(
-      "jaccard",
+      "TS: lcsDistance",
       () => {
-        for (const { s1, s2 } of MEDIUM_STRINGS) {
-          wasm.jaccard(s1, s2);
-        }
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.lcsDistance(s1, s2);
       },
       BENCH_CONFIG,
     );
-
     bench(
-      "cosine",
+      "WASM: lcs_seq",
       () => {
-        for (const { s1, s2 } of MEDIUM_STRINGS) {
-          wasm.cosine(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "sorensen",
-      () => {
-        for (const { s1, s2 } of MEDIUM_STRINGS) {
-          wasm.sorensen(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "tversky",
-      () => {
-        for (const { s1, s2 } of MEDIUM_STRINGS) {
-          wasm.tversky(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "overlap",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.overlap(s1, s2);
-        }
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.lcs_seq(s1, s2);
       },
       BENCH_CONFIG,
     );
   });
 
-  describe("Sequence-based Similarity", () => {
+  describe("Long Strings (> 200 chars)", () => {
     bench(
-      "lcs_seq_normalized",
+      "TS: lcsDistance",
       () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.lcs_seq_normalized(s1, s2);
-        }
+        for (const { s1, s2 } of LONG_STRINGS) ts.lcsDistance(s1, s2);
       },
       BENCH_CONFIG,
     );
-
     bench(
-      "lcs_str_normalized",
+      "WASM: lcs_seq",
       () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.lcs_str_normalized(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "ratcliff_obershelp",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.ratcliff_obershelp(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "smith_waterman_normalized",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.smith_waterman_normalized(s1, s2);
-        }
+        for (const { s1, s2 } of LONG_STRINGS) wasm.lcs_seq(s1, s2);
       },
       BENCH_CONFIG,
     );
   });
 
-  describe("Bigram & Naive Similarity", () => {
+  describe("Normalized", () => {
     bench(
-      "jaccard_bigram",
+      "TS: lcsNormalized",
       () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.jaccard_bigram(s1, s2);
-        }
+        for (const { s1, s2 } of SHORT_STRINGS) ts.lcsNormalized(s1, s2);
       },
       BENCH_CONFIG,
     );
-
     bench(
-      "cosine_bigram",
+      "WASM: lcs_seq_normalized",
       () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.cosine_bigram(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "prefix",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.prefix(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "suffix",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.suffix(s1, s2);
-        }
-      },
-      BENCH_CONFIG,
-    );
-
-    bench(
-      "length",
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.length(s1, s2);
-        }
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.lcs_seq_normalized(s1, s2);
       },
       BENCH_CONFIG,
     );
   });
 });
 
-describe("Universal Compare Function Benchmark (Lorem Ipsum)", () => {
-  const algorithms = [
+// ============================================================================
+// Jaccard: TS vs WASM
+// ============================================================================
+describe("Jaccard: TS vs WASM", () => {
+  describe("Short Strings (< 10 chars)", () => {
+    bench(
+      "TS: jaccard",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) ts.jaccard(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: jaccard",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.jaccard(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+
+  describe("Medium Strings (10-100 chars)", () => {
+    bench(
+      "TS: jaccard",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.jaccard(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: jaccard",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.jaccard(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+
+  describe("Long Strings (> 200 chars)", () => {
+    bench(
+      "TS: jaccard",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) ts.jaccard(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: jaccard",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) wasm.jaccard(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+});
+
+// ============================================================================
+// Cosine: TS vs WASM
+// ============================================================================
+describe("Cosine: TS vs WASM", () => {
+  describe("Short Strings (< 10 chars)", () => {
+    bench(
+      "TS: cosine",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) ts.cosine(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: cosine",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.cosine(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+
+  describe("Medium Strings (10-100 chars)", () => {
+    bench(
+      "TS: cosine",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.cosine(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: cosine",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.cosine(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+
+  describe("Long Strings (> 200 chars)", () => {
+    bench(
+      "TS: cosine",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) ts.cosine(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: cosine",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) wasm.cosine(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+});
+
+// ============================================================================
+// Sorensen-Dice: TS vs WASM
+// ============================================================================
+describe("Sorensen-Dice: TS vs WASM", () => {
+  describe("Short Strings (< 10 chars)", () => {
+    bench(
+      "TS: sorensen",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) ts.sorensen(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: sorensen",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.sorensen(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+
+  describe("Medium Strings (10-100 chars)", () => {
+    bench(
+      "TS: sorensen",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.sorensen(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: sorensen",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.sorensen(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+
+  describe("Long Strings (> 200 chars)", () => {
+    bench(
+      "TS: sorensen",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) ts.sorensen(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: sorensen",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) wasm.sorensen(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+});
+
+// ============================================================================
+// Bigram variants: TS vs WASM
+// ============================================================================
+describe("Bigram: TS vs WASM", () => {
+  describe("Short Strings (< 10 chars)", () => {
+    bench(
+      "TS: jaccardNgram",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) ts.jaccardNgram(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: jaccard_bigram",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.jaccard_bigram(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+
+    bench(
+      "TS: cosineNgram",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) ts.cosineNgram(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: cosine_bigram",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.cosine_bigram(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+
+  describe("Medium Strings (10-100 chars)", () => {
+    bench(
+      "TS: jaccardNgram",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.jaccardNgram(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: jaccard_bigram",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.jaccard_bigram(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+
+    bench(
+      "TS: cosineNgram",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.cosineNgram(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: cosine_bigram",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.cosine_bigram(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+});
+
+// ============================================================================
+// Correctness: verify TS and WASM produce same results (bench mode)
+// ============================================================================
+const CORRECTNESS_CASES = [
+  { s1: "kitten", s2: "sitting" },
+  { s1: "Lorem", s2: "ipsum" },
+  { s1: "dolor", s2: "dolor" },
+  { s1: "consectetur", s2: "consectetuer" },
+  { s1: "adipiscing", s2: "adipiscere" },
+  { s1: "", s2: "" },
+  { s1: "hello", s2: "" },
+  { s1: "", s2: "world" },
+  { s1: "abcdef", s2: "azced" },
+  {
+    s1: "Lorem ipsum dolor sit amet",
+    s2: "Lorem ipsum dolor sit amet consectetur adipiscing",
+  },
+];
+
+function assertEq(label: string, actual: number, expected: number, tol = 0) {
+  if (tol > 0) {
+    if (Math.abs(actual - expected) > tol)
+      throw new Error(`${label}: ${actual} !== ${expected} (tol=${tol})`);
+  } else {
+    if (actual !== expected) throw new Error(`${label}: ${actual} !== ${expected}`);
+  }
+}
+
+describe("Correctness: TS vs WASM", () => {
+  bench(
     "levenshtein",
-    "damerau_levenshtein",
-    "jaro",
-    "jaro_winkler",
-    "cosine",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("levenshtein", ts.levenshtein(s1, s2), wasm.levenshtein(s1, s2));
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
+    "lcsDistance",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("lcs_seq", ts.lcsDistance(s1, s2), wasm.lcs_seq(s1, s2));
+    },
+    BENCH_CONFIG,
+  );
+
+  bench(
     "jaccard",
-    "lcs_seq",
-    "myers_levenshtein",
-  ] as const;
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("jaccard", ts.jaccard(s1, s2), wasm.jaccard(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
 
-  algorithms.forEach((algorithm) => {
-    bench(
-      `compare_${algorithm}`,
-      () => {
-        for (const { s1, s2 } of SHORT_STRINGS) {
-          wasm.compare(s1, s2, algorithm);
-        }
-      },
-      BENCH_CONFIG,
-    );
-  });
-});
+  bench(
+    "cosine",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("cosine", ts.cosine(s1, s2), wasm.cosine(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
 
-describe("Algorithm Correctness Tests (Lorem Ipsum)", () => {
-  it("should validate similarity scores are within bounds [0, 1]", () => {
-    const testCases = [
-      { s1: "Lorem", s2: "ipsum" },
-      { s1: "dolor", s2: "dolor" },
-      { s1: "consectetur", s2: "consectetuer" },
-      { s1: "adipiscing", s2: "adipiscere" },
-    ];
+  bench(
+    "sorensen",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("sorensen", ts.sorensen(s1, s2), wasm.sorensen(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
 
-    for (const { s1, s2 } of testCases) {
-      const levSim = wasm.levenshtein_normalized(s1, s2);
-      const jaroSim = wasm.jaro(s1, s2);
-      const jaroWinSim = wasm.jarowinkler(s1, s2);
-      const jaccardSim = wasm.jaccard(s1, s2);
-      const cosineSim = wasm.cosine(s1, s2);
+  bench(
+    "levenshteinNormalized",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq(
+          "levNorm",
+          ts.levenshteinNormalized(s1, s2),
+          wasm.levenshtein_normalized(s1, s2),
+          0.001,
+        );
+    },
+    BENCH_CONFIG,
+  );
 
-      expect(levSim).toBeGreaterThanOrEqual(0);
-      expect(levSim).toBeLessThanOrEqual(1);
-      expect(jaroSim).toBeGreaterThanOrEqual(0);
-      expect(jaroSim).toBeLessThanOrEqual(1);
-      expect(jaroWinSim).toBeGreaterThanOrEqual(0);
-      expect(jaroWinSim).toBeLessThanOrEqual(1);
-      expect(jaccardSim).toBeGreaterThanOrEqual(0);
-      expect(jaccardSim).toBeLessThanOrEqual(1);
-      expect(cosineSim).toBeGreaterThanOrEqual(0);
-      expect(cosineSim).toBeLessThanOrEqual(1);
-    }
-  });
-
-  it("should validate universal compare matches direct function calls", () => {
-    const testCases = [
-      { s1: "Lorem", s2: "ipsum" },
-      { s1: "dolor", s2: "dolor" },
-    ];
-
-    for (const { s1, s2 } of testCases) {
-      const levDirect = wasm.levenshtein_normalized(s1, s2);
-      const levUniversal = wasm.compare(s1, s2, "levenshtein");
-
-      const jaroDirect = wasm.jaro(s1, s2);
-      const jaroUniversal = wasm.compare(s1, s2, "jaro");
-
-      expect(Math.abs(levDirect - levUniversal)).toBeLessThan(0.001);
-      expect(Math.abs(jaroDirect - jaroUniversal)).toBeLessThan(0.001);
-    }
-  });
-
-  it("should validate identical strings return distance 0 and similarity 1", () => {
-    const testStrings = ["Lorem", "dolor", "consectetur"];
-
-    for (const s of testStrings) {
-      // Distance should be 0 for identical strings
-      expect(wasm.levenshtein(s, s)).toBe(0);
-      expect(wasm.damerau_levenshtein(s, s)).toBe(0);
-      expect(wasm.myers_levenshtein(s, s)).toBe(0);
-      expect(distance.fastest_levenshtein(s, s)).toBe(0);
-
-      // Similarity should be 1 for identical strings
-      expect(wasm.jarowinkler(s, s)).toBe(1);
-      expect(wasm.jaro(s, s)).toBe(1);
-    }
-  });
-
-  it("should return same results for all Levenshtein implementations", () => {
-    const testCases = [
-      { s1: "Lorem", s2: "ipsum" },
-      { s1: "dolor", s2: "dolor" },
-      { s1: "consectetur", s2: "consectetuer" },
-      { s1: "adipiscing", s2: "adipiscere" },
-    ];
-
-    for (const { s1, s2 } of testCases) {
-      const wasmResult = wasm.levenshtein(s1, s2);
-      const fastResult = distance.fastest_levenshtein(s1, s2);
-      const myersResult = wasm.myers_levenshtein(s1, s2);
-
-      expect(wasmResult).toBe(fastResult);
-      expect(wasmResult).toBe(myersResult);
-      expect(fastResult).toBe(myersResult);
-    }
-  });
+  bench(
+    "lcsNormalized",
+    () => {
+      for (const { s1, s2 } of CORRECTNESS_CASES)
+        assertEq("lcsNorm", ts.lcsNormalized(s1, s2), wasm.lcs_seq_normalized(s1, s2), 0.001);
+    },
+    BENCH_CONFIG,
+  );
 });

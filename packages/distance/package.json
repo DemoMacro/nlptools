@@ -25,7 +25,7 @@
   "author": {
     "name": "Demo Macro",
     "email": "abc@imst.xyz",
-    "url": "https://imst.xyz/"
+    "url": "https://www.demomacro.com/"
   },
   "repository": {
     "type": "git",
@@ -43,7 +43,8 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@nlptools/distance-wasm": "workspace:*",
+    "@algorithm.ts/diff": "1.0.4",
+    "@algorithm.ts/lcs": "4.0.6",
     "fastest-levenshtein": "1.0.16"
   }
 }
