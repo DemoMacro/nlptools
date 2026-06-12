@@ -4,9 +4,9 @@
  * Compares pure TS implementations against WASM (distance-wasm) for the same algorithms.
  */
 
-import { describe, bench } from "vitest";
-import * as wasm from "@nlptools/distance-wasm";
 import * as ts from "@nlptools/distance";
+import * as wasm from "@nlptools/distance-wasm";
+import { describe, bench } from "vite-plus/test";
 
 const BENCH_CONFIG = {
   iterations: 1000,

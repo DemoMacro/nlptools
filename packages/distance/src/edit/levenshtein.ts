@@ -1,4 +1,5 @@
 import { distance as fastestLevenshtein } from "fastest-levenshtein";
+
 import { normalize } from "../utils";
 
 /**

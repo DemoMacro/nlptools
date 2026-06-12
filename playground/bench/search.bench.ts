@@ -4,9 +4,9 @@
  * Compares result quality and search speed across different collection sizes.
  */
 
-import { describe, bench } from "vitest";
-import Fuse from "fuse.js";
 import { FuzzySearch, findBestMatch } from "@nlptools/distance";
+import Fuse from "fuse.js";
+import { describe, bench } from "vite-plus/test";
 
 const BENCH_CONFIG = {
   iterations: 1000,

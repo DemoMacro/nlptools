@@ -1,10 +1,10 @@
-import { levenshteinNormalized } from "./edit/levenshtein";
 import { lcsNormalized } from "./edit/lcs";
-import { jaccard, jaccardNgram } from "./token/jaccard";
-import { cosine, cosineNgram } from "./token/cosine";
-import { sorensen, sorensenNgram } from "./token/sorensen";
-import { MinHash } from "./hash/minhash";
+import { levenshteinNormalized } from "./edit/levenshtein";
 import { LSH } from "./hash/lsh";
+import { MinHash } from "./hash/minhash";
+import { cosine, cosineNgram } from "./token/cosine";
+import { jaccard, jaccardNgram } from "./token/jaccard";
+import { sorensen, sorensenNgram } from "./token/sorensen";
 import { ngrams } from "./utils";
 
 // ---------------------------------------------------------------------------
