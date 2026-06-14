@@ -5,7 +5,9 @@ import {
   ngramFrequencyMap,
   CHAR_FREQ_SIZE,
   buildCharFreqArray,
+  intersectCount,
   intersectCountInt,
+  totalCount,
   totalCountInt,
 } from "../utils";
 
@@ -58,24 +60,6 @@ export function cosine(a: string, b: string): number {
   if (totalA === 0 && totalB === 0) return 1;
   if (totalA === 0 || totalB === 0) return 0;
   return intersection / Math.sqrt(totalA * totalB);
-}
-
-function intersectCount(a: Map<string, number>, b: Map<string, number>): number {
-  let count = 0;
-  const [smaller, larger] = a.size <= b.size ? [a, b] : [b, a];
-  for (const [key, countA] of smaller) {
-    const countB = larger.get(key);
-    if (countB !== undefined) {
-      count += countA < countB ? countA : countB;
-    }
-  }
-  return count;
-}
-
-function totalCount(map: Map<string, number>): number {
-  let count = 0;
-  for (const c of map.values()) count += c;
-  return count;
 }
 
 /**

@@ -7,7 +7,16 @@
  * Time: O(m + n)
  */
 
-import { charFrequencyMap, intersectCount, totalCount } from "../utils";
+import {
+  charFrequencyMap,
+  intersectCount,
+  totalCount,
+  CHAR_FREQ_SIZE,
+  buildCharFreqArray,
+} from "../utils";
+
+const _freqA = new Int32Array(CHAR_FREQ_SIZE);
+const _freqB = new Int32Array(CHAR_FREQ_SIZE);
 
 /**
  * Options for Tversky index.
@@ -39,6 +48,26 @@ export interface ITverskyOptions {
 export function tversky(a: string, b: string, options: ITverskyOptions = {}): number {
   const alpha = options.alpha ?? 1;
   const beta = options.beta ?? 1;
+
+  // ASCII fast path
+  _freqA.fill(0);
+  _freqB.fill(0);
+  if (buildCharFreqArray(_freqA, a) && buildCharFreqArray(_freqB, b)) {
+    let intersection = 0;
+    let totalA = 0;
+    let totalB = 0;
+    for (let i = 0; i < CHAR_FREQ_SIZE; i++) {
+      const va = _freqA[i];
+      const vb = _freqB[i];
+      intersection += va < vb ? va : vb;
+      totalA += va;
+      totalB += vb;
+    }
+    const onlyA = totalA - intersection;
+    const onlyB = totalB - intersection;
+    const denominator = intersection + alpha * onlyA + beta * onlyB;
+    return denominator === 0 ? 1 : intersection / denominator;
+  }
 
   const freqA = charFrequencyMap(a);
   const freqB = charFrequencyMap(b);

@@ -57,7 +57,7 @@ export class LSH {
   /**
    * Map from band index → bucket hash → set of document IDs
    */
-  private readonly bands: Array<Map<string, Set<string>>>;
+  private readonly bands: Array<Map<number, Set<string>>>;
 
   /**
    * All indexed document signatures for exact similarity estimation.
@@ -190,13 +190,13 @@ export class LSH {
 }
 
 /**
- * Hash a band slice to a bucket key string.
- * Uses a simple but effective hash combining approach.
+ * Hash a band slice to a bucket key.
+ * Returns a numeric hash directly for faster Map lookups.
  */
-function bandHash(slice: Uint32Array): string {
+function bandHash(slice: Uint32Array): number {
   let hash = 0;
   for (let i = 0; i < slice.length; i++) {
     hash = (hash * 31 + slice[i]) | 0;
   }
-  return hash.toString(36);
+  return hash;
 }

@@ -48,12 +48,12 @@ export function sift4(a: string, b: string, options: ISift4Options = {}): number
       lcss += localCs;
       localCs = 0;
       if (c1 !== c2) {
-        c1 = Math.min(c1, c2);
+        c1 = Math.max(c1, c2);
         c2 = c1;
       }
 
       for (let offset = 0; offset < maxOffset; offset++) {
-        if (!(c1 + 1 < aLen || c2 + offset < bLen)) break;
+        if (c1 + offset >= aLen && c2 + offset >= bLen) break;
 
         if (c1 + offset < aLen && a.charCodeAt(c1 + offset) === b.charCodeAt(c2)) {
           c1 += offset;

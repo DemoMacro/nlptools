@@ -1,18 +1,15 @@
 /**
- * Smith-Waterman local sequence alignment algorithm.
+ * Needleman-Wunsch global sequence alignment algorithm.
  *
- * Designed for biological sequence alignment, it finds the best
- * local alignment between two sequences.
+ * Classic global alignment algorithm used in bioinformatics.
+ * Unlike Smith-Waterman (local), this aligns entire sequences end-to-end.
  *
- * Default scoring: match=1, mismatch=0, gap=-1 (matches textdistance.rs)
+ * Default scoring: match=1, mismatch=0, gap=-1 (matching textdistance.rs)
  *
  * Time: O(m * n), Space: O(m * n)
  */
 
-/**
- * Options for Smith-Waterman alignment.
- */
-export interface ISmithWatermanOptions {
+export interface INeedlemanWunschOptions {
   /** Score for matching characters. @default 1 */
   matchScore?: number;
   /** Score for mismatching characters. @default 0 */
@@ -22,14 +19,18 @@ export interface ISmithWatermanOptions {
 }
 
 /**
- * Compute the raw Smith-Waterman alignment score.
+ * Compute the raw Needleman-Wunsch alignment score.
  *
  * @param a - First string
  * @param b - Second string
  * @param options - Scoring parameters
- * @returns Raw alignment score (non-negative)
+ * @returns Raw alignment score
  */
-export function smithWaterman(a: string, b: string, options: ISmithWatermanOptions = {}): number {
+export function needlemanWunsch(
+  a: string,
+  b: string,
+  options: INeedlemanWunschOptions = {},
+): number {
   const matchScore = options.matchScore ?? 1;
   const mismatchScore = options.mismatchScore ?? 0;
   const gapScore = options.gapScore ?? -1;
@@ -39,7 +40,10 @@ export function smithWaterman(a: string, b: string, options: ISmithWatermanOptio
 
   const w = bLen + 1;
   const dp = new Int32Array((aLen + 1) * w);
-  dp.fill(0);
+
+  // Initialize borders: gaps along first row and column
+  for (let i = 1; i <= aLen; i++) dp[i * w] = i * gapScore;
+  for (let j = 1; j <= bLen; j++) dp[j] = j * gapScore;
 
   for (let i = 1; i <= aLen; i++) {
     const rowBase = i * w;
@@ -49,31 +53,30 @@ export function smithWaterman(a: string, b: string, options: ISmithWatermanOptio
       const diag = dp[prevRowBase + j - 1] + cost;
       const up = dp[prevRowBase + j] + gapScore;
       const left = dp[rowBase + j - 1] + gapScore;
-      dp[rowBase + j] = Math.max(0, diag, up, left);
+      dp[rowBase + j] = Math.max(diag, up, left);
     }
   }
 
-  // textdistance.rs returns dist_mat[l1][l2] (bottom-right cell), not max
   return dp[aLen * w + bLen];
 }
 
 /**
- * Compute the normalized Smith-Waterman similarity in [0, 1].
+ * Compute the normalized Needleman-Wunsch similarity in [0, 1].
  *
- * Normalized by matchScore * max(len(a), len(b)), matching textdistance.rs convention.
+ * Normalized by matchScore * max(len(a), len(b)).
  *
  * @param a - First string
  * @param b - Second string
  * @param options - Scoring parameters
  * @returns Normalized similarity in [0, 1]
  */
-export function smithWatermanNormalized(
+export function needlemanWunschNormalized(
   a: string,
   b: string,
-  options: ISmithWatermanOptions = {},
+  options: INeedlemanWunschOptions = {},
 ): number {
   const matchScore = options.matchScore ?? 1;
   const maxPossible = matchScore * Math.max(a.length, b.length);
   if (maxPossible === 0) return 1;
-  return smithWaterman(a, b, options) / maxPossible;
+  return needlemanWunsch(a, b, options) / maxPossible;
 }

@@ -37,16 +37,33 @@ export function simhash(features: string[], options: ISimHashOptions = {}): bigi
   const bits = options.bits ?? 64;
   const hashFn = options.hashFn ?? fnv1a;
 
-  // Accumulator: positive = more 1s, negative = more 0s
   const v = new Float64Array(bits);
 
   for (const feature of features) {
     const h = hashFn(feature);
-    for (let i = 0; i < bits; i++) {
-      if (h & (1 << i)) {
-        v[i] += 1;
-      } else {
-        v[i] -= 1;
+    // Split into two 16-bit chunks to cover all 32 bits of the hash
+    const lo16 = h & 0xffff;
+    const hi16 = (h >>> 16) & 0xffff;
+    for (let i = 0; i < 16 && i < bits; i++) {
+      if (lo16 & (1 << i)) v[i] += 1;
+      else v[i] -= 1;
+    }
+    for (let i = 0; i < 16 && i + 16 < bits; i++) {
+      if (hi16 & (1 << i)) v[i + 16] += 1;
+      else v[i + 16] -= 1;
+    }
+    // For bits > 32, reuse hash with different mixing
+    if (bits > 32) {
+      const h2 = fnv1a(feature + "\0");
+      const lo16b = h2 & 0xffff;
+      const hi16b = (h2 >>> 16) & 0xffff;
+      for (let i = 0; i < 16 && i + 32 < bits; i++) {
+        if (lo16b & (1 << i)) v[i + 32] += 1;
+        else v[i + 32] -= 1;
+      }
+      for (let i = 0; i < 16 && i + 48 < bits; i++) {
+        if (hi16b & (1 << i)) v[i + 48] += 1;
+        else v[i + 48] -= 1;
       }
     }
   }
@@ -92,8 +109,8 @@ export function hammingSimilarity(a: bigint, b: bigint, bits = 64): number {
  * Count the number of set bits in a bigint using a lookup table.
  * Processes 8 bits at a time instead of 1, reducing iterations from 64 to 8.
  */
-const POPCOUNT_TABLE = new Uint8Array(256);
-for (let i = 0; i < 256; i++) {
+const POPCOUNT_TABLE = new Uint8Array(65536);
+for (let i = 0; i < 65536; i++) {
   POPCOUNT_TABLE[i] =
     (i & 1) +
     ((i >> 1) & 1) +
@@ -102,14 +119,22 @@ for (let i = 0; i < 256; i++) {
     ((i >> 4) & 1) +
     ((i >> 5) & 1) +
     ((i >> 6) & 1) +
-    ((i >> 7) & 1);
+    ((i >> 7) & 1) +
+    ((i >> 8) & 1) +
+    ((i >> 9) & 1) +
+    ((i >> 10) & 1) +
+    ((i >> 11) & 1) +
+    ((i >> 12) & 1) +
+    ((i >> 13) & 1) +
+    ((i >> 14) & 1) +
+    ((i >> 15) & 1);
 }
 
 function bitCount(n: bigint): number {
   let count = 0;
   while (n > 0n) {
-    count += POPCOUNT_TABLE[Number(n & 0xffn)];
-    n >>= 8n;
+    count += POPCOUNT_TABLE[Number(n & 0xffffn)];
+    n >>= 16n;
   }
   return count;
 }
