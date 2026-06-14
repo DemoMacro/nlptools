@@ -39,6 +39,8 @@
     "check": "vp check --fix",
     "test": "vp test run",
     "bench": "vp test bench",
+    "version": "pnpm --filter \"./packages/**\" -r exec basis version",
+    "publish": "pnpm --filter \"./packages/**\" -r exec basis publish",
     "postinstall": "pnpm build && vp config && basis git setup"
   },
   "devDependencies": {

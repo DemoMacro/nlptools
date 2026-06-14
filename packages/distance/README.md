@@ -418,56 +418,68 @@ const result = diff("abc", "ac");
 
 ## Performance
 
-Benchmark via `vitest bench` (V8 JIT), same test data across runtimes.
+Benchmark: same test data across runtimes. TS via `vitest bench` (V8 JIT), WASM via `wasm-pack`, Rust native via `cargo test`.
 Unit: microseconds per operation (us/op).
 
 ### Edit Distance
 
-| Algorithm   | Size            | TS (V8 JIT) | WASM (via JS) |
-| ----------- | --------------- | ----------- | ------------- |
-| levenshtein | Short (<10)     | 0.28        | 1.00          |
-| levenshtein | Medium (10-100) | 1.30        | 4.75          |
-| levenshtein | Long (>200)     | 14.05       | 105.01        |
-| lcs         | Short (<10)     | 1.66        | 1.87          |
-| lcs         | Medium (10-100) | 6.71        | 9.93          |
-| lcs         | Long (>200)     | 217.53      | 163.45        |
+| Algorithm     | Size            | TS (V8 JIT) | WASM  | Rust (native) |
+| ------------- | --------------- | ----------- | ----- | ------------- |
+| levenshtein   | Short (<10)     | 0.27        | 0.88  | 0.02          |
+| levenshtein   | Medium (10-100) | 2.14        | 1.70  | 0.14          |
+| levenshtein   | Long (>200)     | 21.9        | 21.9  | 5.70          |
+| lcs           | Short (<10)     | 2.73        | 1.15  | 0.07          |
+| lcs           | Medium (10-100) | 9.69        | 7.65  | 1.62          |
+| lcs           | Long (>200)     | 361.0       | 198.2 | 56.31         |
+| damerau       | Short (<10)     | 9.12        | 1.58  | 0.20          |
+| damerau       | Medium (10-100) | 42.8        | 22.9  | 5.54          |
+| damerau       | Long (>200)     | 978.7       | 487.8 | 176.4         |
+| sift4         | Short (<10)     | 0.34        | 0.84  | 0.01          |
+| sift4         | Medium (10-100) | 0.86        | 1.17  | 0.09          |
+| sift4         | Long (>200)     | 8.83        | 3.76  | 0.35          |
+| smithWaterman | Short (<10)     | 3.74        | 1.23  | 0.20          |
+| smithWaterman | Medium (10-100) | 36.6        | 16.9  | 3.49          |
+| smithWaterman | Long (>200)     | 831.3       | 381.0 | 204.2         |
+| ratcliff      | Short (<10)     | 1.08        | 1.36  | 0.22          |
+| ratcliff      | Medium (10-100) | 23.8        | 10.1  | 2.03          |
+| ratcliff      | Long (>200)     | 652.4       | 302.5 | 72.82         |
 
 ### Token Similarity (Character Multiset)
 
-| Algorithm | Size            | TS (V8 JIT) | WASM (via JS) |
-| --------- | --------------- | ----------- | ------------- |
-| jaccard   | Short (<10)     | 0.80        | 3.39          |
-| jaccard   | Medium (10-100) | 0.80        | 8.51          |
-| jaccard   | Long (>200)     | 1.85        | 33.04         |
-| cosine    | Short (<10)     | 1.70        | 4.20          |
-| cosine    | Medium (10-100) | 1.41        | 10.74         |
-| cosine    | Long (>200)     | 2.98        | 27.30         |
-| sorensen  | Short (<10)     | 1.26        | 4.15          |
-| sorensen  | Medium (10-100) | 1.14        | 11.18         |
-| sorensen  | Long (>200)     | 2.22        | 26.17         |
+| Algorithm | Size            | TS (V8 JIT) | WASM | Rust (native) |
+| --------- | --------------- | ----------- | ---- | ------------- |
+| jaccard   | Short (<10)     | 0.96        | 1.11 | 0.08          |
+| jaccard   | Medium (10-100) | 0.88        | 1.25 | 0.11          |
+| jaccard   | Long (>200)     | 1.94        | 2.47 | 0.36          |
+| cosine    | Short (<10)     | 1.38        | 1.74 | 0.04          |
+| cosine    | Medium (10-100) | 1.43        | 1.07 | 0.06          |
+| cosine    | Long (>200)     | 1.62        | 2.30 | 0.33          |
+| sorensen  | Short (<10)     | 0.72        | 0.87 | 0.03          |
+| sorensen  | Medium (10-100) | 0.70        | 0.95 | 0.05          |
+| sorensen  | Long (>200)     | 1.44        | 2.28 | 0.19          |
 
 ### Bigram Variants
 
-| Algorithm     | Size            | TS (V8 JIT) | WASM (via JS) |
-| ------------- | --------------- | ----------- | ------------- |
-| jaccardBigram | Short (<10)     | 1.88        | 5.61          |
-| jaccardBigram | Medium (10-100) | 12.31       | 28.87         |
-| cosineBigram  | Short (<10)     | 1.20        | 4.49          |
-| cosineBigram  | Medium (10-100) | 5.57        | 14.10         |
+| Algorithm     | Size            | TS (V8 JIT) | WASM  | Rust (native) |
+| ------------- | --------------- | ----------- | ----- | ------------- |
+| jaccardBigram | Short (<10)     | 1.16        | 1.92  | 0.44          |
+| jaccardBigram | Medium (10-100) | 8.04        | 10.94 | 2.68          |
+| cosineBigram  | Short (<10)     | 0.75        | 2.03  | 0.27          |
+| cosineBigram  | Medium (10-100) | 5.76        | 10.74 | 2.32          |
 
-TS implementations use `Int32Array` ASCII fast path + integer-encoded bigrams, avoiding JS-WASM boundary overhead. For compute-heavy algorithms on long strings (e.g. LCS), WASM via JS can outperform TS due to native computation advantage outweighing the boundary cost.
+All implementations use Myers bit-parallel algorithm for Levenshtein (32-bit single-block for short strings, multi-block for long strings). TS uses `Int32Array` ASCII fast path for token algorithms. Rust and WASM operate on `&[u8]` bytes directly.
 
 ### Fuzzy Search: NLPTools vs Fuse.js
 
 Benchmark: 20 items in collection, 6 queries per iteration.
 Unit: milliseconds per operation (ms/op). Algorithm: levenshtein (default).
 
-| Scenario                | NLPTools | Fuse.js |
-| ----------------------- | -------- | ------- |
-| Setup (constructor)     | 0.0001   | 0.0008  |
-| Search (string array)   | 0.0118   | 0.1040  |
-| Search (object, 1 key)  | 0.0170   | 0.3241  |
-| Search (object, 2 keys) | 0.0284   | 0.6618  |
+| Scenario                | NLPTools (TS) | NLPTools (WASM) | NLPTools (Rust) | Fuse.js |
+| ----------------------- | ------------- | --------------- | --------------- | ------- |
+| Setup (constructor)     | 0.0001        | —               | —               | 0.0008  |
+| Search (string array)   | 0.0116        | 0.0116          | 0.0025          | 0.1040  |
+| Search (object, 1 key)  | 0.0166        | 0.0166          | 0.0018          | 0.3089  |
+| Search (object, 2 keys) | 0.0280        | 0.0280          | 0.0053          | 0.6191  |
 
 Both libraries return identical top-1 results for all test queries. NLPTools scores are normalized similarity (0-1, higher is better); Fuse.js uses Bitap error scores (0 = perfect, lower is better).
 

@@ -40,6 +40,7 @@ export function smithWaterman(a: string, b: string, options: ISmithWatermanOptio
   const w = bLen + 1;
   const dp = new Int32Array((aLen + 1) * w);
   dp.fill(0);
+  let maxScore = 0;
 
   for (let i = 1; i <= aLen; i++) {
     const rowBase = i * w;
@@ -49,12 +50,13 @@ export function smithWaterman(a: string, b: string, options: ISmithWatermanOptio
       const diag = dp[prevRowBase + j - 1] + cost;
       const up = dp[prevRowBase + j] + gapScore;
       const left = dp[rowBase + j - 1] + gapScore;
-      dp[rowBase + j] = Math.max(0, diag, up, left);
+      const val = Math.max(0, diag, up, left);
+      dp[rowBase + j] = val;
+      if (val > maxScore) maxScore = val;
     }
   }
 
-  // textdistance.rs returns dist_mat[l1][l2] (bottom-right cell), not max
-  return dp[aLen * w + bLen];
+  return maxScore;
 }
 
 /**

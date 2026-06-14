@@ -1,4 +1,5 @@
 {
+  "version": "0.0.8",
   "scripts": {
     "dev": "rm -rf ./pkg && wasm-pack build --dev --scope nlptools",
     "build": "rm -rf ./pkg && wasm-pack build --release --scope nlptools",

@@ -1,14 +1,8 @@
-//! Benchmark tests for distance-wasm, structured to align with the TS benchmark
-//! in playground/bench/distance.bench.ts for direct comparison.
-//!
-//! Run with: pnpm --filter @nlptools/distance-wasm test bench -- --nocapture
-
 #![cfg(test)]
 
 use distance_wasm::*;
 use std::time::Instant;
 
-// Test data — identical to the TS benchmark
 const SHORT_STRINGS: &[(&str, &str)] = &[
     ("Lorem", "ipsum"),
     ("dolor", "dolor"),
@@ -50,7 +44,10 @@ const CORRECTNESS_CASES: &[(&str, &str)] = &[
     ("hello", ""),
     ("", "world"),
     ("abcdef", "azced"),
-    ("Lorem ipsum dolor sit amet", "Lorem ipsum dolor sit amet consectetur adipiscing"),
+    (
+        "Lorem ipsum dolor sit amet",
+        "Lorem ipsum dolor sit amet consectetur adipiscing",
+    ),
 ];
 
 const ITERATIONS: u64 = 1000;
@@ -80,11 +77,7 @@ fn bench_similarity(label: &str, test_pairs: &[(&str, &str)], f: fn(&str, &str) 
 }
 
 fn assert_eq_u32(label: &str, actual: u32, expected: u32) {
-    assert_eq!(
-        actual, expected,
-        "FAIL {}: {} != {}",
-        label, actual, expected
-    );
+    assert_eq!(actual, expected, "FAIL {}: {} != {}", label, actual, expected);
 }
 
 fn assert_close(label: &str, actual: f64, expected: f64, tol: f64) {
@@ -95,45 +88,44 @@ fn assert_close(label: &str, actual: f64, expected: f64, tol: f64) {
     );
 }
 
-// ============================================================================
-// Levenshtein
-// ============================================================================
 #[test]
 fn bench_levenshtein() {
     println!("\n=== Levenshtein ===");
     bench_distance("levenshtein (short)", SHORT_STRINGS, levenshtein);
     bench_distance("levenshtein (medium)", MEDIUM_STRINGS, levenshtein);
     bench_distance("levenshtein (long)", LONG_STRINGS, levenshtein);
-    bench_similarity("levenshtein_normalized (short)", SHORT_STRINGS, levenshtein_normalized);
+    bench_similarity(
+        "levenshtein_normalized (short)",
+        SHORT_STRINGS,
+        levenshtein_normalized,
+    );
 }
 
-// ============================================================================
-// Damerau-Levenshtein
-// ============================================================================
 #[test]
 fn bench_damerau_levenshtein() {
     println!("\n=== Damerau-Levenshtein ===");
-    bench_distance("damerau_levenshtein (short)", SHORT_STRINGS, damerau_levenshtein);
-    bench_distance("damerau_levenshtein (medium)", MEDIUM_STRINGS, damerau_levenshtein);
-    bench_distance("damerau_levenshtein (long)", LONG_STRINGS, damerau_levenshtein);
-    bench_similarity("damerau_levenshtein_normalized (short)", SHORT_STRINGS, damerau_levenshtein_normalized);
+    bench_distance(
+        "damerau_levenshtein (short)",
+        SHORT_STRINGS,
+        damerau_levenshtein,
+    );
+    bench_distance(
+        "damerau_levenshtein (medium)",
+        MEDIUM_STRINGS,
+        damerau_levenshtein,
+    );
+    bench_distance(
+        "damerau_levenshtein (long)",
+        LONG_STRINGS,
+        damerau_levenshtein,
+    );
+    bench_similarity(
+        "damerau_levenshtein_normalized (short)",
+        SHORT_STRINGS,
+        damerau_levenshtein_normalized,
+    );
 }
 
-// ============================================================================
-// Myers Levenshtein
-// ============================================================================
-#[test]
-fn bench_myers_levenshtein() {
-    println!("\n=== Myers Levenshtein ===");
-    bench_distance("myers_levenshtein (short)", SHORT_STRINGS, myers_levenshtein);
-    bench_distance("myers_levenshtein (medium)", MEDIUM_STRINGS, myers_levenshtein);
-    bench_distance("myers_levenshtein (long)", LONG_STRINGS, myers_levenshtein);
-    bench_similarity("myers_levenshtein_normalized (short)", SHORT_STRINGS, myers_levenshtein_normalized);
-}
-
-// ============================================================================
-// Jaro / Jaro-Winkler
-// ============================================================================
 #[test]
 fn bench_jaro() {
     println!("\n=== Jaro / Jaro-Winkler ===");
@@ -144,9 +136,6 @@ fn bench_jaro() {
     bench_similarity("jaroWinkler (medium)", MEDIUM_STRINGS, jarowinkler);
 }
 
-// ============================================================================
-// Hamming
-// ============================================================================
 #[test]
 fn bench_hamming() {
     println!("\n=== Hamming ===");
@@ -155,21 +144,19 @@ fn bench_hamming() {
     bench_similarity("hamming_normalized (short)", SHORT_STRINGS, hamming_normalized);
 }
 
-// ============================================================================
-// SIFT4
-// ============================================================================
 #[test]
 fn bench_sift4() {
     println!("\n=== SIFT4 ===");
     bench_distance("sift4_simple (short)", SHORT_STRINGS, sift4_simple);
     bench_distance("sift4_simple (medium)", MEDIUM_STRINGS, sift4_simple);
     bench_distance("sift4_simple (long)", LONG_STRINGS, sift4_simple);
-    bench_similarity("sift4_simple_normalized (short)", SHORT_STRINGS, sift4_simple_normalized);
+    bench_similarity(
+        "sift4_simple_normalized (short)",
+        SHORT_STRINGS,
+        sift4_simple_normalized,
+    );
 }
 
-// ============================================================================
-// LCS
-// ============================================================================
 #[test]
 fn bench_lcs() {
     println!("\n=== LCS ===");
@@ -179,44 +166,52 @@ fn bench_lcs() {
     bench_similarity("lcs_seq_normalized (short)", SHORT_STRINGS, lcs_seq_normalized);
 }
 
-// ============================================================================
-// LCS Substring
-// ============================================================================
 #[test]
 fn bench_lcs_str() {
     println!("\n=== LCS Substring ===");
     bench_distance("lcs_str (short)", SHORT_STRINGS, lcs_str);
     bench_distance("lcs_str (medium)", MEDIUM_STRINGS, lcs_str);
     bench_distance("lcs_str (long)", LONG_STRINGS, lcs_str);
-    bench_similarity("lcs_str_normalized (short)", SHORT_STRINGS, lcs_str_normalized);
+    bench_similarity(
+        "lcs_str_normalized (short)",
+        SHORT_STRINGS,
+        lcs_str_normalized,
+    );
 }
 
-// ============================================================================
-// Ratcliff-Obershelp
-// ============================================================================
 #[test]
 fn bench_ratcliff() {
     println!("\n=== Ratcliff-Obershelp ===");
-    bench_similarity("ratcliff_obershelp (short)", SHORT_STRINGS, ratcliff_obershelp);
-    bench_similarity("ratcliff_obershelp (medium)", MEDIUM_STRINGS, ratcliff_obershelp);
-    bench_similarity("ratcliff_obershelp (long)", LONG_STRINGS, ratcliff_obershelp);
+    bench_similarity(
+        "ratcliff_obershelp (short)",
+        SHORT_STRINGS,
+        ratcliff_obershelp,
+    );
+    bench_similarity(
+        "ratcliff_obershelp (medium)",
+        MEDIUM_STRINGS,
+        ratcliff_obershelp,
+    );
+    bench_similarity(
+        "ratcliff_obershelp (long)",
+        LONG_STRINGS,
+        ratcliff_obershelp,
+    );
 }
 
-// ============================================================================
-// Smith-Waterman
-// ============================================================================
 #[test]
 fn bench_smith_waterman() {
     println!("\n=== Smith-Waterman ===");
     bench_distance("smith_waterman (short)", SHORT_STRINGS, smith_waterman);
     bench_distance("smith_waterman (medium)", MEDIUM_STRINGS, smith_waterman);
     bench_distance("smith_waterman (long)", LONG_STRINGS, smith_waterman);
-    bench_similarity("smith_waterman_normalized (short)", SHORT_STRINGS, smith_waterman_normalized);
+    bench_similarity(
+        "smith_waterman_normalized (short)",
+        SHORT_STRINGS,
+        smith_waterman_normalized,
+    );
 }
 
-// ============================================================================
-// Token Similarity
-// ============================================================================
 #[test]
 fn bench_token() {
     println!("\n=== Token Similarity ===");
@@ -237,9 +232,6 @@ fn bench_token() {
     bench_similarity("overlap (long)", LONG_STRINGS, overlap);
 }
 
-// ============================================================================
-// Naive
-// ============================================================================
 #[test]
 fn bench_naive() {
     println!("\n=== Naive ===");
@@ -251,9 +243,6 @@ fn bench_naive() {
     bench_similarity("length (medium)", MEDIUM_STRINGS, length);
 }
 
-// ============================================================================
-// Bigram
-// ============================================================================
 #[test]
 fn bench_bigram() {
     println!("\n=== Bigram ===");
@@ -263,44 +252,84 @@ fn bench_bigram() {
     bench_similarity("cosine_bigram (medium)", MEDIUM_STRINGS, cosine_bigram);
 }
 
-// ============================================================================
-// Correctness
-// ============================================================================
 #[test]
 fn test_correctness() {
-    println!("\n=== Correctness (same cases as TS benchmark) ===");
+    println!("\n=== Correctness ===");
+
+    assert_eq_u32("levenshtein('', '')", levenshtein("", ""), 0);
+    assert_eq_u32("levenshtein('abc', '')", levenshtein("abc", ""), 3);
+    assert_eq_u32("levenshtein('', 'abc')", levenshtein("", "abc"), 3);
+    assert_eq_u32(
+        "levenshtein('kitten','sitting')",
+        levenshtein("kitten", "sitting"),
+        3,
+    );
+    assert_eq_u32(
+        "levenshtein('saturday','sunday')",
+        levenshtein("saturday", "sunday"),
+        3,
+    );
+    assert_eq_u32("levenshtein('test','text')", levenshtein("test", "text"), 1);
+    assert_eq_u32("levenshtein('abc','abc')", levenshtein("abc", "abc"), 0);
+
+    let a_long = "The quick brown fox jumps over the lazy dog and runs away very far from home";
+    let b_long =
+        "The quick brown dog jumps over the lazy fox and runs very very far away from home";
+    let dist_long = levenshtein(a_long, b_long);
+    assert!(dist_long > 0 && dist_long < 30, "levenshtein long: {}", dist_long);
+
+    assert_eq_u32("damerau('abc','acb')", damerau_levenshtein("abc", "acb"), 1);
+    assert_eq_u32(
+        "damerau('abc','abc')",
+        damerau_levenshtein("abc", "abc"),
+        0,
+    );
+
+    assert_eq_u32(
+        "hamming('karolin','kathrin')",
+        hamming("karolin", "kathrin"),
+        3,
+    );
+    assert_eq_u32("hamming('abc','abc')", hamming("abc", "abc"), 0);
+
+    assert_eq_u32("sift4('abc','abc')", sift4_simple("abc", "abc"), 0);
+    let sift_dist = sift4_simple("kitten", "sitting");
+    assert!(sift_dist > 0 && sift_dist < 6, "sift4 kitten/sitting: {}", sift_dist);
+
+    assert_eq_u32("lcs_seq('abcde','ace')", lcs_seq("abcde", "ace"), 3);
+    assert_eq_u32("lcs_seq('abc','abc')", lcs_seq("abc", "abc"), 3);
+    assert_eq_u32("lcs_seq('','abc')", lcs_seq("", "abc"), 0);
+
+    assert_eq_u32("lcs_str('abcde','abfde')", lcs_str("abcde", "abfde"), 2);
+    assert_eq_u32("lcs_str('abc','xyz')", lcs_str("abc", "xyz"), 0);
+
+    let sw = smith_waterman("ACGT", "ACGT");
+    assert_eq_u32("sw('ACGT','ACGT')", sw, 4);
 
     for &(s1, s2) in CORRECTNESS_CASES {
-        // Distance (exact integer match)
-        assert_eq_u32("levenshtein", levenshtein(s1, s2), levenshtein(s1, s2));
-        assert_eq_u32("damerau_levenshtein", damerau_levenshtein(s1, s2), damerau_levenshtein(s1, s2));
-        assert_eq_u32("hamming", hamming(s1, s2), hamming(s1, s2));
-        assert_eq_u32("sift4_simple", sift4_simple(s1, s2), sift4_simple(s1, s2));
-        assert_eq_u32("lcs_seq", lcs_seq(s1, s2), lcs_seq(s1, s2));
-        assert_eq_u32("lcs_str", lcs_str(s1, s2), lcs_str(s1, s2));
-        assert_eq_u32("smith_waterman", smith_waterman(s1, s2), smith_waterman(s1, s2));
+        let lev_norm = levenshtein_normalized(s1, s2);
+        assert!(
+            lev_norm >= 0.0 && lev_norm <= 1.0,
+            "lev_norm out of range: {}",
+            lev_norm
+        );
+        let j = jaro(s1, s2);
+        assert!(j >= 0.0 && j <= 1.0, "jaro out of range: {}", j);
+        let jw = jarowinkler(s1, s2);
+        assert!(jw >= 0.0 && jw <= 1.0, "jarowinkler out of range: {}", jw);
+        let jac = jaccard(s1, s2);
+        assert!(jac >= 0.0 && jac <= 1.0, "jaccard out of range: {}", jac);
+        let cos = cosine(s1, s2);
+        assert!(cos >= 0.0 && cos <= 1.0, "cosine out of range: {}", cos);
+        let sor = sorensen(s1, s2);
+        assert!(sor >= 0.0 && sor <= 1.0, "sorensen out of range: {}", sor);
+        let rat = ratcliff_obershelp(s1, s2);
+        assert!(rat >= 0.0 && rat <= 1.0, "ratcliff out of range: {}", rat);
 
-        // Similarity (tolerance 0.001)
-        assert_close("levenshtein_normalized", levenshtein_normalized(s1, s2), 1.0 - levenshtein_normalized(s1, s2), 0.001);
-        assert_close("damerau_levenshtein_normalized", damerau_levenshtein_normalized(s1, s2), 1.0 - damerau_levenshtein_normalized(s1, s2), 0.001);
-        assert_close("jaro", jaro(s1, s2), jaro(s1, s2), 0.001);
-        assert_close("jaroWinkler", jarowinkler(s1, s2), jarowinkler(s1, s2), 0.001);
-        assert_close("hamming_normalized", hamming_normalized(s1, s2), 1.0 - hamming_normalized(s1, s2), 0.001);
-        assert_close("sift4_simple_normalized", sift4_simple_normalized(s1, s2), 1.0 - sift4_simple_normalized(s1, s2), 0.001);
-        assert_close("lcs_seq_normalized", lcs_seq_normalized(s1, s2), lcs_seq_normalized(s1, s2), 0.001);
-        assert_close("lcs_str_normalized", lcs_str_normalized(s1, s2), lcs_str_normalized(s1, s2), 0.001);
-        assert_close("ratcliff_obershelp", ratcliff_obershelp(s1, s2), ratcliff_obershelp(s1, s2), 0.001);
-        assert_close("smith_waterman_normalized", smith_waterman_normalized(s1, s2), smith_waterman_normalized(s1, s2), 0.001);
-        assert_close("jaccard", jaccard(s1, s2), jaccard(s1, s2), 0.001);
-        assert_close("cosine", cosine(s1, s2), cosine(s1, s2), 0.001);
-        assert_close("sorensen", sorensen(s1, s2), sorensen(s1, s2), 0.001);
-        assert_close("tversky", tversky(s1, s2), tversky(s1, s2), 0.001);
-        assert_close("overlap", overlap(s1, s2), overlap(s1, s2), 0.001);
-        assert_close("prefix", prefix(s1, s2), prefix(s1, s2), 0.001);
-        assert_close("suffix", suffix(s1, s2), suffix(s1, s2), 0.001);
-        assert_close("length", length(s1, s2), 1.0 - length(s1, s2), 0.001);
-        assert_close("jaccard_bigram", jaccard_bigram(s1, s2), jaccard_bigram(s1, s2), 0.001);
-        assert_close("cosine_bigram", cosine_bigram(s1, s2), cosine_bigram(s1, s2), 0.001);
+        assert_eq_u32("lev sym", levenshtein(s1, s2), levenshtein(s2, s1));
+        assert_close("jaro sym", jaro(s1, s2), jaro(s2, s1), 0.001);
+        assert_close("jaccard sym", jaccard(s1, s2), jaccard(s2, s1), 0.001);
+        assert_close("cosine sym", cosine(s1, s2), cosine(s2, s1), 0.001);
     }
 
     println!("  All {} cases passed", CORRECTNESS_CASES.len());

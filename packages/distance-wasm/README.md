@@ -9,246 +9,147 @@
 
 ## Features
 
-- ⚡ **WebAssembly Performance**: Optimized Rust implementation running in WASM
-- 🧮 **Comprehensive Algorithms**: 30+ string similarity and distance algorithms
-- 🎯 **Multiple Categories**: Edit-based, sequence-based, token-based, and naive algorithms
-- 📝 **TypeScript First**: Full type safety with comprehensive API
-- 🔧 **Universal Interface**: Single compare function for all algorithms
-- 📊 **Normalized Results**: Consistent 0-1 similarity scores across algorithms
-- 🚀 **Zero Runtime Dependencies**: Lightweight and fast implementation
+- **WebAssembly Performance**: Native Rust implementation compiled to WASM
+- **25+ algorithms**: Edit distance, sequence alignment, token similarity, and fuzzy search
+- **Myers bit-parallel**: Levenshtein uses 32-bit block-based Myers for all string lengths
+- **FuzzySearch engine**: `FuzzySearch`, `MultiKeyFuzzySearch`, and `find_best_match` for object array search
+- **Universal compare**: Single `compare()` function accepting algorithm name strings
+- **Normalized results**: Consistent 0-1 similarity scores across algorithms
 
 ## Installation
 
 ```bash
-# Install with npm
-$ npm install @nlptools/distance-wasm
-
-# Install with yarn
-$ yarn add @nlptools/distance-wasm
-
-# Install with pnpm
-$ pnpm add @nlptools/distance-wasm
+npm install @nlptools/distance-wasm
 ```
 
 ## Usage
 
-### Basic Setup
-
 ```typescript
-import * as distanceWasm from "@nlptools/distance-wasm";
+import * as wasm from "@nlptools/distance-wasm";
 
-// All algorithms are available as named functions
-console.log(distanceWasm.levenshtein("kitten", "sitting")); // 3
-console.log(distanceWasm.jaro("hello", "hallo")); // 0.8666666666666667
-console.log(distanceWasm.cosine("abc", "bcd")); // 0.6666666666666666
+// Edit distance
+wasm.levenshtein("kitten", "sitting"); // 3
+wasm.levenshtein_normalized("kitten", "sitting"); // 0.571
+
+// Similarity
+wasm.jaro("martha", "marhta"); // 0.961
+wasm.jarowinkler("martha", "marhta"); // 0.961
+
+// Token-based
+wasm.jaccard("hello", "hallo"); // 0.667
+wasm.cosine("hello", "hallo"); // 0.8
+
+// Universal compare
+wasm.compare("hello", "hallo", "jaro"); // 0.961
 ```
 
-### Distance vs Similarity
-
-Most algorithms have both distance and normalized versions:
+### Fuzzy Search
 
 ```typescript
-// Distance algorithms (lower is more similar)
-const distance = distanceWasm.levenshtein("cat", "bat"); // 1
+import { FuzzySearch, Algorithm, findBestMatch } from "@nlptools/distance-wasm";
 
-// Similarity algorithms (higher is more similar, 0-1 range)
-const similarity = distanceWasm.levenshtein_normalized("cat", "bat"); // 0.6666666666666666
-```
+// String array search
+const search = new FuzzySearch(["apple", "banana", "cherry"], Algorithm.Levenshtein, 0.3, false);
+search.search("aple"); // [{ index: 0, score: 0.8 }]
 
-### Available Algorithms
+// Multi-key weighted search for object arrays
+const keyValues = ["Old Man's War", "John Scalzi", "Harry Potter", "J.K. Rowling"];
+const mkSearch = new MultiKeyFuzzySearch(
+  keyValues,
+  2,
+  [0.7, 0.3],
+  Algorithm.Levenshtein,
+  0.3,
+  false,
+);
+mkSearch.search("old man"); // [{ index: 0, score: 0.54, key_scores: [0.57, 0.50] }]
 
-#### Edit Distance Algorithms
-
-```typescript
-// Classic string edit distance
-distanceWasm.levenshtein("saturday", "sunday"); // 3
-distanceWasm.damerau_levenshtein("ca", "abc"); // 2
-
-// Phonetic and similarity algorithms
-distanceWasm.jaro("martha", "marhta"); // 0.9611111111111111
-distanceWasm.jarowinkler("martha", "marhta"); // 0.9611111111111111
-distanceWasm.hamming("karolin", "kathrin"); // 3
-distanceWasm.sift4_simple("abc", "axc"); // 1
-```
-
-#### Sequence-based Algorithms
-
-```typescript
-// Longest common subsequence/substring
-distanceWasm.lcs_seq("ABCD", "ACBAD"); // 3
-distanceWasm.lcs_str("ABCD", "ACBAD"); // 1
-
-// Gestalt pattern matching
-distanceWasm.ratcliff_obershelp("hello", "hallo"); // 0.8
-
-// Local sequence alignment
-distanceWasm.smith_waterman("ACGT", "ACGT"); // 4
-```
-
-#### Token-based Algorithms
-
-```typescript
-// Set-based similarity measures
-distanceWasm.jaccard("hello world", "world hello"); // 1
-distanceWasm.cosine("hello world", "world hello"); // 1
-distanceWasm.sorensen("hello world", "world hello"); // 1
-distanceWasm.overlap("hello", "hello world"); // 1
-distanceWasm.tversky("abc", "bcd"); // 0.5
-```
-
-#### Bigram Algorithms
-
-```typescript
-// Character pair based similarity
-distanceWasm.jaccard_bigram("night", "nacht"); // 0.14285714285714285
-distanceWasm.cosine_bigram("night", "nacht"); // 0.25
-```
-
-#### Naive Algorithms
-
-```typescript
-// Simple comparison methods
-distanceWasm.prefix("hello", "help"); // 0.6
-distanceWasm.suffix("hello", "ello"); // 0.8
-distanceWasm.length("hello", "hallo"); // 0
-```
-
-### Universal Compare Function
-
-Use the universal function to access all algorithms by name:
-
-```typescript
-const result = distanceWasm.compare("hello", "hallo", "jaro");
-console.log(result); // 0.8666666666666667
+// One-shot convenience
+findBestMatch("kitten", ["sitting", "kit", "mitten"], Algorithm.Levenshtein, 0.3, false);
+// { index: 1, score: 0.5 }
 ```
 
 ## API Reference
 
-### Distance Functions
+### Edit Distance
 
-#### `levenshtein(s1: string, s2: string): number`
+| Function                                 | Description                                    | Returns     |
+| ---------------------------------------- | ---------------------------------------------- | ----------- |
+| `levenshtein(s1, s2)`                    | Levenshtein edit distance (Myers bit-parallel) | `u32`       |
+| `levenshtein_normalized(s1, s2)`         | Normalized similarity                          | `f64` (0-1) |
+| `damerau_levenshtein(s1, s2)`            | Damerau-Levenshtein (unrestricted)             | `u32`       |
+| `damerau_levenshtein_normalized(s1, s2)` | Normalized similarity                          | `f64` (0-1) |
+| `jaro(s1, s2)`                           | Jaro similarity                                | `f64` (0-1) |
+| `jarowinkler(s1, s2)`                    | Jaro-Winkler similarity                        | `f64` (0-1) |
+| `hamming(s1, s2)`                        | Hamming distance                               | `u32`       |
+| `hamming_normalized(s1, s2)`             | Normalized similarity                          | `f64` (0-1) |
+| `sift4_simple(s1, s2)`                   | SIFT4 approximate distance                     | `u32`       |
+| `sift4_simple_normalized(s1, s2)`        | Normalized similarity                          | `f64` (0-1) |
 
-Calculate the Levenshtein distance between two strings.
+### Sequence-based
 
-**Parameters:**
+| Function                              | Description                                | Returns     |
+| ------------------------------------- | ------------------------------------------ | ----------- |
+| `lcs_seq(s1, s2)`                     | Longest common subsequence length          | `u32`       |
+| `lcs_seq_normalized(s1, s2)`          | Normalized similarity                      | `f64` (0-1) |
+| `lcs_str(s1, s2)`                     | Longest common substring length            | `u32`       |
+| `lcs_str_normalized(s1, s2)`          | Normalized similarity                      | `f64` (0-1) |
+| `ratcliff_obershelp(s1, s2)`          | Ratcliff-Obershelp similarity              | `f64` (0-1) |
+| `smith_waterman(s1, s2)`              | Smith-Waterman local alignment score       | `u32`       |
+| `smith_waterman_normalized(s1, s2)`   | Normalized similarity                      | `f64` (0-1) |
+| `needleman_wunsch(s1, s2)`            | Needleman-Wunsch global alignment score    | `i32`       |
+| `needleman_wunsch_normalized(s1, s2)` | Normalized similarity                      | `f64` (0-1) |
+| `gotoh(s1, s2)`                       | Gotoh affine gap alignment score           | `f64`       |
+| `gotoh_normalized(s1, s2)`            | Normalized similarity                      | `f64` (0-1) |
+| `monge_elkan(s1, s2)`                 | Monge-Elkan asymmetric similarity          | `f64` (0-1) |
+| `monge_elkan_symmetric(s1, s2)`       | Symmetric variant                          | `f64` (0-1) |
+| `bag_distance(s1, s2)`                | Bag distance (edit distance approximation) | `u32`       |
+| `bag_distance_normalized(s1, s2)`     | Normalized similarity                      | `f64` (0-1) |
+| `mra(s1, s2)`                         | Match Rating Algorithm score               | `u32`       |
+| `mra_normalized(s1, s2)`              | Normalized similarity                      | `f64` (0-1) |
 
-- `s1` (string) - First string
-- `s2` (string) - Second string
+### Token Similarity
 
-**Returns:** `number` - Edit distance (minimum number of single-character edits)
+| Function                 | Description                             | Returns     |
+| ------------------------ | --------------------------------------- | ----------- |
+| `jaccard(s1, s2)`        | Jaccard similarity (character multiset) | `f64` (0-1) |
+| `cosine(s1, s2)`         | Cosine similarity (character multiset)  | `f64` (0-1) |
+| `sorensen(s1, s2)`       | Sorensen-Dice coefficient               | `f64` (0-1) |
+| `tversky(s1, s2)`        | Tversky index (asymmetric)              | `f64` (0-1) |
+| `overlap(s1, s2)`        | Overlap coefficient                     | `f64` (0-1) |
+| `jaccard_bigram(s1, s2)` | Jaccard on character bigrams            | `f64` (0-1) |
+| `cosine_bigram(s1, s2)`  | Cosine on character bigrams             | `f64` (0-1) |
+| `prefix(s1, s2)`         | Prefix similarity                       | `f64` (0-1) |
+| `suffix(s1, s2)`         | Suffix similarity                       | `f64` (0-1) |
+| `length(s1, s2)`         | Length-based similarity                 | `f64` (0-1) |
 
-#### `damerau_levenshtein(s1: string, s2: string): number`
+### Fuzzy Search
 
-Calculate the Damerau-Levenshtein distance, which includes transposition operations.
+| Function / Class                                                                   | Description                                                                                                                                                                                                                                               |
+| ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FuzzySearch(items, algo, threshold, caseSensitive)`                               | Search engine for string arrays                                                                                                                                                                                                                           |
+| `FuzzySearch.search(query, limit?)`                                                | Returns `SearchResult[]` sorted by score                                                                                                                                                                                                                  |
+| `MultiKeyFuzzySearch(keyValues, numKeys, weights, algo, threshold, caseSensitive)` | Multi-key weighted search for object arrays                                                                                                                                                                                                               |
+| `MultiKeyFuzzySearch.search(query, limit?)`                                        | Returns `MultiKeySearchResult[]` with per-key scores                                                                                                                                                                                                      |
+| `findBestMatch(query, items, algo, threshold, caseSensitive)`                      | One-shot best match                                                                                                                                                                                                                                       |
+| `Algorithm`                                                                        | Enum: `Levenshtein`, `Jaro`, `JaroWinkler`, `Hamming`, `Sift4`, `LcsSeq`, `LcsStr`, `Ratcliff`, `SmithWaterman`, `NeedlemanWunsch`, `Gotoh`, `BagDistance`, `Mra`, `Jaccard`, `Cosine`, `Sorensen`, `Tversky`, `Overlap`, `JaccardBigram`, `CosineBigram` |
 
-**Parameters:**
+### Universal Compare
 
-- `s1` (string) - First string
-- `s2` (string) - Second string
+`compare(s1, s2, algorithm)` accepts algorithm names: `"levenshtein"`, `"damerau-levenshtein"`, `"jaro"`, `"jaro-winkler"`, `"hamming"`, `"sift4"`, `"lcs-seq"`, `"lcs-str"`, `"ratcliff-obershelp"`, `"smith-waterman"`, `"needleman-wunsch"`, `"gotoh"`, `"monge-elkan"`, `"bag-distance"`, `"mra"`, `"jaccard"`, `"cosine"`, `"sorensen"`, `"tversky"`, `"overlap"`, `"prefix"`, `"suffix"`, `"length"`, `"jaccard-bigram"`, `"cosine-bigram"`.
 
-**Returns:** `number` - Distance with transposition support
+## Architecture
 
-#### `hamming(s1: string, s2: string): number`
+All algorithms are implemented natively in Rust, operating directly on `&[u8]` bytes for maximum performance. The WASM module is built with `wasm-pack` and uses `wasm-bindgen` for JavaScript interop.
 
-Calculate the Hamming distance for equal-length strings.
-
-**Parameters:**
-
-- `s1` (string) - First string
-- `s2` (string) - Second string
-
-**Returns:** `number` - Number of positions where characters differ
-
-### Similarity Functions
-
-#### `jaro(s1: string, s2: string): number`
-
-Calculate Jaro similarity between two strings.
-
-**Parameters:**
-
-- `s1` (string) - First string
-- `s2` (string) - Second string
-
-**Returns:** `number` - Jaro similarity score (0-1)
-
-#### `jarowinkler(s1: string, s2: string): number`
-
-Calculate Jaro-Winkler similarity, a modified version of Jaro.
-
-**Parameters:**
-
-- `s1` (string) - First string
-- `s2` (string) - Second string
-
-**Returns:** `number` - Jaro-Winkler similarity score (0-1)
-
-#### `jaccard(s1: string, s2: string): number`
-
-Calculate Jaccard similarity based on character n-grams.
-
-**Parameters:**
-
-- `s1` (string) - First string
-- `s2` (string) - Second string
-
-**Returns:** `number` - Jaccard similarity score (0-1)
-
-#### `cosine(s1: string, s2: string): number`
-
-Calculate cosine similarity between character n-gram vectors.
-
-**Parameters:**
-
-- `s1` (string) - First string
-- `s2` (string) - Second string
-
-**Returns:** `number` - Cosine similarity score (0-1)
-
-### Universal Function
-
-#### `compare(s1: string, s2: string, algorithm: string): number`
-
-Compare two strings using any available algorithm by name.
-
-**Parameters:**
-
-- `s1` (string) - First string
-- `s2` (string) - Second string
-- `algorithm` (string) - Algorithm name (e.g., 'levenshtein', 'jaro', 'jaccard')
-
-**Returns:** `number` - Similarity score (0-1) or distance value
-
-**Available Algorithm Names:**
-
-- Edit Distance: `'levenshtein'`, `'damerau_levenshtein'`, `'jaro'`, `'jarowinkler'`, `'hamming'`, `'sift4_simple'`
-- Sequence: `'lcs_seq'`, `'lcs_str'`, `'ratcliff_obershelp'`, `'smith_waterman'`
-- Token: `'jaccard'`, `'cosine'`, `'sorensen'`, `'tversky'`, `'overlap'`
-- Naive: `'prefix'`, `'suffix'`, `'length'`
-- Bigram: `'jaccard_bigram'`, `'cosine_bigram'`
-
-### Normalized Variants
-
-Most distance algorithms have normalized versions that return similarity scores:
-
-- `levenshtein_normalized`, `damerau_levenshtein_normalized`, `hamming_normalized`, `sift4_simple_normalized`
-- `lcs_seq_normalized`, `lcs_str_normalized`, `smith_waterman_normalized`
-
-## Performance
-
-The WebAssembly implementation provides significant performance improvements:
-
-- **10-100x faster** than pure JavaScript implementations
-- **Consistent performance** across different platforms
-- **Memory efficient** with optimized algorithms
-- **Zero runtime dependencies** after WASM compilation
+- `src/edit/` — Edit distance algorithms (levenshtein with Myers bit-parallel, damerau, jaro, hamming, sift4, lcs, smith-waterman, needleman-wunsch, gotoh, monge-elkan, bag, mra)
+- `src/token/` — Token similarity algorithms (jaccard, cosine, sorensen, tversky, overlap, naive)
+- `src/search.rs` — FuzzySearch engine with multi-key weighted support
+- `src/utils.rs` — Shared utilities (frequency arrays, intersection, normalization)
 
 ## References
 
-This project incorporates and builds upon the following excellent open source projects:
-
-- [textdistance.rs](https://github.com/life4/textdistance.rs) - Core Rust implementation of string similarity algorithms
-- [fastest-levenshtein](https://github.com/ka-weihe/fastest-levenshtein) - Myers algorithm implementation referenced in `myers.rs`
+- [fastest-levenshtein](https://github.com/ka-weihe/fastest-levenshtein) — Myers bit-parallel algorithm reference
 
 ## License
 

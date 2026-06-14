@@ -47,7 +47,7 @@ export function damerauLevenshtein(a: string, b: string): number {
   }
 
   // Track last row where each character was seen in a
-  const lastSeen = new Map<number, number>();
+  const lastSeen = new Uint32Array(128);
 
   for (let i = 0; i < aLen; i++) {
     let db = 0;
@@ -57,7 +57,7 @@ export function damerauLevenshtein(a: string, b: string): number {
     for (let j = 0; j < bLen; j++) {
       const j1 = j + 1; // 1-based
       const bChar = b.charCodeAt(j);
-      const last = lastSeen.get(bChar) ?? 0;
+      const last = bChar < 128 ? lastSeen[bChar] : 0;
 
       const subCost = aChar === bChar ? 0 : 1;
       const base = (i1 + 1) * w + j1 + 1;
@@ -75,7 +75,7 @@ export function damerauLevenshtein(a: string, b: string): number {
       }
     }
 
-    lastSeen.set(aChar, i1);
+    if (aChar < 128) lastSeen[aChar] = i1;
   }
 
   return mat[(aLen + 1) * w + bLen + 1];

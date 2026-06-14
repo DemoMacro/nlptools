@@ -25,9 +25,9 @@ export function jaro(a: string, b: string): number {
 
   if (aLen === 0 && bLen === 0) return 1;
   if (aLen === 0 || bLen === 0) return 0;
+  if (aLen === 1 && bLen === 1) return a.charCodeAt(0) === b.charCodeAt(0) ? 1 : 0;
 
   const matchDistance = Math.floor(Math.max(aLen, bLen) / 2) - 1;
-  if (matchDistance < 0) return 0;
 
   const aMatches = new Uint8Array(aLen);
   const bMatches = new Uint8Array(bLen);

@@ -432,6 +432,222 @@ describe("Bigram: TS vs WASM", () => {
 });
 
 // ============================================================================
+// Damerau-Levenshtein: TS vs WASM
+// ============================================================================
+describe("Damerau-Levenshtein: TS vs WASM", () => {
+  describe("Short Strings (< 10 chars)", () => {
+    bench(
+      "TS: damerauLevenshtein",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) ts.damerauLevenshtein(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: damerau_levenshtein",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.damerau_levenshtein(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+  describe("Medium Strings (10-100 chars)", () => {
+    bench(
+      "TS: damerauLevenshtein",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.damerauLevenshtein(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: damerau_levenshtein",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.damerau_levenshtein(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+  describe("Long Strings (> 200 chars)", () => {
+    bench(
+      "TS: damerauLevenshtein",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) ts.damerauLevenshtein(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: damerau_levenshtein",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) wasm.damerau_levenshtein(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+});
+
+// ============================================================================
+// SIFT4: TS vs WASM
+// ============================================================================
+describe("SIFT4: TS vs WASM", () => {
+  describe("Short Strings (< 10 chars)", () => {
+    bench(
+      "TS: sift4",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) ts.sift4(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: sift4_simple",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.sift4_simple(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+  describe("Medium Strings (10-100 chars)", () => {
+    bench(
+      "TS: sift4",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.sift4(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: sift4_simple",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.sift4_simple(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+  describe("Long Strings (> 200 chars)", () => {
+    bench(
+      "TS: sift4",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) ts.sift4(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: sift4_simple",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) wasm.sift4_simple(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+});
+
+// ============================================================================
+// Smith-Waterman: TS vs WASM
+// ============================================================================
+describe("Smith-Waterman: TS vs WASM", () => {
+  describe("Short Strings (< 10 chars)", () => {
+    bench(
+      "TS: smithWaterman",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) ts.smithWaterman(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: smith_waterman",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.smith_waterman(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+  describe("Medium Strings (10-100 chars)", () => {
+    bench(
+      "TS: smithWaterman",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.smithWaterman(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: smith_waterman",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.smith_waterman(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+  describe("Long Strings (> 200 chars)", () => {
+    bench(
+      "TS: smithWaterman",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) ts.smithWaterman(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: smith_waterman",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) wasm.smith_waterman(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+});
+
+// ============================================================================
+// Ratcliff-Obershelp: TS vs WASM
+// ============================================================================
+describe("Ratcliff-Obershelp: TS vs WASM", () => {
+  describe("Short Strings (< 10 chars)", () => {
+    bench(
+      "TS: ratcliff",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) ts.ratcliff(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: ratcliff_obershelp",
+      () => {
+        for (const { s1, s2 } of SHORT_STRINGS) wasm.ratcliff_obershelp(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+  describe("Medium Strings (10-100 chars)", () => {
+    bench(
+      "TS: ratcliff",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) ts.ratcliff(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: ratcliff_obershelp",
+      () => {
+        for (const { s1, s2 } of MEDIUM_STRINGS) wasm.ratcliff_obershelp(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+  describe("Long Strings (> 200 chars)", () => {
+    bench(
+      "TS: ratcliff",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) ts.ratcliff(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+    bench(
+      "WASM: ratcliff_obershelp",
+      () => {
+        for (const { s1, s2 } of LONG_STRINGS) wasm.ratcliff_obershelp(s1, s2);
+      },
+      BENCH_CONFIG,
+    );
+  });
+});
+
+// ============================================================================
 // Correctness: verify TS and WASM produce same results (bench mode)
 // ============================================================================
 const CORRECTNESS_CASES = [
@@ -459,13 +675,12 @@ function assertEq(label: string, actual: number, expected: number, tol = 0) {
   }
 }
 
-// WASM convention notes:
+// Convention notes (TS and WASM are aligned):
 // - Edit distances (levenshtein, damerau, hamming, sift4): return raw distance
 // - lcs_seq / lcs_str: return LCS *length*, not distance
-// - length: returns normalized *distance* (0 = identical)
-// - *_normalized for edit distances: return normalized *distance* (0 = identical)
+// - *_normalized: return normalized *similarity* (1 = identical, 0 = totally different)
 // - Similarity functions (jaro, cosine, jaccard, etc.): return similarity (1 = identical)
-// - lcs_seq_normalized / lcs_str_normalized / smith_waterman_normalized: similarity
+// - length: returns similarity (1 = identical)
 
 describe("Correctness: TS vs WASM", () => {
   bench(
@@ -517,12 +732,12 @@ describe("Correctness: TS vs WASM", () => {
   bench(
     "levenshteinNormalized",
     () => {
-      // wasm returns normalized distance (0=identical), TS returns similarity (1=identical)
+      // Both TS and WASM return similarity (1=identical)
       for (const { s1, s2 } of CORRECTNESS_CASES)
         assertEq(
           "levNorm",
           ts.levenshteinNormalized(s1, s2),
-          1 - wasm.levenshtein_normalized(s1, s2),
+          wasm.levenshtein_normalized(s1, s2),
           0.001,
         );
     },
@@ -552,12 +767,12 @@ describe("Correctness: TS vs WASM", () => {
   bench(
     "damerauLevenshteinNormalized",
     () => {
-      // wasm returns normalized distance (0=identical)
+      // Both return similarity (1=identical)
       for (const { s1, s2 } of CORRECTNESS_CASES)
         assertEq(
           "damerauN",
           ts.damerauLevenshteinNormalized(s1, s2),
-          1 - wasm.damerau_levenshtein_normalized(s1, s2),
+          wasm.damerau_levenshtein_normalized(s1, s2),
           0.001,
         );
     },
@@ -594,14 +809,9 @@ describe("Correctness: TS vs WASM", () => {
   bench(
     "hammingNormalized",
     () => {
-      // wasm returns normalized distance (0=identical)
+      // Both return similarity (1=identical)
       for (const { s1, s2 } of CORRECTNESS_CASES)
-        assertEq(
-          "hammingN",
-          ts.hammingNormalized(s1, s2),
-          1 - wasm.hamming_normalized(s1, s2),
-          0.001,
-        );
+        assertEq("hammingN", ts.hammingNormalized(s1, s2), wasm.hamming_normalized(s1, s2), 0.001);
     },
     BENCH_CONFIG,
   );
@@ -676,14 +886,9 @@ describe("Correctness: TS vs WASM", () => {
   bench(
     "sift4Normalized",
     () => {
-      // wasm returns normalized distance (0=identical)
+      // Both return similarity (1=identical)
       for (const { s1, s2 } of CORRECTNESS_CASES)
-        assertEq(
-          "sift4N",
-          ts.sift4Normalized(s1, s2),
-          1 - wasm.sift4_simple_normalized(s1, s2),
-          0.001,
-        );
+        assertEq("sift4N", ts.sift4Normalized(s1, s2), wasm.sift4_simple_normalized(s1, s2), 0.001);
     },
     BENCH_CONFIG,
   );
@@ -727,9 +932,9 @@ describe("Correctness: TS vs WASM", () => {
   bench(
     "length",
     () => {
-      // wasm.length returns normalized distance (0=identical)
+      // Both return similarity (1=identical)
       for (const { s1, s2 } of CORRECTNESS_CASES)
-        assertEq("length", ts.length(s1, s2), 1 - wasm.length(s1, s2), 0.001);
+        assertEq("length", ts.length(s1, s2), wasm.length(s1, s2), 0.001);
     },
     BENCH_CONFIG,
   );
